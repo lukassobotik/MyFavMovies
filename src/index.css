@@ -1,13 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
   margin: 0;
+  background-color: black;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
+  color: #FFF;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  z-index: -10;
+  overflow: auto;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.login-panel{
+
+}
+
+.logout-btn {
+  background-color: yellow;
+  font-family: 'Roboto', ui-rounded;
+  padding: 5px;
+  margin-left: 10px;
+}
+
+.row {
+  display: flex;
+  background-color: dimgray;
+}
+
+.row-title {
+  font-family: "Roboto", ui-rounded;
+  padding: 4px;
+  text-align: left;
+}
+
+.row-items {
+  position: relative;
+  flex: auto;
+}
+
+.navbar-btn {
+  color: #FFFFFF;
+  font-family: "Roboto", ui-rounded;
+  text-decoration: none;
+}
+
+.column {
+  flex: available;
+  padding: 10px;
+  align-self: center;
+  size: auto;
+}
+
+.column:nth-last-child(1) {
+  position: fixed;
+  right: 0;
+}
+
+.logo {
+  color: #FFFFFF;
+  font-family: "Roboto", ui-rounded;
+  text-decoration: none;
+}
+
+.row_item img {
+  display: block;
+  overflow: hidden;
+}
+
+.container {
+  display: inline;
+  z-index: -10;
+  height: 100%;
+}
+
+.row_item {
+  position: relative;
+  padding: 2px;
+  flex: 1 1 0;
+  transition: transform 450ms;
+}
+
+.container .row_item:focus,
+.container .row_item:hover {
+  transform: scale(1.5);
+  transform-origin: center;
+  z-index: 100;
+}
+
+.arrow {
+  z-index: 101;
+  overflow: hidden;
+}
+
+.slider {
+  overflow: visible;
 }
