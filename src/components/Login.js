@@ -1,13 +1,10 @@
 import Layout from "./Layout";
-import {useContext, useState} from "react";
-import useGlobalState from "../services/useGlobalState";
+import {useState} from "react";
 import {useHistory} from "react-router-dom";
 
 export default function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const {StateContext} = useGlobalState();
-    const {dispatch} = useContext(StateContext);
     const history = useHistory();
 
     function setUsernameHandler(evt) {
@@ -29,7 +26,6 @@ export default function Login() {
             if (res.user) {
                 setUsername('');
                 setPassword('');
-                dispatch({type:'login', user: res.user});
                 history.push('/');
             }
         }))
