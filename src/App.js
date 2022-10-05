@@ -11,7 +11,6 @@ function App() {
         <div className="App">
             <Switch>
                 <Route path="/" exact>
-                    <h1>Home Page or Root</h1>
                     <Redirect to="/browse" />
                 </Route>
                 <Route path="/login" exact>
@@ -19,6 +18,9 @@ function App() {
                 </Route>
                 <Route path="/browse" exact>
                     <Browse/>
+                </Route>
+                <Route path="/movie/*" exact>
+
                 </Route>
             </Switch>
         </div>
