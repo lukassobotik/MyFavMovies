@@ -18,7 +18,7 @@ function App() {
                   <Browse/>
               </Route>
               <Route path="/movie/*" exact>
-
+                  <h1>Movie</h1>
               </Route>
           </Switch>
       </div>
