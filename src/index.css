@@ -104,3 +104,8 @@ code {
 .slider {
   overflow: visible;
 }
+
+.carousel_row {
+  overflow-x: visible;
+  overflow-y: visible;
+}
