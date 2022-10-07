@@ -2,9 +2,6 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import Movie from "./Movie";
 import {MdChevronLeft, MdChevronRight} from "react-icons/md"
-import ReactDOMServer from 'react-dom/server';
-
-let lastLoadedNum = 0;
 
 export default function Row({title, fetchURL, rowId}) {
     const [allMovies, setAllMovies] = useState([]);
@@ -31,13 +28,17 @@ export default function Row({title, fetchURL, rowId}) {
 
     useEffect(() => {
         axios.get(fetchURL).then((response) => {
+            console.log("Movies: ");
             console.log(response.data.results);
             setMovies(response.data.results);
             setAllMovies(response.data.results);
+            console.log("allMovies: ");
+            console.log(allMovies);
+            console.log("width: ");
+            console.log(width);
             setIsLoading(false);
-            const newMovies = allMovies.slice(0, width);
-            setMovies(newMovies);
-            lastLoadedNum = width;
+            setMovies(response.data.results.slice(0, width));
+            document.getElementById("lastLoadedNum" + rowId).setAttribute('numValue', width.toString());
         }).catch((err) => {
             console.log(err);
         })
@@ -46,18 +47,48 @@ export default function Row({title, fetchURL, rowId}) {
     let index = 0;
 
     const left = () => {
-        const newMovies = allMovies.slice(lastLoadedNum, (lastLoadedNum - width));
-        lastLoadedNum -= width;
-        console.log(newMovies);
-        console.log(movies);
+        let element = document.getElementById("lastLoadedNum" + rowId);
+        let lastLoadedNum = document.getElementById("lastLoadedNum" + rowId).getAttribute('numValue');
+        lastLoadedNum = parseInt(lastLoadedNum);
+
+        let newMovies;
+        if (lastLoadedNum - width < 0) {
+            newMovies = allMovies?.slice(lastLoadedNum - width);
+        } else {
+            newMovies = allMovies?.slice((lastLoadedNum - width), lastLoadedNum);
+        }
+
+        lastLoadedNum = lastLoadedNum - width;
+
+        element.setAttribute("numValue", lastLoadedNum.toString());
+        element.innerText = lastLoadedNum.toString();
         setMovies(newMovies);
+
+        if (lastLoadedNum < 0) {
+            element.setAttribute("numValue", allMovies.length.toString());
+        }
     }
     const right = () => {
-        const newMovies = allMovies.slice(lastLoadedNum, (lastLoadedNum + width));
-        lastLoadedNum += width;
-        console.log(newMovies);
-        console.log(movies);
+        let element = document.getElementById("lastLoadedNum" + rowId);
+        let lastLoadedNum = document.getElementById("lastLoadedNum" + rowId).getAttribute('numValue');
+        lastLoadedNum = parseInt(lastLoadedNum);
+
+        let newMovies;
+        if (lastLoadedNum >= allMovies.length) {
+            newMovies = allMovies?.slice(0, width);
+        } else {
+            newMovies = allMovies?.slice(lastLoadedNum, (lastLoadedNum + width));
+        }
+
+        lastLoadedNum = lastLoadedNum + width;
+
+        element.setAttribute("numValue", lastLoadedNum.toString());
+        element.innerText = lastLoadedNum.toString();
         setMovies(newMovies);
+
+        if (lastLoadedNum >= allMovies.length) {
+            element.setAttribute("numValue", "0");
+        }
     }
 
     return (
@@ -74,6 +105,7 @@ export default function Row({title, fetchURL, rowId}) {
                 <MdChevronRight className="arrow bg-red-500 rounded-full absolute opacity-50 hover:opacity-100 cursor-pointer z-10 right-0 hidden group-hover:block" size={40} onClick={right}/>
                 <MdChevronLeft className="arrow bg-red-500 rounded-full absolute opacity-50 hover:opacity-100 cursor-pointer z-10 left-0 hidden group-hover:block" size={40} onClick={left}/>
             </div>
+            <div id={"lastLoadedNum" + rowId} className="hidden" numValue={0}></div>
         </div>
     )
 }
