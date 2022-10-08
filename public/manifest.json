@@ -1,6 +1,6 @@
 {
-  "short_name": "Movies",
-  "name": "Movie & TV Logger",
+  "short_name": "MyFavMovies",
+  "name": "My Favorite Movies",
   "icons": [
     {
       "src": "favicon.ico",
