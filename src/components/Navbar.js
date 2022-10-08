@@ -1,21 +1,26 @@
-import {Link} from "react-router-dom";
-import Logo from "./icons/Movies-1-transparent.png";
-import Profile from "./icons/Profile";
+import {Link, useHistory} from "react-router-dom";
+import Logo from "./icons/MyFavMovies-transparent.png";
 
 export default function Navbar() {
+    const history = useHistory();
+
+    const click = () => {
+      history.push('/login');
+    }
+
     return (<nav>
-        <div className="row">
-            <div className="column">
-                <img id="logo" src={Logo} alt="Home" width={25} height={25}/>
+        <div className="navbar">
+            <div className="navbar_item">
+                <img id="logo" src={Logo} alt="Home" width={25} height={25} onClick={() => {history.push('/browse')}}/>
             </div>
-            <div className="column">
-                <Link to="/browse" className="navbar-btn">Home</Link>
+            <div className="navbar_item">
+                <Link to="/search" className="navbar-btn">Search</Link>
             </div>
-            <div className="column">
-                <Link to="/login" className="navbar-btn">Log In</Link>
-            </div>
-            <div className="column">
-                <Profile/>
+            <div className="navbar_item">
+                <div className="account flex">
+                    <Link to="/account" className="navbar-btn m-auto">Account</Link>
+                    <button className="logout-btn button" onClick={click}>Login</button>
+                </div>
             </div>
         </div>
     </nav>);

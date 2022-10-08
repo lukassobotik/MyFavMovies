@@ -94,7 +94,7 @@ export default function Row({title, fetchURL, rowId}) {
     return (
         !isLoading && <div className="">
             <h2 className='text-white font-bold md:text-xl p-4 text-left'> {title} </h2>
-            <div id={"row:" + rowId} className="carousel_row relative flex items-center bg-gray-900 group">
+            <div id={"row:" + rowId} className="carousel_row relative flex items-center group">
                 <div id={'slider' + rowId}
                      className="slider w-full h-full relative">
                     {movies?.map((item, id) => {

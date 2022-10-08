@@ -4,7 +4,7 @@
 
 body {
   margin: 0;
-  background-color: black;
+  background-color: #131313;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -21,28 +21,73 @@ code {
 }
 
 .login-panel{
+  display: inline-block;
+  margin: 50px;
+}
 
+.button {
+  text-align: center;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;
+  border-radius: 10px;
+  display: block;
+  border: 0;
+  font-weight: 700;
+  box-shadow: 0 0 14px -7px #f09819;
 }
 
 .logout-btn {
-  background-color: yellow;
-  font-family: 'Roboto', ui-rounded;
-  padding: 5px;
+  background-image: linear-gradient(45deg, #FF512F 0%, #F09819  51%, #FF512F  100%);
   margin-left: 10px;
+  padding: 5px;
+}
+.logout-btn:hover {
+  background-position: right center;
+  color: #fff;
+  text-decoration: none;
+}
+.logout-btn:active {
+  transform: scale(0.95);
 }
 
-.row {
+.login-btn {
+  width: 100%;
+  background-image: linear-gradient(45deg, #FF512F 0%, #F09819  51%, #FF512F  100%);
+  margin: 0 auto;
+  padding: 15px 30px;
+}
+.login-btn:hover {
+  background-position: right center;
+  color: #fff;
+  text-decoration: none;
+}
+.logout-btn:active {
+  transform: scale(0.95);
+}
+
+.text_field {
+  color: #F09819;
+  border: 2px solid #FF512F;
+  border-radius: 10px;
+  padding: 10px 25px;
+  background: transparent;
+  max-width: 190px;
+  margin-bottom: 10px;
+}
+
+.navbar {
   display: flex;
-  background-color: dimgray;
+  background-color: black;
 }
 
-.row-title {
+.navbar-title {
   font-family: "Roboto", ui-rounded;
   padding: 4px;
   text-align: left;
 }
 
-.row-items {
+.navbar-items {
   position: relative;
   flex: auto;
 }
@@ -53,16 +98,19 @@ code {
   text-decoration: none;
 }
 
-.column {
+.navbar_item {
   flex: available;
   padding: 10px;
   align-self: center;
   size: auto;
 }
-
-.column:nth-last-child(1) {
-  position: fixed;
+.navbar_item:first-child {
+  margin-left: 5%;
+}
+.navbar_item:nth-last-child(1) {
+  position: absolute;
   right: 0;
+  margin-right: 5%;
 }
 
 .logo {
@@ -76,10 +124,11 @@ code {
   overflow: hidden;
 }
 
-.container {
+.browse_container {
   display: inline;
   z-index: -10;
   height: 100%;
+  background-color: #131313;
 }
 
 .row_item {
@@ -89,8 +138,8 @@ code {
   transition: transform 450ms;
 }
 
-.container .row_item:focus,
-.container .row_item:hover {
+.browse_container .row_item:focus,
+.browse_container .row_item:hover {
   transform: scale(1.5);
   transform-origin: center;
   z-index: 100;

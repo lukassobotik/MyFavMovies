@@ -7,6 +7,10 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const history = useHistory();
 
+    document.onmousedown = () => {
+        return true;
+    };
+
     function setUsernameHandler(evt) {
         setUsername(evt.target.value);
     }
@@ -33,12 +37,12 @@ export default function Login() {
 
     return <Layout>
         <div className="login-panel">
-            <h1>Log In</h1>
-            <input type="text" placeholder="Username" onChange={setUsernameHandler} value={username}/>
+            <div className="text-4xl text-center font-bold mb-5">Log In</div>
+            <input className="text_field" type="text" placeholder="Username" onChange={setUsernameHandler} value={username}/>
             <p></p>
-            <input type="password" placeholder="Password" onChange={setPasswordHandler} value={password}/>
+            <input className="text_field" type="password" placeholder="Password" onChange={setPasswordHandler} value={password}/>
             <p></p>
-            <button onClick={login}>Log In</button>
+            <button className="login-btn button" onClick={login}>Log In</button>
         </div>
     </Layout>;
 }
