@@ -1,11 +1,23 @@
 import {Link, useHistory} from "react-router-dom";
 import Logo from "./icons/MyFavMovies-transparent.png";
+import {UserAuth} from "../context/AuthContext";
 
 export default function Navbar() {
     const history = useHistory();
+    const {user, logOut} = UserAuth();
+    console.log("user:");
+    console.log(user);
 
-    const click = () => {
-      history.push('/login');
+    const login = () => {
+        history.push('/login');
+    }
+    const logout = async () => {
+        try {
+            await logOut();
+            history.push('/');
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return (<nav>
@@ -17,10 +29,13 @@ export default function Navbar() {
                 <Link to="/search" className="navbar-btn">Search</Link>
             </div>
             <div className="navbar_item">
-                <div className="account flex">
+                {user?.email ? <div className="account flex">
                     <Link to="/account" className="navbar-btn m-auto">Account</Link>
-                    <button className="logout-btn button" onClick={click}>Login</button>
-                </div>
+                        <button className="logout-btn button" onClick={logout}>Log Out</button>
+                </div> :
+                    <div className="account flex">
+                        <button className="logout-btn button" onClick={login}>Sign In</button>
+                    </div>}
             </div>
         </div>
     </nav>);

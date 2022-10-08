@@ -1,10 +1,13 @@
 import Layout from "./Layout";
 import {useState} from "react";
-import {useHistory} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
+import {UserAuth} from "../context/AuthContext";
 
 export default function Login() {
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const {logIn} = UserAuth();
     const history = useHistory();
 
     document.onmousedown = () => {
@@ -12,37 +15,37 @@ export default function Login() {
     };
 
     function setUsernameHandler(evt) {
-        setUsername(evt.target.value);
+        setEmail(evt.target.value);
     }
 
     function setPasswordHandler(evt) {
         setPassword(evt.target.value);
     }
 
-    function login() {
-        fetch('/api/login', {
-            method: 'POST',
-            body: JSON.stringify({username, password}),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then((res) => res.json().then(res => {
-            if (res.user) {
-                setUsername('');
-                setPassword('');
+    const login = async (e) => {
+        e.preventDefault();
+        try {
+            await (logIn(email, password)).then(() => {
                 history.push('/');
-            }
-        }))
+            }).catch((error) => {
+                setError(error.message);
+            });
+        } catch (error) {
+            console.log(error);
+            setError(error.message);
+        }
     }
 
     return <Layout>
         <div className="login-panel">
             <div className="text-4xl text-center font-bold mb-5">Log In</div>
-            <input className="text_field" type="text" placeholder="Username" onChange={setUsernameHandler} value={username}/>
+            {error ? <p className=''>{error.toString()} </p> : null}
+            <input className="text_field" type="text" placeholder="Email" onChange={setUsernameHandler} value={email}/>
             <p></p>
             <input className="text_field" type="password" placeholder="Password" onChange={setPasswordHandler} value={password}/>
             <p></p>
             <button className="login-btn button" onClick={login}>Log In</button>
+            <div className="mt-5"><Link to="/signup">Sign Up</Link></div>
         </div>
     </Layout>;
 }

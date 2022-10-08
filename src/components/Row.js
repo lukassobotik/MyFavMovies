@@ -9,7 +9,6 @@ export default function Row({title, fetchURL, rowId}) {
     const [isLoading, setIsLoading] = useState(true);
 
     let width = window.innerWidth;
-    console.log(width);
     if (width > 1250) {
         width = (width / 200);
         width = width - 3;
@@ -22,23 +21,14 @@ export default function Row({title, fetchURL, rowId}) {
     } else {
         width = (width / 200);
     }
-    console.log(width);
     width = Math.floor(width);
-    console.log(width);
 
     useEffect(() => {
         axios.get(fetchURL).then((response) => {
-            console.log("Movies: ");
-            console.log(response.data.results);
             setMovies(response.data.results);
             setAllMovies(response.data.results);
-            console.log("allMovies: ");
-            console.log(allMovies);
-            console.log("width: ");
-            console.log(width);
             setIsLoading(false);
             setMovies(response.data.results.slice(0, width));
-            document.getElementById("lastLoadedNum" + rowId).setAttribute('numValue', width.toString());
         }).catch((err) => {
             console.log(err);
         })
@@ -48,7 +38,7 @@ export default function Row({title, fetchURL, rowId}) {
 
     const left = () => {
         let element = document.getElementById("lastLoadedNum" + rowId);
-        let lastLoadedNum = document.getElementById("lastLoadedNum" + rowId).getAttribute('numValue');
+        let lastLoadedNum = document.getElementById("lastLoadedNum" + rowId)?.getAttribute('numvalue');
         lastLoadedNum = parseInt(lastLoadedNum);
 
         let newMovies;
@@ -60,17 +50,17 @@ export default function Row({title, fetchURL, rowId}) {
 
         lastLoadedNum = lastLoadedNum - width;
 
-        element.setAttribute("numValue", lastLoadedNum.toString());
+        element.setAttribute("numvalue", lastLoadedNum.toString());
         element.innerText = lastLoadedNum.toString();
         setMovies(newMovies);
 
         if (lastLoadedNum < 0) {
-            element.setAttribute("numValue", allMovies.length.toString());
+            element.setAttribute("numvalue", allMovies.length.toString());
         }
     }
     const right = () => {
         let element = document.getElementById("lastLoadedNum" + rowId);
-        let lastLoadedNum = document.getElementById("lastLoadedNum" + rowId).getAttribute('numValue');
+        let lastLoadedNum = document.getElementById("lastLoadedNum" + rowId).getAttribute('numvalue');
         lastLoadedNum = parseInt(lastLoadedNum);
 
         let newMovies;
@@ -82,12 +72,12 @@ export default function Row({title, fetchURL, rowId}) {
 
         lastLoadedNum = lastLoadedNum + width;
 
-        element.setAttribute("numValue", lastLoadedNum.toString());
+        element.setAttribute("numvalue", lastLoadedNum.toString());
         element.innerText = lastLoadedNum.toString();
         setMovies(newMovies);
 
         if (lastLoadedNum >= allMovies.length) {
-            element.setAttribute("numValue", "0");
+            element.setAttribute("numvalue", "0");
         }
     }
 
@@ -105,7 +95,7 @@ export default function Row({title, fetchURL, rowId}) {
                 <MdChevronRight className="arrow bg-red-500 rounded-full absolute opacity-50 hover:opacity-100 cursor-pointer z-10 right-0 hidden group-hover:block" size={40} onClick={right}/>
                 <MdChevronLeft className="arrow bg-red-500 rounded-full absolute opacity-50 hover:opacity-100 cursor-pointer z-10 left-0 hidden group-hover:block" size={40} onClick={left}/>
             </div>
-            <div id={"lastLoadedNum" + rowId} className="hidden" numValue={0}></div>
+            <div id={"lastLoadedNum" + rowId} className="hidden" numvalue={0}></div>
         </div>
     )
 }
