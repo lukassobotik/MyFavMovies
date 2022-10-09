@@ -158,3 +158,20 @@ code {
   overflow-x: visible;
   overflow-y: visible;
 }
+
+.youtube-container {
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: auto;
+  position: absolute;
+  overflow: hidden;
+  aspect-ratio: 16/9;
+  pointer-events: none;
+}
+
+.youtube-container iframe {
+  width: 300%;
+  height: 100%;
+  margin-left: -100%;
+}

@@ -27,6 +27,7 @@ export default function Row({title, fetchURL, rowId}) {
         axios.get(fetchURL).then((response) => {
             setMovies(response.data.results);
             setAllMovies(response.data.results);
+            console.log(response.data.results);
             setIsLoading(false);
             setMovies(response.data.results.slice(0, width));
         }).catch((err) => {
