@@ -9,7 +9,7 @@ export default function SignUp() {
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
     const [error, setError] = useState('');
-    const {signUp} = UserAuth()
+    const {signUp, logOut} = UserAuth()
     const auth = getAuth();
     const history = useHistory();
 
@@ -37,6 +37,7 @@ export default function SignUp() {
                     displayName: username
                 }).then(() => {
                     history.push('/');
+                    logout();
                 }).catch((error) => {
                     setError(error.message);
                 })
@@ -47,6 +48,15 @@ export default function SignUp() {
         } catch (error) {
             console.log(error);
             setError(error.message);
+        }
+    }
+
+    const logout = async () => {
+        try {
+            await logOut();
+            history.push('/login');
+        } catch (error) {
+            console.log(error);
         }
     }
 

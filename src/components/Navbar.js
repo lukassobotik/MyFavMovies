@@ -5,8 +5,6 @@ import {UserAuth} from "../context/AuthContext";
 export default function Navbar() {
     const history = useHistory();
     const {user, logOut} = UserAuth();
-    console.log("user:");
-    console.log(user);
 
     const login = () => {
         history.push('/login');

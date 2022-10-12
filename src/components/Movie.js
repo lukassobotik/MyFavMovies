@@ -10,7 +10,6 @@ export default function Movie({item, index, rowId, type}) {
     const trailerPath = `https://api.themoviedb.org/3/movie/${item?.id}/videos?api_key=${requests.key}`
     const [isLoading, setIsLoading] = useState(true);
     const [play, setPlay] = useState(false);
-    console.log(item)
 
     useEffect(() => {
         axios.get(logoPath).then((response) => {
@@ -82,7 +81,7 @@ export default function Movie({item, index, rowId, type}) {
                 <img id={"logo" + index + "-" + rowId} src={`https://image.tmdb.org/t/p/w500/`} alt={""} className="ml-5 mt-5 w-[0px] h-auto left-0 top-0 absolute"/>
                 {play ? <div className="youtube-container rounded-t">
                     <iframe src={`https://www.youtube.com/embed/${item?.trailerPath}?autoplay=1&controls=0&autohide=1?rel=0&amp&modestbranding=1`}
-                            title="YouTube video player"
+                            title={item.title + " Trailer"}
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowFullScreen loading="lazy"></iframe>
                 </div> : null}
