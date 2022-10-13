@@ -38,7 +38,7 @@ code {
 }
 
 .logout-btn {
-  background-image: linear-gradient(45deg, #FF512F 0%, #F09819  51%, #FF512F  100%);
+  background-image: linear-gradient(45deg, #fe934c 0%, #fc686f  51%, #fe934c  100%);
   margin-left: 10px;
   padding: 5px;
 }
@@ -53,7 +53,7 @@ code {
 
 .login-btn {
   width: 100%;
-  background-image: linear-gradient(45deg, #FF512F 0%, #F09819  51%, #FF512F  100%);
+  background-image: linear-gradient(45deg, #fe934c 0%, #fc686f  51%, #fe934c  100%);
   margin: 0 auto;
   padding: 15px 30px;
 }

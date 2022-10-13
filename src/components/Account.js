@@ -22,7 +22,7 @@ export default function Account() {
                         <img src={"https://cdn-icons-png.flaticon.com/512/3524/3524659.png"} alt="Settings" className="" onClick={settings}/>
                     </div>
                     <div className="flex justify-center">
-                        <div className="h-fit aspect-square w-3/5 mt-5 text-justify flex items-center justify-center rounded-full bg-gradient-to-r p-1 from-[#FF512F] to-[#F09819]">
+                        <div className="h-fit aspect-square w-3/5 mt-5 text-justify flex items-center justify-center rounded-full bg-gradient-to-r p-1 from-[#fe934c] to-[#fc686f]">
                             <div className="w-full h-full text-justify flex items-center justify-center rounded-full overflow-hidden">
                                 <img src={"https://cdn-icons-png.flaticon.com/512/456/456212.png"} alt="PFP" className="p-10"/>
                             </div>
