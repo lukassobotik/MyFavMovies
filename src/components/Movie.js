@@ -1,8 +1,8 @@
 import {useHistory} from "react-router-dom";
-import Marquee from "react-fast-marquee";
 import requests from "./requests";
 import {useEffect, useState} from "react";
 import axios from "axios";
+import {MdPlayCircle, MdOutlineAddCircle, MdStars} from "react-icons/md"
 
 export default function Movie({item, index, rowId, type}) {
     const history = useHistory();
@@ -72,11 +72,22 @@ export default function Movie({item, index, rowId, type}) {
         history.push("/" + type + "/" + item?.id);
     }
 
+    const clickPlay = () => {
+
+    }
+    const clickList = () => {
+
+    }
+    const clickRate = () => {
+
+    }
+
+
     return (
-        !isLoading && <div id={"itemId" + index + "-" + rowId} className='w-[200px] sm:w-[240px] md:w-[280px] inline-block cursor-pointer relative p-2'>
-        <div className="row_item" onMouseOver={hover} onMouseLeave={hide} onClick={click}>
-            <div id={"player" + index + "-" + rowId} className="">
-                <img id={"img" + index + "-" + rowId} className='w-full h-auto block overflow-visible rounded-t'
+        !isLoading && <div id={"itemId" + index + "-" + rowId} className='w-[200px] sm:w-[240px] md:w-[280px] inline-block cursor-pointer relative p-2 group'>
+        <div className="row_item" onMouseOver={hover} onMouseLeave={hide}>
+            <div id={"player" + index + "-" + rowId} className="" onClick={click}>
+                <img id={"img" + index + "-" + rowId} className='w-full h-auto block overflow-visible rounded'
                      src={`https://image.tmdb.org/t/p/w500/${item.backdrop_path}`} alt={item.title}/>
                 <img id={"logo" + index + "-" + rowId} src={`https://image.tmdb.org/t/p/w500/`} alt={""} className="ml-5 mt-5 w-[0px] h-auto left-0 top-0 absolute"/>
                 {play ? <div className="youtube-container rounded-t">
@@ -86,17 +97,16 @@ export default function Movie({item, index, rowId, type}) {
                             allowFullScreen loading="lazy"></iframe>
                 </div> : null}
             </div>
-            <div className='absolute top-0 left-0 w-full h-full opacity-0'>
-                <p className="whitespace-normal text-xs md:text-sm font-bold flex justify-center items-center h-full text-center">{item?.title}</p>
-                <div className="w-full font-bold text-center text-white">{item?.title}</div>
-            </div>
             <div id={"card" + index + "-" + rowId} className="w-full bg-black invisible rounded-b whitespace-nowrap overflow-hidden">
-                <Marquee videoId={"marquee" + index + "-" + rowId} gradient={false} play={play}>
-                    <div className="text-white whitespace-nowrap text-xs md:text-sm font-extrabold  w-fit overflow-hidden flex-nowrap justify-center items-center h-full text-center">
-                        {item?.title + "⠀⠀⠀⠀"}
-                    </div>
-                </Marquee>
-                <div className="flex items-center items-stretch">
+                <div className="text-white text-xs md:text-sm font-extrabold w-full h-full overflow-hidden flex items-center justify-center text-center">
+                    {item?.title}
+                </div>
+                <div className="flex items-center justify-center text-center">
+                    <MdPlayCircle size={30} onClick={clickPlay}/>
+                    <MdOutlineAddCircle size={30} onClick={clickList}/>
+                    <MdStars size={30} onClick={clickRate}/>
+                </div>
+                <div className="flex items-center items-stretch justify-center">
                     <div className="text-white whitespace-normal w-auto mr-5 text-xs md:text-sm font-bold flex-nowrap inline-block items-center h-full text-left">{item?.release_date}</div>
                     <div className="text-green-600 whitespace-normal w-auto text-xs md:text-sm font-bold flex-nowrap inline-block items-center h-full text-left">{item?.vote_average}</div>
                 </div>
