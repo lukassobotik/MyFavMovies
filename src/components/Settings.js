@@ -38,10 +38,10 @@ export default function Settings() {
 
     return (
         <Layout>
-            <div className="login-panel">
-                <h1>Settings</h1>
-                <input className="text_field" type="text" placeholder="Photo URL" onChange={setPfpUrlHandler} value={pfpUrl} onFocus={() => {setIsPfpUrlFocused(true)}}/>
-                <button className="login-btn button" onClick={save}>Save</button>
+            <div className="settings-panel w-[75%]">
+                <div className="text-left font-bold mb-2">Profile Picture URL</div>
+                <input className="text_field w-full" type="text" placeholder="Photo URL" onChange={setPfpUrlHandler} value={pfpUrl} onFocus={() => {setIsPfpUrlFocused(true)}}/>
+                <button className="settings-btn button" onClick={save}>Save</button>
             </div>
         </Layout>
     )
