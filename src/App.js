@@ -6,6 +6,7 @@ import {AuthContextProvider} from "./context/AuthContext";
 import SignUp from "./components/SignUp";
 import AccountProtectedRoute from "./components/AccountProtectedRoute";
 import Account from "./components/Account";
+import Settings from "./components/Settings";
 
 function App() {
     document.onmousedown = () => {
@@ -29,6 +30,9 @@ function App() {
                     </Route>
                     <Route path="/account" exact>
                         <AccountProtectedRoute><Account/></AccountProtectedRoute>
+                    </Route>
+                    <Route path="/settings" exact>
+                        <AccountProtectedRoute><Settings/></AccountProtectedRoute>
                     </Route>
                     <Route path="/movie/*" exact>
                         <h1>Movie</h1>

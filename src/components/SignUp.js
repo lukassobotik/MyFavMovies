@@ -9,7 +9,7 @@ export default function SignUp() {
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
     const [error, setError] = useState('');
-    const {signUp, logOut} = UserAuth()
+    const {signUp, logOut} = UserAuth();
     const auth = getAuth();
     const history = useHistory();
 
