@@ -191,7 +191,6 @@ code {
   flex-direction: column;
 }
 
-.profile_picture {
-  border-image-slice: 1;
-  border-image-source: linear-gradient(to left, #743ad5, #d53a9d);
+.MuiTab-label {
+  color:pink;
 }

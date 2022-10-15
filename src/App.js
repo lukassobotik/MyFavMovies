@@ -7,39 +7,51 @@ import SignUp from "./components/SignUp";
 import AccountProtectedRoute from "./components/AccountProtectedRoute";
 import Account from "./components/Account";
 import Settings from "./components/Settings";
+import {createTheme, ThemeProvider} from "@mui/material";
 
 function App() {
     document.onmousedown = () => {
         return false;
     };
+
+    const theme = createTheme({
+        palette: {
+            secondary: {
+                main: '#fc686f'
+            }
+        }
+    });
+
     return (
-        <AuthContextProvider>
-            <div className="App">
-                <Switch>
-                    <Route path="/" exact>
-                        <Redirect to="/browse"/>
-                    </Route>
-                    <Route path="/login/" exact>
-                        <Login/>
-                    </Route>
-                    <Route path="/signup/" exact>
-                        <SignUp/>
-                    </Route>
-                    <Route path="/browse" exact>
-                        <Browse/>
-                    </Route>
-                    <Route path="/account" exact>
-                        <AccountProtectedRoute><Account/></AccountProtectedRoute>
-                    </Route>
-                    <Route path="/settings" exact>
-                        <AccountProtectedRoute><Settings/></AccountProtectedRoute>
-                    </Route>
-                    <Route path="/movie/*" exact>
-                        <h1>Movie</h1>
-                    </Route>
-                </Switch>
-            </div>
-        </AuthContextProvider>
+        <ThemeProvider theme={theme}>
+            <AuthContextProvider>
+                <div className="App">
+                    <Switch>
+                        <Route path="/" exact>
+                            <Redirect to="/browse"/>
+                        </Route>
+                        <Route path="/login/" exact>
+                            <Login/>
+                        </Route>
+                        <Route path="/signup/" exact>
+                            <SignUp/>
+                        </Route>
+                        <Route path="/browse" exact>
+                            <Browse/>
+                        </Route>
+                        <Route path="/account" exact>
+                            <AccountProtectedRoute><Account/></AccountProtectedRoute>
+                        </Route>
+                        <Route path="/settings" exact>
+                            <AccountProtectedRoute><Settings/></AccountProtectedRoute>
+                        </Route>
+                        <Route path="/movie/*" exact>
+                            <h1>Movie</h1>
+                        </Route>
+                    </Switch>
+                </div>
+            </AuthContextProvider>
+        </ThemeProvider>
     );
 }
 
