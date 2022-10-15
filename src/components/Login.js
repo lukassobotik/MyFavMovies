@@ -2,6 +2,7 @@ import Layout from "./Layout";
 import {useState} from "react";
 import {Link, useHistory} from "react-router-dom";
 import {UserAuth} from "../context/AuthContext";
+import {Alert} from "@mui/material";
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -39,10 +40,10 @@ export default function Login() {
     return <Layout>
         <div className="login-panel">
             <div className="text-4xl text-center font-bold mb-5">Log In</div>
-            {error ? <p className=''>{error.toString()} </p> : null}
-            <input className="text_field" type="text" placeholder="Email" onChange={setUsernameHandler} value={email}/>
+            {error ? <Alert className="mb-2" variant="filled" severity="error">{error.toString()}</Alert> : null}
+            <input className="text_field w-full" type="text" placeholder="Email" onChange={setUsernameHandler} value={email}/>
             <p></p>
-            <input className="text_field" type="password" placeholder="Password" onChange={setPasswordHandler} value={password}/>
+            <input className="text_field w-full" type="password" placeholder="Password" onChange={setPasswordHandler} value={password}/>
             <p></p>
             <button className="login-btn button" onClick={login}>Log In</button>
             <div className="mt-5"><Link to="/signup">Sign Up</Link></div>

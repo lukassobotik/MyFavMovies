@@ -3,6 +3,7 @@ import {useState} from "react";
 import {Link, useHistory} from "react-router-dom";
 import {UserAuth} from "../context/AuthContext";
 import {getAuth, updateProfile} from "firebase/auth"
+import {Alert} from "@mui/material";
 
 export default function SignUp() {
     const [email, setEmail] = useState('');
@@ -63,12 +64,12 @@ export default function SignUp() {
     return <Layout>
         <div className="login-panel">
             <div className="text-4xl text-center font-bold mb-5">Sign Up</div>
-            {error ? <p className=''>{error.toString()} </p> : null}
-            <input className="text_field" type="text" placeholder="Username" onChange={setUsernameHandler} value={username}/>
+            {error ? <Alert className="mb-2" variant="filled" severity="error">{error.toString()}</Alert> : null}
+            <input className="text_field w-full" type="text" placeholder="Username" onChange={setUsernameHandler} value={username}/>
             <p></p>
-            <input className="text_field" type="text" placeholder="Email" onChange={setEmailHandler} value={email}/>
+            <input className="text_field w-full" type="text" placeholder="Email" onChange={setEmailHandler} value={email}/>
             <p></p>
-            <input className="text_field" type="password" placeholder="Password" onChange={setPasswordHandler} value={password}/>
+            <input className="text_field w-full" type="password" placeholder="Password" onChange={setPasswordHandler} value={password}/>
             <p></p>
             <button className="login-btn button" onClick={signup}>Sign Up</button>
             <div className="mt-5"><Link to="/login">Log In</Link></div>
