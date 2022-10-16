@@ -55,7 +55,7 @@ export default function Account() {
     return (
         <Layout>
             <div className="flex h-screen">
-                <div className="w-1/4 h-full border-r-2 border-r-black flex profile_overview text-xs sm:text-xs md:text-2xl lg:text-4xl">
+                <div className="w-1/4 h-fit rounded-3xl border-r-2 border-b-2 border-r-[#fc686f] border-b-[#fc686f] flex profile_overview text-xs sm:text-xs md:text-2xl lg:text-4xl">
                     <div className="relative m-2 w-[5px] sm:w-[15px] md:w-[25px] lg:w-[30px]">
                         <MdSettings className="" size={50} color="#000000" onClick={settings}/>
                     </div>
@@ -66,7 +66,7 @@ export default function Account() {
                             </div>
                         </div>
                     </div>
-                    <div className="mt-5 w-full">{user ? user.displayName : 'Username'}</div>
+                    <div className="mt-5 mb-5 w-full">{user ? user.displayName : 'Username'}</div>
                 </div>
                 <div className="w-3/4 h-full">
                     <Box sx={{ width: '100%' }}>
@@ -78,7 +78,10 @@ export default function Account() {
                             </Tabs>
                         </Box>
                         <TabPanel value={value} index={0}>
-                            <div>Watchlist Panel</div>
+                            <div className="whitespace-nowrap">
+                                <div className="bg-gray-600 w-full h-[100px] sm:h-[150px] md:h-[250px] lg:h-[350px] mb-5">Movie</div>
+                                <div className="bg-gray-600 w-full h-[100px] sm:h-[150px] md:h-[250px] lg:h-[350px] mb-5">Movie</div>
+                            </div>
                         </TabPanel>
                         <TabPanel value={value} index={1}>
                             <div>Rated Panel</div>

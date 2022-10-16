@@ -2,14 +2,17 @@ import {useHistory} from "react-router-dom";
 import requests from "./requests";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import {MdPlayCircle, MdOutlineAddCircle, MdStars} from "react-icons/md"
+import {MdOutlineAddCircle, MdPlayCircle, MdStars} from "react-icons/md"
+import {addDoc, collection} from "firebase/firestore";
+import {auth, db} from "../firebase";
 
-export default function Movie({item, index, rowId, type}) {
+export default function BrowseMovieCard({item, index, rowId, type}) {
     const history = useHistory();
     const logoPath = `https://api.themoviedb.org/3/movie/${item?.id}/images?api_key=${requests.key}`;
     const trailerPath = `https://api.themoviedb.org/3/movie/${item?.id}/videos?api_key=${requests.key}`
     const [isLoading, setIsLoading] = useState(true);
     const [play, setPlay] = useState(false);
+    console.log(item)
 
     useEffect(() => {
         axios.get(logoPath).then((response) => {
@@ -33,7 +36,7 @@ export default function Movie({item, index, rowId, type}) {
                 let type = trailer_item?.type;
 
                 if (lang === "en" && type === "Trailer") {
-                    item.trailerPath = vid_key;
+                    item.trailer_path = vid_key;
                 }
             })
 
@@ -75,8 +78,18 @@ export default function Movie({item, index, rowId, type}) {
     const clickPlay = () => {
 
     }
-    const clickList = () => {
+    async function clickList() {
+        try {
+            const docRef = await addDoc(collection(db, "users", auth.currentUser.uid.toString(), "watchlist"), {
+                item: item,
+                movieId: item?.id,
+                name: item?.title
+            });
 
+            console.log("Document written with ID: ", docRef.id);
+        } catch (e) {
+            console.error("Error adding document: ", e);
+        }
     }
     const clickRate = () => {
 
@@ -91,7 +104,7 @@ export default function Movie({item, index, rowId, type}) {
                      src={`https://image.tmdb.org/t/p/w500/${item.backdrop_path}`} alt={item.title}/>
                 <img id={"logo" + index + "-" + rowId} src={`https://image.tmdb.org/t/p/w500/`} alt={""} className="ml-5 mt-5 w-[0px] h-auto left-0 top-0 absolute"/>
                 {play ? <div className="youtube-container rounded-t">
-                    <iframe src={`https://www.youtube.com/embed/${item?.trailerPath}?autoplay=1&controls=0&autohide=1?rel=0&amp&modestbranding=1`}
+                    <iframe src={`https://www.youtube.com/embed/${item?.trailer_path}?autoplay=1&controls=0&autohide=1?rel=0&amp&modestbranding=1`}
                             title={item.title + " Trailer"}
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowFullScreen loading="lazy"></iframe>

@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
-import Movie from "./Movie";
+import BrowseMovieCard from "./BrowseMovieCard";
 import {MdChevronLeft, MdChevronRight} from "react-icons/md"
 
 export default function Row({title, fetchURL, rowId}) {
@@ -90,7 +90,7 @@ export default function Row({title, fetchURL, rowId}) {
                      className="slider w-full h-full relative">
                     {movies?.map((item, id) => {
                         index++;
-                        return (<Movie key={id} item={item} index={index} rowId={rowId} type={"movie"}/>)
+                        return (<BrowseMovieCard key={id} item={item} index={index} rowId={rowId} type={"movie"}/>)
                     })}
                 </div>
                 <MdChevronRight className="arrow bg-red-500 rounded-full absolute opacity-50 hover:opacity-100 cursor-pointer z-10 right-0 hidden group-hover:block" size={40} onClick={right}/>
