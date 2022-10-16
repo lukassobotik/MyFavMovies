@@ -89,16 +89,13 @@ export default function Account() {
     return (
         !isLoading && <Layout>
             <div className="flex h-screen">
-                <div
-                    className="w-1/4 h-fit rounded-3xl border-r-2 border-b-2 border-r-[#fc686f] border-b-[#fc686f] flex profile_overview text-xs sm:text-xs md:text-2xl lg:text-4xl">
-                    <div className="relative m-2 w-[5px] sm:w-[15px] md:w-[25px] lg:w-[30px]">
-                        <MdSettings className="" size={50} color="#000000" onClick={settings}/>
+                <div className="w-1/4 h-fit rounded-3xl border-r-2 border-b-2 border-r-[#fc686f] border-b-[#fc686f] flex profile_overview text-xs sm:text-xs md:text-2xl lg:text-4xl">
+                    <div className="relative m-2 w-[15px] sm:w-[30px] md:w-[50px] lg:w-[60px]">
+                        <MdSettings className="w-fit" size={50} color="#FFFFFF" onClick={settings}/>
                     </div>
                     <div className="flex justify-center">
-                        <div
-                            className="h-fit aspect-square w-3/5 text-justify flex items-center justify-center rounded-full bg-gradient-to-r p-1 from-[#fe934c] to-[#fc686f]">
-                            <div
-                                className="w-full h-full text-justify flex items-center justify-center rounded-full overflow-hidden">
+                        <div className="h-fit aspect-square w-3/5 text-justify flex items-center justify-center rounded-full bg-gradient-to-r p-1 from-[#fe934c] to-[#fc686f]">
+                            <div className="w-full h-full text-justify flex items-center justify-center rounded-full overflow-hidden">
                                 {user.photoURL ? <img src={user.photoURL} alt="Invalid URl"/> :
                                     <MdPerson className="" size={500} color="#000000"/>}
                             </div>
@@ -121,9 +118,9 @@ export default function Account() {
                             <div className="whitespace-nowrap">
                                 {watchlist.map((item, id) => {
                                     return (
-                                        <div className="bg-gray-600 w-full h-[100px] sm:h-[150px] md:h-[250px] lg:h-[350px] mb-5 rounded-3xl flex" key={id}>
-                                            <img className="h-[100px] sm:h-[150px] md:h-[250px] lg:h-[350px] rounded-l-3xl" src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} alt={item?.title}/>
-                                            <div className="relative overflow-y-auto overflow-x-hidden">
+                                        <div className="w-full h-[100px] sm:h-[150px] md:h-[250px] lg:h-[350px] mb-5 rounded-3xl flex border-2 border-[#fc686f] bg-[#2b2b2b]" key={id}>
+                                            <img className="h-[96px] sm:h-[146px] md:h-[246px] lg:h-[346px] rounded-l-3xl" src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} alt={item?.title}/>
+                                            <div className="relative overflow-y-auto overflow-x-hidden text-xs sm:text-xs md:text-xl lg:text-2xl">
                                                 <div className="font-extrabold m-3 w-full text-left break-words">{item?.title}</div>
                                                 <div className="inline-block w-fit h-fit whitespace-pre-wrap mr-3 ml-3 text-left">{item?.overview}</div>
                                             </div>
