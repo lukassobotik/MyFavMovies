@@ -190,7 +190,3 @@ code {
 .profile_overview {
   flex-direction: column;
 }
-
-.MuiTab-label {
-  color:pink;
-}
