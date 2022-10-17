@@ -12,7 +12,6 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
     const trailerPath = `https://api.themoviedb.org/3/movie/${item?.id}/videos?api_key=${requests.key}`
     const [isLoading, setIsLoading] = useState(true);
     const [play, setPlay] = useState(false);
-    console.log(item)
 
     useEffect(() => {
         axios.get(logoPath).then((response) => {
@@ -95,9 +94,8 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
 
     }
 
-
     return (
-        !isLoading && <div id={"itemId" + index + "-" + rowId} className='w-[200px] sm:w-[240px] md:w-[280px] inline-block cursor-pointer relative p-2 group'>
+        !isLoading && <div id={"itemId" + index + "-" + rowId} className='w-[200px] sm:w-[240px] md:w-[280px] inline-block cursor-pointer relative p-2 group' data-index={index}>
         <div id={"itemInRowId" + index} className="row_item" onMouseOver={hover} onMouseLeave={hide}>
             <div id={"player" + index + "-" + rowId} className="" onClick={click}>
                 <img id={"img" + index + "-" + rowId} className='w-full h-auto block overflow-visible rounded'

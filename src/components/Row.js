@@ -2,26 +2,13 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import BrowseMovieCard from "./BrowseMovieCard";
 import {MdChevronLeft, MdChevronRight} from "react-icons/md"
+import {useHistory} from "react-router-dom";
 
+let pos = 1;
 export default function Row({title, fetchURL, rowId}) {
     const [allMovies, setAllMovies] = useState([]);
     const [movies, setMovies] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-
-    let width = window.innerWidth;
-    if (width > 1250) {
-        width = (width / 200);
-        width = width - 3;
-    } else if (width < 1250 && width > 800){
-        width = (width / 200);
-        width = width - 2;
-    } else if (width < 800 && width > 600) {
-        width = (width / 200);
-        width = width - 1;
-    } else {
-        width = (width / 200);
-    }
-    width = Math.floor(width);
 
     useEffect(() => {
         axios.get(fetchURL).then((response) => {
@@ -29,7 +16,7 @@ export default function Row({title, fetchURL, rowId}) {
             setAllMovies(response.data.results);
             console.log(response.data.results);
             setIsLoading(false);
-            setMovies(response.data.results.slice(0, width));
+            // setMovies(response.data.results.slice(0, width));
         }).catch((err) => {
             console.log(err);
         })
@@ -39,58 +26,44 @@ export default function Row({title, fetchURL, rowId}) {
 
     const left = () => {
         let element = document.getElementById("lastLoadedNum" + rowId);
-        let lastLoadedNum = document.getElementById("lastLoadedNum" + rowId)?.getAttribute('numvalue');
-        lastLoadedNum = parseInt(lastLoadedNum);
+        let card = document.getElementById("itemId" + pos + "-" + rowId);
+        pos = parseInt(document.getElementById("lastLoadedNum" + rowId)?.getAttribute('numvalue'));
 
-        let newMovies;
-        if (lastLoadedNum - width < 0) {
-            newMovies = allMovies?.slice(lastLoadedNum - width);
-        } else {
-            newMovies = allMovies?.slice((lastLoadedNum - width), lastLoadedNum);
-        }
+        if (pos - 1 > 0) pos--;
 
-        lastLoadedNum = lastLoadedNum - width;
+        console.log(pos);
 
-        element.setAttribute("numvalue", lastLoadedNum.toString());
-        element.innerText = lastLoadedNum.toString();
-        setMovies(newMovies);
+        card.style.display = "inline-block";
 
-        if (lastLoadedNum < 0) {
-            element.setAttribute("numvalue", allMovies.length.toString());
-        }
+        element.setAttribute("numvalue", pos.toString());
     }
     const right = () => {
         let element = document.getElementById("lastLoadedNum" + rowId);
-        let lastLoadedNum = document.getElementById("lastLoadedNum" + rowId).getAttribute('numvalue');
-        lastLoadedNum = parseInt(lastLoadedNum);
+        let card = document.getElementById("itemId" + pos + "-" + rowId);
+        pos = parseInt(document.getElementById("lastLoadedNum" + rowId)?.getAttribute('numvalue'));
 
-        let newMovies;
-        if (lastLoadedNum >= allMovies.length) {
-            newMovies = allMovies?.slice(0, width);
-        } else {
-            newMovies = allMovies?.slice(lastLoadedNum, (lastLoadedNum + width));
-        }
+        console.log(pos);
 
-        lastLoadedNum = lastLoadedNum + width;
+        card.style.display = "none";
 
-        element.setAttribute("numvalue", lastLoadedNum.toString());
-        element.innerText = lastLoadedNum.toString();
-        setMovies(newMovies);
+        if (pos + 1 < allMovies.length) pos++;
 
-        if (lastLoadedNum >= allMovies.length) {
-            element.setAttribute("numvalue", "0");
-        }
+        element.setAttribute("numvalue", pos.toString());
     }
+
+    useHistory().listen(() => {
+        pos = 1;
+    })
 
     return (
         !isLoading && <div className="">
             <h2 className='text-white font-bold md:text-xl p-4 text-left'> {title} </h2>
-            <div id={"row:" + rowId} className="carousel_row relative flex items-center group">
+            <div id={"row:" + rowId} className="carousel_row relative flex whitespace-nowrap items-center group">
                 <div id={'slider' + rowId}
                      className="slider w-full h-full relative">
                     {movies?.map((item, id) => {
                         index++;
-                        return (<BrowseMovieCard key={id} item={item} index={index} rowId={rowId} type={"movie"}/>)
+                        return (<BrowseMovieCard key={id} item={item} index={index} rowId={rowId} type={item.media_type ? item.media_type : "movie"}/>)
                     })}
                 </div>
                 <MdChevronRight className="arrow bg-red-500 rounded-full absolute opacity-50 hover:opacity-100 cursor-pointer z-10 right-0 hidden group-hover:block" size={40} onClick={right}/>
