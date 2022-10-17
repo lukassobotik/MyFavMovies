@@ -156,6 +156,10 @@ code {
   z-index: 100;
 }
 
+#itemInRowId1 {
+  transform-origin: left;
+}
+
 .arrow {
   z-index: 101;
   overflow: hidden;

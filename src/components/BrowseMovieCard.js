@@ -98,7 +98,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
 
     return (
         !isLoading && <div id={"itemId" + index + "-" + rowId} className='w-[200px] sm:w-[240px] md:w-[280px] inline-block cursor-pointer relative p-2 group'>
-        <div className="row_item" onMouseOver={hover} onMouseLeave={hide}>
+        <div id={"itemInRowId" + index} className="row_item" onMouseOver={hover} onMouseLeave={hide}>
             <div id={"player" + index + "-" + rowId} className="" onClick={click}>
                 <img id={"img" + index + "-" + rowId} className='w-full h-auto block overflow-visible rounded'
                      src={`https://image.tmdb.org/t/p/w500/${item.backdrop_path}`} alt={item.title}/>
