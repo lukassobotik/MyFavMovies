@@ -110,7 +110,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
                             allowFullScreen loading="lazy"></iframe>
                 </div> : null}
             </div>
-            <div id={"card" + index + "-" + rowId} className="w-full bg-black invisible rounded-b whitespace-nowrap overflow-hidden">
+            <div id={"card" + index + "-" + rowId} className="fixed w-full bg-black invisible rounded-b whitespace-nowrap overflow-hidden">
                 <div className="text-white text-xs md:text-sm font-extrabold w-full h-full overflow-hidden flex items-center justify-center text-center">
                     {item?.title}
                 </div>
