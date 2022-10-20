@@ -5,4 +5,4 @@
 - [ ] Remove items from wathchlist
 - [ ] Show that a movie is already added to watchlist
 - [ ] Document how to self host the firebase server
-- [ ] Figure out how to decide what movies are relevant to the user
+- [x] Figure out how to decide what movies are relevant to the user
