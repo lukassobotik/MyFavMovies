@@ -4,6 +4,8 @@ import BrowseMovieCard from "./BrowseMovieCard";
 import {MdChevronLeft, MdChevronRight} from "react-icons/md"
 import {useHistory} from "react-router-dom";
 
+const scrollAmountPerClick = 3;
+
 let pos = 1;
 export default function Row({title, fetchURL, rowId}) {
     const [allMovies, setAllMovies] = useState([]);
@@ -25,30 +27,34 @@ export default function Row({title, fetchURL, rowId}) {
     let index = 0;
 
     const left = () => {
-        let element = document.getElementById("lastLoadedNum" + rowId);
-        let card = document.getElementById("itemId" + pos + "-" + rowId);
-        pos = parseInt(document.getElementById("lastLoadedNum" + rowId)?.getAttribute('numvalue'));
+        for (let i = 0; i < scrollAmountPerClick; i++) {
+            let element = document.getElementById("slider" + rowId);
+            let card = document.getElementById("itemId" + pos + "-" + rowId);
+            pos = parseInt(document.getElementById("slider" + rowId)?.getAttribute('numvalue'));
 
-        if (pos - 1 > 0) pos--;
+            if (pos - 1 > 0) pos--;
 
-        console.log(pos);
+            console.log(pos);
 
-        card.style.display = "inline-block";
+            card.style.display = "inline-block";
 
-        element.setAttribute("numvalue", pos.toString());
+            element.setAttribute("numvalue", pos.toString());
+        }
     }
     const right = () => {
-        let element = document.getElementById("lastLoadedNum" + rowId);
-        let card = document.getElementById("itemId" + pos + "-" + rowId);
-        pos = parseInt(document.getElementById("lastLoadedNum" + rowId)?.getAttribute('numvalue'));
+        for (let i = 0; i < scrollAmountPerClick; i++) {
+            let element = document.getElementById("slider" + rowId);
+            let card = document.getElementById("itemId" + pos + "-" + rowId);
+            pos = parseInt(document.getElementById("slider" + rowId)?.getAttribute('numvalue'));
 
-        console.log(pos);
+            console.log(pos);
 
-        card.style.display = "none";
+            card.style.display = "none";
 
-        if (pos + 1 < allMovies.length) pos++;
+            if (pos + 1 < allMovies.length) pos++;
 
-        element.setAttribute("numvalue", pos.toString());
+            element.setAttribute("numvalue", pos.toString());
+        }
     }
 
     useHistory().listen(() => {
@@ -60,7 +66,8 @@ export default function Row({title, fetchURL, rowId}) {
             <h2 className='text-white font-bold md:text-xl p-4 text-left'> {title} </h2>
             <div id={"row:" + rowId} className="carousel_row relative flex whitespace-nowrap items-center group">
                 <div id={'slider' + rowId}
-                     className="slider w-full h-full relative">
+                     className="slider w-full h-full relative"
+                     numvalue={1}>
                     {movies?.map((item, id) => {
                         index++;
                         return (<BrowseMovieCard key={id} item={item} index={index} rowId={rowId} type={item.media_type ? item.media_type : "movie"}/>)
@@ -69,7 +76,6 @@ export default function Row({title, fetchURL, rowId}) {
                 <MdChevronRight className="arrow bg-red-500 rounded-full absolute opacity-50 hover:opacity-100 cursor-pointer z-10 right-0 hidden group-hover:block" size={40} onClick={right}/>
                 <MdChevronLeft className="arrow bg-red-500 rounded-full absolute opacity-50 hover:opacity-100 cursor-pointer z-10 left-0 hidden group-hover:block" size={40} onClick={left}/>
             </div>
-            <div id={"lastLoadedNum" + rowId} className="hidden" numvalue={0}></div>
         </div>
     )
 }
