@@ -8,5 +8,8 @@ export default function Layout({children}) {
             </div>
         </header>
         <section>{children}</section>
+        <footer className="h-[250px]">
+
+        </footer>
     </>
 }

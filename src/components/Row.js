@@ -2,26 +2,15 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import BrowseMovieCard from "./BrowseMovieCard";
 import {MdChevronLeft, MdChevronRight} from "react-icons/md"
+import {useHistory} from "react-router-dom";
 
+const scrollAmountPerClick = 3;
+
+let pos = 1;
 export default function Row({title, fetchURL, rowId}) {
     const [allMovies, setAllMovies] = useState([]);
     const [movies, setMovies] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-
-    let width = window.innerWidth;
-    if (width > 1250) {
-        width = (width / 200);
-        width = width - 3;
-    } else if (width < 1250 && width > 800){
-        width = (width / 200);
-        width = width - 2;
-    } else if (width < 800 && width > 600) {
-        width = (width / 200);
-        width = width - 1;
-    } else {
-        width = (width / 200);
-    }
-    width = Math.floor(width);
 
     useEffect(() => {
         axios.get(fetchURL).then((response) => {
@@ -29,7 +18,7 @@ export default function Row({title, fetchURL, rowId}) {
             setAllMovies(response.data.results);
             console.log(response.data.results);
             setIsLoading(false);
-            setMovies(response.data.results.slice(0, width));
+            // setMovies(response.data.results.slice(0, width));
         }).catch((err) => {
             console.log(err);
         })
@@ -37,66 +26,72 @@ export default function Row({title, fetchURL, rowId}) {
 
     let index = 0;
 
+    const setLeftOrigin = () => {
+        let numvalue = parseInt(document.getElementById("slider" + rowId)?.getAttribute('numvalue'));
+        let card = document.getElementById("itemInRowId" + numvalue + "-" + rowId);
+        card.style.transformOrigin = "left";
+    }
+
+    const resetOrigin = (pos) => {
+        let card = document.getElementById("itemInRowId" + pos + "-" + rowId);
+        if (card) card.style.transformOrigin = "center";
+    }
+
     const left = () => {
-        let element = document.getElementById("lastLoadedNum" + rowId);
-        let lastLoadedNum = document.getElementById("lastLoadedNum" + rowId)?.getAttribute('numvalue');
-        lastLoadedNum = parseInt(lastLoadedNum);
+        resetOrigin(pos);
+        for (let i = 0; i <= scrollAmountPerClick; i++) {
+            let element = document.getElementById("slider" + rowId);
+            pos = parseInt(document.getElementById("slider" + rowId)?.getAttribute('numvalue'));
+            let card = document.getElementById("itemId" + pos + "-" + rowId);
 
-        let newMovies;
-        if (lastLoadedNum - width < 0) {
-            newMovies = allMovies?.slice(lastLoadedNum - width);
-        } else {
-            newMovies = allMovies?.slice((lastLoadedNum - width), lastLoadedNum);
+            if (pos - 1 > 0) pos--;
+
+            console.log(pos);
+
+            if (card) card.style.display = "inline-block";
+
+            element.setAttribute("numvalue", pos.toString());
         }
 
-        lastLoadedNum = lastLoadedNum - width;
-
-        element.setAttribute("numvalue", lastLoadedNum.toString());
-        element.innerText = lastLoadedNum.toString();
-        setMovies(newMovies);
-
-        if (lastLoadedNum < 0) {
-            element.setAttribute("numvalue", allMovies.length.toString());
-        }
+        setLeftOrigin();
     }
     const right = () => {
-        let element = document.getElementById("lastLoadedNum" + rowId);
-        let lastLoadedNum = document.getElementById("lastLoadedNum" + rowId).getAttribute('numvalue');
-        lastLoadedNum = parseInt(lastLoadedNum);
+        for (let i = 0; i < scrollAmountPerClick; i++) {
+            let element = document.getElementById("slider" + rowId);
+            let card = document.getElementById("itemId" + pos + "-" + rowId);
+            pos = parseInt(document.getElementById("slider" + rowId)?.getAttribute('numvalue'));
 
-        let newMovies;
-        if (lastLoadedNum >= allMovies.length) {
-            newMovies = allMovies?.slice(0, width);
-        } else {
-            newMovies = allMovies?.slice(lastLoadedNum, (lastLoadedNum + width));
+            console.log(pos);
+
+            if (card) card.style.display = "none";
+
+            if (pos + 1 < allMovies.length) pos++;
+
+            element.setAttribute("numvalue", pos.toString());
         }
 
-        lastLoadedNum = lastLoadedNum + width;
-
-        element.setAttribute("numvalue", lastLoadedNum.toString());
-        element.innerText = lastLoadedNum.toString();
-        setMovies(newMovies);
-
-        if (lastLoadedNum >= allMovies.length) {
-            element.setAttribute("numvalue", "0");
-        }
+        setLeftOrigin();
     }
+
+    useHistory().listen(() => {
+        pos = 1;
+    })
 
     return (
         !isLoading && <div className="">
             <h2 className='text-white font-bold md:text-xl p-4 text-left'> {title} </h2>
-            <div id={"row:" + rowId} className="carousel_row relative flex items-center group">
+            <div id={"row:" + rowId} className="carousel_row relative flex whitespace-nowrap items-center group">
                 <div id={'slider' + rowId}
-                     className="slider w-full h-full relative">
+                     className="slider w-full h-full relative"
+                     numvalue={1}>
                     {movies?.map((item, id) => {
                         index++;
-                        return (<BrowseMovieCard key={id} item={item} index={index} rowId={rowId} type={"movie"}/>)
+                        return (<BrowseMovieCard key={id} item={item} index={index} rowId={rowId} type={item.media_type ? item.media_type : "movie"}/>)
                     })}
                 </div>
                 <MdChevronRight className="arrow bg-red-500 rounded-full absolute opacity-50 hover:opacity-100 cursor-pointer z-10 right-0 hidden group-hover:block" size={40} onClick={right}/>
                 <MdChevronLeft className="arrow bg-red-500 rounded-full absolute opacity-50 hover:opacity-100 cursor-pointer z-10 left-0 hidden group-hover:block" size={40} onClick={left}/>
             </div>
-            <div id={"lastLoadedNum" + rowId} className="hidden" numvalue={0}></div>
         </div>
     )
 }

@@ -12,7 +12,6 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
     const trailerPath = `https://api.themoviedb.org/3/movie/${item?.id}/videos?api_key=${requests.key}`
     const [isLoading, setIsLoading] = useState(true);
     const [play, setPlay] = useState(false);
-    console.log(item)
 
     useEffect(() => {
         axios.get(logoPath).then((response) => {
@@ -95,10 +94,9 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
 
     }
 
-
     return (
-        !isLoading && <div id={"itemId" + index + "-" + rowId} className='w-[200px] sm:w-[240px] md:w-[280px] inline-block cursor-pointer relative p-2 group'>
-        <div id={"itemInRowId" + index} className="row_item" onMouseOver={hover} onMouseLeave={hide}>
+        !isLoading && <div id={"itemId" + index + "-" + rowId} className='w-[300px] inline-block cursor-pointer relative p-2 group' data-index={index}>
+        <div id={"itemInRowId" + index + "-" + rowId} className="row_item" onMouseOver={hover} onMouseLeave={hide}>
             <div id={"player" + index + "-" + rowId} className="" onClick={click}>
                 <img id={"img" + index + "-" + rowId} className='w-full h-auto block overflow-visible rounded'
                      src={`https://image.tmdb.org/t/p/w500/${item.backdrop_path}`} alt={item.title}/>
@@ -106,7 +104,6 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
                 {play ? <div className="youtube-container rounded-t">
                     <iframe src={`https://www.youtube.com/embed/${item?.trailer_path}?autoplay=1&controls=0&autohide=1?rel=0&amp&modestbranding=1`}
                             title={item.title + " Trailer"}
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowFullScreen loading="lazy"></iframe>
                 </div> : null}
             </div>
