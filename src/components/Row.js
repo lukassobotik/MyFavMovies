@@ -26,20 +26,34 @@ export default function Row({title, fetchURL, rowId}) {
 
     let index = 0;
 
+    const setLeftOrigin = () => {
+        let numvalue = parseInt(document.getElementById("slider" + rowId)?.getAttribute('numvalue'));
+        let card = document.getElementById("itemInRowId" + numvalue + "-" + rowId);
+        card.style.transformOrigin = "left";
+    }
+
+    const resetOrigin = (pos) => {
+        let card = document.getElementById("itemInRowId" + pos + "-" + rowId);
+        if (card) card.style.transformOrigin = "center";
+    }
+
     const left = () => {
-        for (let i = 0; i < scrollAmountPerClick; i++) {
+        resetOrigin(pos);
+        for (let i = 0; i <= scrollAmountPerClick; i++) {
             let element = document.getElementById("slider" + rowId);
-            let card = document.getElementById("itemId" + pos + "-" + rowId);
             pos = parseInt(document.getElementById("slider" + rowId)?.getAttribute('numvalue'));
+            let card = document.getElementById("itemId" + pos + "-" + rowId);
 
             if (pos - 1 > 0) pos--;
 
             console.log(pos);
 
-            card.style.display = "inline-block";
+            if (card) card.style.display = "inline-block";
 
             element.setAttribute("numvalue", pos.toString());
         }
+
+        setLeftOrigin();
     }
     const right = () => {
         for (let i = 0; i < scrollAmountPerClick; i++) {
@@ -49,12 +63,14 @@ export default function Row({title, fetchURL, rowId}) {
 
             console.log(pos);
 
-            card.style.display = "none";
+            if (card) card.style.display = "none";
 
             if (pos + 1 < allMovies.length) pos++;
 
             element.setAttribute("numvalue", pos.toString());
         }
+
+        setLeftOrigin();
     }
 
     useHistory().listen(() => {

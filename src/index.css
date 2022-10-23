@@ -152,11 +152,10 @@ code {
 .browse_container .row_item:focus,
 .browse_container .row_item:hover {
   transform: scale(1.5);
-  transform-origin: center;
   z-index: 100;
 }
 
-#itemInRowId1 {
+[id^="itemInRowId1"] {
   transform-origin: left;
 }
 
@@ -189,6 +188,7 @@ code {
   width: 300%;
   height: 100%;
   margin-left: -100%;
+  overflow: hidden;
 }
 
 .profile_overview {

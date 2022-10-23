@@ -8,5 +8,13 @@ export default function Layout({children}) {
             </div>
         </header>
         <section>{children}</section>
+        <footer>
+            <div>a</div>
+            <div>a</div>
+            <div>a</div>
+            <div>a</div>
+            <div>a</div>
+            <div>a</div>
+        </footer>
     </>
 }
