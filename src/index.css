@@ -155,7 +155,7 @@ code {
   z-index: 100;
 }
 
-[id^="itemInRowId1"] {
+[id^="itemInRowId1-"] {
   transform-origin: left;
 }
 
