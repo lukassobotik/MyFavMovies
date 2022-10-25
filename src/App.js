@@ -8,6 +8,7 @@ import AccountProtectedRoute from "./components/AccountProtectedRoute";
 import Account from "./components/Account";
 import Settings from "./components/Settings";
 import {createTheme, ThemeProvider} from "@mui/material";
+import Movie from "./components/Movie";
 
 function App() {
     document.onmousedown = () => {
@@ -46,7 +47,7 @@ function App() {
                             <AccountProtectedRoute><Settings/></AccountProtectedRoute>
                         </Route>
                         <Route path="/movie/*" exact>
-                            <h1>Movie</h1>
+                            <Movie/>
                         </Route>
                     </Switch>
                 </div>
