@@ -31,22 +31,36 @@ export default function Row({title, fetchURL, rowId}) {
         let card = document.getElementById("itemInRowId" + numvalue + "-" + rowId);
         card.style.transformOrigin = "left";
     }
-
     const resetOrigin = (pos) => {
         let card = document.getElementById("itemInRowId" + pos + "-" + rowId);
         if (card) card.style.transformOrigin = "center";
     }
 
+    const setLeftAnimation = () => {
+        let elements = document.getElementById("slider" + rowId).querySelectorAll(".row_item");
+        for (let i = 0; i < allMovies.length; i++) {
+            elements[i].style.transition = "all 0.7s ease-out";
+            elements[i].style.left = "-900px";
+        }
+    }
+
+    const setNoAnimation = () => {
+        let elements = document.getElementById("slider" + rowId).querySelectorAll(".row_item");
+        for (let i = 0; i < allMovies.length; i++) {
+            elements[i].style.transition = "none";
+            elements[i].style.left = "0";
+            elements[i].style.transition = "transform 450ms";
+        }
+    }
+
     const left = () => {
         resetOrigin(pos);
         for (let i = 0; i <= scrollAmountPerClick; i++) {
-            let element = document.getElementById("slider" + rowId);
             pos = parseInt(document.getElementById("slider" + rowId)?.getAttribute('numvalue'));
+            let element = document.getElementById("slider" + rowId);
             let card = document.getElementById("itemId" + pos + "-" + rowId);
 
             if (pos - 1 > 0) pos--;
-
-            console.log(pos);
 
             if (card) card.style.display = "inline-block";
 
@@ -58,14 +72,21 @@ export default function Row({title, fetchURL, rowId}) {
     const right = () => {
         for (let i = 0; i < scrollAmountPerClick; i++) {
             let element = document.getElementById("slider" + rowId);
-            let card = document.getElementById("itemId" + pos + "-" + rowId);
             pos = parseInt(document.getElementById("slider" + rowId)?.getAttribute('numvalue'));
-
-            console.log(pos);
-
-            if (card) card.style.display = "none";
+            let card = document.getElementById("itemId" + pos + "-" + rowId);
+            let fade = document.getElementById("itemInRowId" + pos + "-" + rowId);
 
             if (pos + 1 < allMovies.length) pos++;
+
+            setLeftAnimation();
+
+            function listener(event) {
+                if (card && event.propertyName === "left") card.style.display = "none";
+                setNoAnimation();
+                fade.removeEventListener('transitionend', listener);
+            }
+
+            fade.addEventListener('transitionend', listener);
 
             element.setAttribute("numvalue", pos.toString());
         }

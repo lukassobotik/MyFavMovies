@@ -5,7 +5,7 @@
 body {
   margin: 0;
   background-color: #131313;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   color: #FFF;
@@ -147,6 +147,7 @@ code {
   padding: 2px;
   flex: 1 1 0;
   transition: transform 450ms;
+  left: 0;
 }
 
 .browse_container .row_item:focus,
