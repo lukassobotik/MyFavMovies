@@ -33,8 +33,10 @@ export default function Row({title, fetchURL, rowId}) {
         card.style.transformOrigin = "left";
     }
     const resetOrigin = (pos) => {
-        let card = document.getElementById("itemInRowId" + pos + "-" + rowId);
-        if (card) card.style.transformOrigin = "center";
+        for (let i = pos; i <= allMovies.length; i++) {
+            let card = document.getElementById("itemInRowId" + i + "-" + rowId);
+            if (card) card.style.transformOrigin = "center";
+        }
     }
 
     const setAnimation = (direction) => {
