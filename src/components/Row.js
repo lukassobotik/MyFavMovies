@@ -5,6 +5,7 @@ import {MdChevronLeft, MdChevronRight} from "react-icons/md"
 import {useHistory} from "react-router-dom";
 
 const scrollAmountPerClick = 3;
+const movieItemWidth = 300;
 
 let pos = 1;
 export default function Row({title, fetchURL, rowId}) {
@@ -36,20 +37,18 @@ export default function Row({title, fetchURL, rowId}) {
         if (card) card.style.transformOrigin = "center";
     }
 
-    const setLeftAnimation = () => {
+    const setAnimation = (direction) => {
         let elements = document.getElementById("slider" + rowId).querySelectorAll(".row_item");
         for (let i = 0; i < allMovies.length; i++) {
-            elements[i].style.transition = "all 0.7s ease-out";
-            elements[i].style.left = "-900px";
-        }
-    }
-
-    const setNoAnimation = () => {
-        let elements = document.getElementById("slider" + rowId).querySelectorAll(".row_item");
-        for (let i = 0; i < allMovies.length; i++) {
-            elements[i].style.transition = "none";
-            elements[i].style.left = "0";
-            elements[i].style.transition = "transform 450ms";
+            let left = (parseInt(elements[i].style.left, 10));
+            let width = (document.getElementById("root").scrollWidth) - (movieItemWidth * scrollAmountPerClick);
+            if (direction === "right" && left > (-width)) {
+                elements[i].style.left = left + (-movieItemWidth) + "px";
+            } else if (direction === "left" && left < 0) {
+                elements[i].style.left = left + movieItemWidth + "px";
+            } else if (direction !== "left" && direction !== "right"){
+                console.error("wrong direction attribute");
+            }
         }
     }
 
@@ -58,11 +57,10 @@ export default function Row({title, fetchURL, rowId}) {
         for (let i = 0; i <= scrollAmountPerClick; i++) {
             pos = parseInt(document.getElementById("slider" + rowId)?.getAttribute('numvalue'));
             let element = document.getElementById("slider" + rowId);
-            let card = document.getElementById("itemId" + pos + "-" + rowId);
 
             if (pos - 1 > 0) pos--;
 
-            if (card) card.style.display = "inline-block";
+            setAnimation("left");
 
             element.setAttribute("numvalue", pos.toString());
         }
@@ -73,20 +71,10 @@ export default function Row({title, fetchURL, rowId}) {
         for (let i = 0; i < scrollAmountPerClick; i++) {
             let element = document.getElementById("slider" + rowId);
             pos = parseInt(document.getElementById("slider" + rowId)?.getAttribute('numvalue'));
-            let card = document.getElementById("itemId" + pos + "-" + rowId);
-            let fade = document.getElementById("itemInRowId" + pos + "-" + rowId);
 
             if (pos + 1 < allMovies.length) pos++;
 
-            setLeftAnimation();
-
-            function listener(event) {
-                if (card && event.propertyName === "left") card.style.display = "none";
-                setNoAnimation();
-                fade.removeEventListener('transitionend', listener);
-            }
-
-            fade.addEventListener('transitionend', listener);
+            setAnimation("right");
 
             element.setAttribute("numvalue", pos.toString());
         }

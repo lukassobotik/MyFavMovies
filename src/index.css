@@ -146,8 +146,8 @@ code {
   position: relative;
   padding: 2px;
   flex: 1 1 0;
-  transition: transform 450ms;
-  left: 0;
+  transition: all 450ms;
+  left: 1px;
 }
 
 .browse_container .row_item:focus,
