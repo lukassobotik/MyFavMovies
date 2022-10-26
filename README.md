@@ -8,4 +8,4 @@
 - [x] Figure out how to decide what movies are relevant to the user
 
 ## How will we decide what movies are relevant to you?
-We will take all tags on the current movies (for example "based on novel or book" or "based on comic") and the genres of the movie, after that we will put it in a list how many times you've liked that specific genre a tag and what rating you gave it.
+I will take all tags on the current movie (for example "based on novel or book" or "based on comic") and the genres of the movie, after that I will put it in a list how many times you've liked that specific genre a tag and what rating you gave it. From that I will find similar movies with similar tags and genres.
