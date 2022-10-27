@@ -3,7 +3,7 @@ import requests from "./requests";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {MdOutlineAddCircle, MdPlayCircle, MdStars, MdCheckCircle} from "react-icons/md"
-import {setDoc, doc, getDocs, collection} from "firebase/firestore";
+import {setDoc, deleteDoc, doc, getDocs, collection} from "firebase/firestore";
 import {auth, db} from "../firebase";
 
 export default function BrowseMovieCard({item, index, rowId, type}) {
@@ -112,11 +112,20 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
             name: item?.title
         }
         const user = auth.currentUser.uid.toString().trim();
-        try {
-            await setDoc(doc(db, "users", user, "watchlist", item.id.toString()), docData);
-            setIsOnWatchlist(true);
-        } catch (e) {
-            console.error("Error adding document: ", e);
+        if (!isOnWatchlist) {
+            try {
+                await setDoc(doc(db, "users", user, "watchlist", item.id.toString()), docData);
+                setIsOnWatchlist(true);
+            } catch (e) {
+                console.error("Error adding document: ", e);
+            }
+        } else {
+            try {
+                await deleteDoc(doc(db, "users", user, "watchlist", item.id.toString()));
+                setIsOnWatchlist(false);
+            } catch (e) {
+                console.error("Error adding document: ", e);
+            }
         }
     }
     const clickRate = () => {
@@ -142,7 +151,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
                 </div>
                 <div className="flex items-center justify-center text-center">
                     <MdPlayCircle size={30} onClick={clickPlay}/>
-                    {isOnWatchlist ? <MdCheckCircle size={30}/> : <MdOutlineAddCircle size={30} onClick={clickList}/>}
+                    {isOnWatchlist ? <MdCheckCircle size={30} onClick={clickList}/> : <MdOutlineAddCircle size={30} onClick={clickList}/>}
                     <MdStars size={30} onClick={clickRate}/>
                 </div>
                 <div className="flex items-center items-stretch justify-center">
