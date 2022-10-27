@@ -50,9 +50,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
         if (!loaded) {
             auth.onAuthStateChanged(user => {
                 if (user) {
-                    loadData().then(r => {
-                        console.log(r)
-                    });
+                    loadData().then(() => {});
                 }
             });
             loaded = true;

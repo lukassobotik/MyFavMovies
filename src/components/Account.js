@@ -4,8 +4,9 @@ import {useHistory} from "react-router-dom";
 import {MdPerson, MdSettings} from "react-icons/md"
 import React, {useEffect, useState} from "react"
 import {Box, Tab, Tabs, Typography} from "@mui/material";
-import {collection, getDocs} from "firebase/firestore";
+import {collection, deleteDoc, doc, getDocs} from "firebase/firestore";
 import {auth, db} from "../firebase";
+import {MdRemoveCircle} from "react-icons/md"
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -86,6 +87,21 @@ export default function Account() {
         loaded = false;
     })
 
+    async function removeItem(item) {
+        try {
+            await deleteDoc(doc(db, "users", auth.currentUser.uid.toString(), "watchlist", item.id.toString()));
+            let newWatchlist = [];
+            watchlist.map((i) => {
+                if (i !== item) {
+                    newWatchlist.push(i);
+                }
+            })
+            setWatchlist(newWatchlist);
+        } catch (e) {
+            console.error("Error adding document: ", e);
+        }
+    }
+
     return (
         !isLoading && <Layout>
             <div className="flex h-screen">
@@ -120,8 +136,15 @@ export default function Account() {
                                     return (
                                         <div className="w-full h-[100px] sm:h-[150px] md:h-[250px] lg:h-[350px] mb-5 rounded-3xl flex border-2 border-[#fc686f] bg-[#2b2b2b]" key={id}>
                                             <img className="h-[96px] sm:h-[146px] md:h-[246px] lg:h-[346px] rounded-l-3xl" src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} alt={item?.title}/>
-                                            <div className="relative overflow-y-auto overflow-x-hidden text-xs sm:text-xs md:text-xl lg:text-2xl">
-                                                <div className="font-extrabold m-3 w-full text-left break-words">{item?.title}</div>
+                                            <div className="relative overflow-y-auto overflow-x-hidden text-xs sm:text-xs md:text-xl lg:text-2xl h-full">
+                                                <div className="font-extrabold m-3 w-full text-left break-words">
+                                                    <div className="flex">
+                                                        <div className="relative">{item?.title}</div>
+                                                        <div className="w-full h-full relative mt-auto mb-auto ml-3">
+                                                            <MdRemoveCircle className="w-fit h-fit" onClick={() => {removeItem(item).then(() => {})}}/>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <div className="inline-block w-fit h-fit whitespace-pre-wrap mr-3 ml-3 text-left">{item?.overview}</div>
                                             </div>
                                         </div>
