@@ -2,8 +2,8 @@ import {useHistory} from "react-router-dom";
 import requests from "./requests";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import {MdOutlineAddCircle, MdPlayCircle, MdStars} from "react-icons/md"
-import {addDoc, collection} from "firebase/firestore";
+import {MdOutlineAddCircle, MdPlayCircle, MdStars, MdCheckCircle} from "react-icons/md"
+import {setDoc, doc, getDocs, collection} from "firebase/firestore";
 import {auth, db} from "../firebase";
 
 export default function BrowseMovieCard({item, index, rowId, type}) {
@@ -12,6 +12,8 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
     const trailerPath = `https://api.themoviedb.org/3/movie/${item?.id}/videos?api_key=${requests.key}`
     const [isLoading, setIsLoading] = useState(true);
     const [play, setPlay] = useState(false);
+    const [isOnWatchlist, setIsOnWatchlist] = useState(false);
+    let loaded = false;
 
     useEffect(() => {
         axios.get(logoPath).then((response) => {
@@ -42,7 +44,33 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
         }).catch((err) => {
             console.log(err);
         })
+    });
+
+    useEffect(() => {
+        if (!loaded) {
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    loadData().then(r => {
+                        console.log(r)
+                    });
+                }
+            });
+            loaded = true;
+        }
     })
+
+    useHistory().listen(() => {
+        loaded = false;
+    })
+
+    async function loadData() {
+        const querySnapshot = await getDocs(collection(db, "users", auth.currentUser.uid.toString(), "watchlist"));
+        querySnapshot.forEach((doc) => {
+            if (doc.data().item.id.toString() === item.id.toString()) {
+                setIsOnWatchlist(true);
+            }
+        });
+    }
 
     const hover = () => {
         const img = document.getElementById("img" + index + "-" + rowId);
@@ -78,14 +106,15 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
 
     }
     async function clickList() {
+        const docData = {
+            item: item,
+            movieId: item?.id,
+            name: item?.title
+        }
+        const user = auth.currentUser.uid.toString().trim();
         try {
-            const docRef = await addDoc(collection(db, "users", auth.currentUser.uid.toString(), "watchlist"), {
-                item: item,
-                movieId: item?.id,
-                name: item?.title
-            });
-
-            console.log("Document written with ID: ", docRef.id);
+            await setDoc(doc(db, "users", user, "watchlist", item.id.toString()), docData);
+            setIsOnWatchlist(true);
         } catch (e) {
             console.error("Error adding document: ", e);
         }
@@ -113,7 +142,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
                 </div>
                 <div className="flex items-center justify-center text-center">
                     <MdPlayCircle size={30} onClick={clickPlay}/>
-                    <MdOutlineAddCircle size={30} onClick={clickList}/>
+                    {isOnWatchlist ? <MdCheckCircle size={30}/> : <MdOutlineAddCircle size={30} onClick={clickList}/>}
                     <MdStars size={30} onClick={clickRate}/>
                 </div>
                 <div className="flex items-center items-stretch justify-center">
