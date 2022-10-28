@@ -5,6 +5,8 @@ import axios from "axios";
 import {MdOutlineAddCircle, MdPlayCircle, MdStars, MdCheckCircle} from "react-icons/md"
 import {setDoc, deleteDoc, doc, getDocs, collection} from "firebase/firestore";
 import {auth, db} from "../firebase";
+import {Popover, Rating} from "@mui/material";
+import React from "react";
 
 export default function BrowseMovieCard({item, index, rowId, type}) {
     const history = useHistory();
@@ -13,6 +15,8 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
     const [isLoading, setIsLoading] = useState(true);
     const [play, setPlay] = useState(false);
     const [isOnWatchlist, setIsOnWatchlist] = useState(false);
+    const [rating, setRating] = React.useState(2);
+    const [anchorEl, setAnchorEl] = React.useState(null);
     let loaded = false;
 
     useEffect(() => {
@@ -27,7 +31,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
         }).catch((err) => {
             console.log(err);
         })
-    }, [logoPath]);
+    });
 
     useEffect(() => {
         axios.get(trailerPath).then((response) => {
@@ -71,6 +75,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
     }
 
     const hover = () => {
+        document.getElementById("itemInRowId" + index + "-" + rowId).style.zIndex = "10";
         const img = document.getElementById("img" + index + "-" + rowId);
         const logo = document.getElementById("logo" + index + "-" + rowId);
         const card = document.getElementById("card" + index + "-" + rowId);
@@ -84,6 +89,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
         img.style.boxShadow = "10px 10px 10px black";
     }
     const hide = () => {
+        document.getElementById("itemInRowId" + index + "-" + rowId).style.zIndex = "9";
         const img = document.getElementById("img" + index + "-" + rowId);
         const logo = document.getElementById("logo" + index + "-" + rowId);
         const card = document.getElementById("card" + index + "-" + rowId);
@@ -126,9 +132,23 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
             }
         }
     }
-    const clickRate = () => {
-
+    const clickRate = (event) => {
+        setAnchorEl(event.currentTarget);
+        const element = document.getElementById("itemInRowId" + index + "-" + rowId);
+        element.style.transform = "scale(1.5)";
+        element.style.zIndex = "10";
     }
+
+    const handleClose = () => {
+        setAnchorEl(null);
+        hide();
+        const element = document.getElementById("itemInRowId" + index + "-" + rowId);
+        element.style.transform = "";
+        element.style.zIndex = "9";
+    };
+
+    const open = Boolean(anchorEl);
+    const popover_id = open ? 'simple-popover' : undefined;
 
     return (
         !isLoading && <div id={"itemId" + index + "-" + rowId} className='w-[300px] inline-block cursor-pointer relative p-2 group' data-index={index}>
@@ -151,6 +171,24 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
                     <MdPlayCircle size={30} onClick={clickPlay}/>
                     {isOnWatchlist ? <MdCheckCircle size={30} onClick={clickList}/> : <MdOutlineAddCircle size={30} onClick={clickList}/>}
                     <MdStars size={30} onClick={clickRate}/>
+                    <Popover
+                        id={popover_id}
+                        open={open}
+                        anchorEl={anchorEl}
+                        onClose={handleClose}
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                        }}
+                    >
+                        <Rating
+                            name="simple-controlled"
+                            value={rating}
+                            onChange={(event, newValue) => {
+                                setRating(newValue);
+                            }}
+                        />
+                    </Popover>
                 </div>
                 <div className="flex items-center items-stretch justify-center">
                     <div className="text-white whitespace-normal w-auto mr-5 text-xs md:text-sm font-bold flex-nowrap inline-block items-center h-full text-left">{item?.release_date}</div>
