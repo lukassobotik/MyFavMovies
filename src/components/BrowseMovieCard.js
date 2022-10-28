@@ -11,13 +11,15 @@ import React from "react";
 export default function BrowseMovieCard({item, index, rowId, type}) {
     const history = useHistory();
     const logoPath = `https://api.themoviedb.org/3/movie/${item?.id}/images?api_key=${requests.key}`;
-    const trailerPath = `https://api.themoviedb.org/3/movie/${item?.id}/videos?api_key=${requests.key}`
+    const trailerPath = `https://api.themoviedb.org/3/movie/${item?.id}/videos?api_key=${requests.key}`;
     const [isLoading, setIsLoading] = useState(true);
-    const [play, setPlay] = useState(false);
+    const [playTrailer, setPlayTrailer] = useState(false);
     const [isOnWatchlist, setIsOnWatchlist] = useState(false);
     const [rating, setRating] = React.useState(0);
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [ratingPopoverAnchorEl, setRatingPopoverAnchorEl] = React.useState(null);
     let loaded = false;
+    const isRatingPopoverOpen = Boolean(ratingPopoverAnchorEl);
+    const popoverId = isRatingPopoverOpen ? 'rating-popover' : undefined;
 
     useEffect(() => {
         axios.get(logoPath).then((response) => {
@@ -31,9 +33,6 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
         }).catch((err) => {
             console.log(err);
         })
-    });
-
-    useEffect(() => {
         axios.get(trailerPath).then((response) => {
             response.data.results.map((trailer_item) => {
                 let lang = trailer_item?.iso_639_1;
@@ -48,9 +47,6 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
         }).catch((err) => {
             console.log(err);
         })
-    });
-
-    useEffect(() => {
         if (!loaded) {
             auth.onAuthStateChanged(user => {
                 if (user) {
@@ -59,7 +55,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
             });
             loaded = true;
         }
-    })
+    });
 
     useHistory().listen(() => {
         loaded = false;
@@ -80,51 +76,34 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
         });
     }
 
-    const hover = () => {
+    const showDetails = () => {
         document.getElementById("itemInRowId" + index + "-" + rowId).style.zIndex = "10";
-        const img = document.getElementById("img" + index + "-" + rowId);
-        const logo = document.getElementById("logo" + index + "-" + rowId);
-        const card = document.getElementById("card" + index + "-" + rowId);
-
-        card.style.visibility = "visible";
-        logo.style.width = "100px";
-
-        setPlay(true);
-
-        card.style.boxShadow = "10px 10px 10px black";
-        img.style.boxShadow = "10px 10px 10px black";
+        document.getElementById("card" + index + "-" + rowId).style.visibility = "visible";
+        setPlayTrailer(true);
     }
-    const hide = () => {
+    const hideDetails = () => {
         document.getElementById("itemInRowId" + index + "-" + rowId).style.zIndex = "9";
-        const img = document.getElementById("img" + index + "-" + rowId);
-        const logo = document.getElementById("logo" + index + "-" + rowId);
-        const card = document.getElementById("card" + index + "-" + rowId);
-
-        card.style.visibility = "hidden";
-        logo.style.width = "0px";
-
-        setPlay(false);
-
-        card.style.boxShadow = "none";
-        img.style.boxShadow = "none";
+        document.getElementById("card" + index + "-" + rowId).style.visibility = "hidden";
+        setPlayTrailer(false);
     }
-    const click = () => {
+
+    const generalClick = () => {
         history.push("/" + type + "/" + item?.id);
     }
 
-    const clickPlay = () => {
+    const playClick = () => {
 
     }
-    async function clickList() {
-        const docData = {
-            item: item,
-            movieId: item?.id,
-            name: item?.title
-        }
+
+    async function listClick() {
         const user = auth.currentUser.uid.toString().trim();
         if (!isOnWatchlist) {
             try {
-                await setDoc(doc(db, "users", user, "watchlist", item.id.toString()), docData);
+                await setDoc(doc(db, "users", user, "watchlist", item.id.toString()), {
+                    item: item,
+                    movieId: item?.id,
+                    name: item?.title
+                });
                 setIsOnWatchlist(true);
             } catch (e) {
                 console.error("Error adding document: ", e);
@@ -138,24 +117,32 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
             }
         }
     }
-    const clickRate = (event) => {
-        setAnchorEl(event.currentTarget);
+
+    const ratingClick = (event) => {
+        setRatingPopoverAnchorEl(event.currentTarget);
         const element = document.getElementById("itemInRowId" + index + "-" + rowId);
         element.style.transform = "scale(1.5)";
         element.style.zIndex = "10";
     }
 
-    const saveRatingToDB = async (newValue) => {
-        const docData = {
-            item: item,
-            movieId: item?.id,
-            name: item?.title,
-            rating: newValue
-        }
+    const handleRatingClose = () => {
+        setRatingPopoverAnchorEl(null);
+        hideDetails();
+        const element = document.getElementById("itemInRowId" + index + "-" + rowId);
+        element.style.transform = "";
+        element.style.zIndex = "9";
+    };
+
+    const saveRating = async (newValue) => {
         const user = auth.currentUser.uid.toString().trim();
         if (rating !== null) {
             try {
-                await setDoc(doc(db, "users", user, "ratings", item.id.toString()), docData);
+                await setDoc(doc(db, "users", user, "ratings", item.id.toString()), {
+                    item: item,
+                    movieId: item?.id,
+                    name: item?.title,
+                    rating: newValue
+                });
                 setRating(newValue);
             } catch (e) {
                 console.error("Error adding document: ", e);
@@ -170,52 +157,36 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
         }
     }
 
-    const handleClose = () => {
-        setAnchorEl(null);
-        hide();
-        const element = document.getElementById("itemInRowId" + index + "-" + rowId);
-        element.style.transform = "";
-        element.style.zIndex = "9";
-    };
-
-    const open = Boolean(anchorEl);
-    const popover_id = open ? 'rating-popover' : undefined;
-
     return (
         !isLoading && <div id={"itemId" + index + "-" + rowId} className='w-[300px] inline-block cursor-pointer relative p-2 group' data-index={index}>
-        <div id={"itemInRowId" + index + "-" + rowId} className="row_item" style={{left: 0}} onMouseOver={hover} onMouseLeave={hide}>
-            <div id={"player" + index + "-" + rowId} className="" onClick={click}>
-                <img id={"img" + index + "-" + rowId} className='w-full h-auto block overflow-visible rounded'
+        <div id={"itemInRowId" + index + "-" + rowId} className="row_item" style={{left: 0}} onMouseOver={showDetails} onMouseLeave={hideDetails}>
+            <div id={"player" + index + "-" + rowId} className="player" onClick={generalClick}>
+                <img className='w-full h-auto block overflow-visible rounded'
                      src={`https://image.tmdb.org/t/p/w500/${item.backdrop_path}`} alt={item.title}/>
-                <img id={"logo" + index + "-" + rowId} src={`https://image.tmdb.org/t/p/w500/`} alt={""} className="ml-5 mt-5 w-[0px] h-auto left-0 top-0 absolute"/>
-                {play ? <div className="youtube-container rounded-t">
+                <div className="ml-5 mt-5 w-[0px] h-auto left-0 top-0 absolute"/>
+                {playTrailer ? <div className="youtube-container rounded-t">
                     <iframe src={`https://www.youtube.com/embed/${item?.trailer_path}?autoplay=1&controls=0&autohide=1?rel=0&amp&modestbranding=1`}
                             title={item.title + " Trailer"}
                             allowFullScreen loading="lazy"></iframe>
                 </div> : null}
             </div>
-            <div id={"card" + index + "-" + rowId} className="fixed w-full bg-black invisible rounded-b whitespace-nowrap overflow-hidden">
+            <div id={"card" + index + "-" + rowId} className="movie_card_info fixed w-full left-0 bg-black invisible rounded-b whitespace-nowrap overflow-hidden">
                 <div className="text-white text-xs md:text-sm font-extrabold w-full h-full overflow-hidden flex items-center justify-center text-center">
                     {item?.title}
                 </div>
                 <div className="flex items-center justify-center text-center">
-                    <MdPlayCircle size={30} onClick={clickPlay}/>
-                    {isOnWatchlist ? <MdCheckCircle size={30} onClick={clickList}/> : <MdOutlineAddCircle size={30} onClick={clickList}/>}
-                    <MdStars size={30} onClick={clickRate}/>
-                    <Popover id={popover_id} open={open} anchorEl={anchorEl} onClose={handleClose} anchorOrigin={{
+                    <MdPlayCircle size={30} onClick={playClick} className="movie_card_button"/>
+                    {isOnWatchlist ? <MdCheckCircle size={30} onClick={listClick} className="movie_card_button"/> : <MdOutlineAddCircle size={30} onClick={listClick} className="movie_card_button"/>}
+                    <MdStars size={30} onClick={ratingClick} className="movie_card_button"/>
+                    <Popover id={popoverId} open={isRatingPopoverOpen} anchorEl={ratingPopoverAnchorEl} onClose={handleRatingClose} anchorOrigin={{
                             vertical: 'center',
                             horizontal: 'center',
                         }} transformOrigin={{
                             vertical: 'center',
                             horizontal: 'center'
                     }}>
-                        <Rating
-                            name="rating"
-                            value={rating / 2}
-                            precision={0.5}
-                            defaultValue={0}
-                            onChange={(event, newValue) => {
-                                saveRatingToDB(newValue * 2).then(() => {});
+                        <Rating name="rating" value={rating / 2} precision={0.5} defaultValue={0} onChange={(event, newValue) => {
+                                saveRating(newValue * 2).then(() => {});
                             }}
                         />
                     </Popover>

@@ -140,12 +140,17 @@ code {
   background-color: #131313;
 }
 
+.movie_card_button {
+  cursor: pointer;
+}
+
 .row_item {
   position: relative;
   padding: 2px;
   flex: 1 1 0;
   transition: all 450ms;
   left: 1px;
+  cursor: default;
 }
 
 .browse_container .row_item:focus,
@@ -171,8 +176,13 @@ code {
   overflow-y: visible;
 }
 
+.player {
+  cursor: pointer;
+}
+
 .youtube-container {
   top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   position: absolute;
