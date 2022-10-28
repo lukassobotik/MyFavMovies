@@ -15,7 +15,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
     const [isLoading, setIsLoading] = useState(true);
     const [play, setPlay] = useState(false);
     const [isOnWatchlist, setIsOnWatchlist] = useState(false);
-    const [rating, setRating] = React.useState(2);
+    const [rating, setRating] = React.useState(0);
     const [anchorEl, setAnchorEl] = React.useState(null);
     let loaded = false;
 
@@ -66,10 +66,16 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
     })
 
     async function loadData() {
-        const querySnapshot = await getDocs(collection(db, "users", auth.currentUser.uid.toString(), "watchlist"));
-        querySnapshot.forEach((doc) => {
+        const watchlistSnapshot = await getDocs(collection(db, "users", auth.currentUser.uid.toString(), "watchlist"));
+        watchlistSnapshot.forEach((doc) => {
             if (doc.data().item.id.toString() === item.id.toString()) {
                 setIsOnWatchlist(true);
+            }
+        });
+        const ratingSnapshot = await getDocs(collection(db, "users", auth.currentUser.uid.toString(), "ratings"));
+        ratingSnapshot.forEach((doc) => {
+            if (doc.data().item.id.toString() === item.id.toString()) {
+                setRating(doc.data().rating);
             }
         });
     }
@@ -139,6 +145,31 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
         element.style.zIndex = "10";
     }
 
+    const saveRatingToDB = async (newValue) => {
+        const docData = {
+            item: item,
+            movieId: item?.id,
+            name: item?.title,
+            rating: newValue
+        }
+        const user = auth.currentUser.uid.toString().trim();
+        if (rating !== null) {
+            try {
+                await setDoc(doc(db, "users", user, "ratings", item.id.toString()), docData);
+                setRating(newValue);
+            } catch (e) {
+                console.error("Error adding document: ", e);
+            }
+        } else {
+            try {
+                await deleteDoc(doc(db, "users", user, "ratings", item.id.toString()));
+                setRating(newValue);
+            } catch (e) {
+                console.error("Error adding document: ", e);
+            }
+        }
+    }
+
     const handleClose = () => {
         setAnchorEl(null);
         hide();
@@ -148,7 +179,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
     };
 
     const open = Boolean(anchorEl);
-    const popover_id = open ? 'simple-popover' : undefined;
+    const popover_id = open ? 'rating-popover' : undefined;
 
     return (
         !isLoading && <div id={"itemId" + index + "-" + rowId} className='w-[300px] inline-block cursor-pointer relative p-2 group' data-index={index}>
@@ -171,21 +202,20 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
                     <MdPlayCircle size={30} onClick={clickPlay}/>
                     {isOnWatchlist ? <MdCheckCircle size={30} onClick={clickList}/> : <MdOutlineAddCircle size={30} onClick={clickList}/>}
                     <MdStars size={30} onClick={clickRate}/>
-                    <Popover
-                        id={popover_id}
-                        open={open}
-                        anchorEl={anchorEl}
-                        onClose={handleClose}
-                        anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'left',
-                        }}
-                    >
+                    <Popover id={popover_id} open={open} anchorEl={anchorEl} onClose={handleClose} anchorOrigin={{
+                            vertical: 'center',
+                            horizontal: 'center',
+                        }} transformOrigin={{
+                            vertical: 'center',
+                            horizontal: 'center'
+                    }}>
                         <Rating
-                            name="simple-controlled"
-                            value={rating}
+                            name="rating"
+                            value={rating / 2}
+                            precision={0.5}
+                            defaultValue={0}
                             onChange={(event, newValue) => {
-                                setRating(newValue);
+                                saveRatingToDB(newValue * 2).then(() => {});
                             }}
                         />
                     </Popover>
