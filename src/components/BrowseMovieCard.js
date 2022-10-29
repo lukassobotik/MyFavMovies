@@ -2,7 +2,7 @@ import {useHistory} from "react-router-dom";
 import requests from "./requests";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import {MdOutlineAddCircle, MdPlayCircle, MdStars, MdCheckCircle} from "react-icons/md"
+import {MdOutlineAddCircle, MdPlayCircle, MdStars, MdCheckCircle, MdCircle} from "react-icons/md"
 import {setDoc, deleteDoc, doc, getDocs, collection} from "firebase/firestore";
 import {auth, db} from "../firebase";
 import {Popover, Rating} from "@mui/material";
@@ -16,6 +16,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
     const [playTrailer, setPlayTrailer] = useState(false);
     const [isOnWatchlist, setIsOnWatchlist] = useState(false);
     const [rating, setRating] = React.useState(0);
+    const [isRated, setIsRated] = useState(false);
     const [ratingPopoverAnchorEl, setRatingPopoverAnchorEl] = React.useState(null);
     let loaded = false;
     const isRatingPopoverOpen = Boolean(ratingPopoverAnchorEl);
@@ -72,6 +73,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
         ratingSnapshot.forEach((doc) => {
             if (doc.data().item.id.toString() === item.id.toString()) {
                 setRating(doc.data().rating);
+                setIsRated(true);
             }
         });
     }
@@ -144,6 +146,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
                     rating: newValue
                 });
                 setRating(newValue);
+                setIsRated(true);
             } catch (e) {
                 console.error("Error adding document: ", e);
             }
@@ -151,6 +154,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
             try {
                 await deleteDoc(doc(db, "users", user, "ratings", item.id.toString()));
                 setRating(newValue);
+                setIsRated(false);
             } catch (e) {
                 console.error("Error adding document: ", e);
             }
@@ -177,7 +181,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
                 <div className="flex items-center justify-center text-center">
                     <MdPlayCircle size={30} onClick={playClick} className="movie_card_button"/>
                     {isOnWatchlist ? <MdCheckCircle size={30} onClick={listClick} className="movie_card_button"/> : <MdOutlineAddCircle size={30} onClick={listClick} className="movie_card_button"/>}
-                    <MdStars size={30} onClick={ratingClick} className="movie_card_button"/>
+                    {isRated ? <div onClick={ratingClick} className="movie_card_button items-center flex justify-center"><div className="absolute text-black font-bold mb-1">{rating}</div><MdCircle size={30}/></div> : <MdStars size={30} onClick={ratingClick} className="movie_card_button"/>}
                     <Popover id={popoverId} open={isRatingPopoverOpen} anchorEl={ratingPopoverAnchorEl} onClose={handleRatingClose} anchorOrigin={{
                             vertical: 'center',
                             horizontal: 'center',
