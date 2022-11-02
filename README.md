@@ -1,9 +1,6 @@
 # MyFavMovies
 [**MyFavMovies**](https://puckyeu.github.io/MyFavMovies/) is a website, which is made for you to **Discover** what movies or tv shows you would want to watch. It is in a streaming service like fashion, and all results will be **Personalized** depending on **Your Ratings** of previous movies. The website will contain every bit of information you would **need** or **want** to know about the movie like **Release Dates, Cast, Crew** and so on.
 
-## Todo list
-- [ ] Document how to self-host the firebase server
-
 ## Features in the future
 - [ ] What movies do you know an actor from
 - [ ] Movies where two or more of your favorite actors co-star
