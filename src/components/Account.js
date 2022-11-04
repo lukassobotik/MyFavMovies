@@ -106,7 +106,7 @@ export default function Account() {
         !isLoading && <Layout>
             <div className="flex h-screen">
                 <div className="w-1/4 h-fit rounded-3xl border-r-2 border-b-2 border-r-[#fc686f] border-b-[#fc686f] flex profile_overview text-xs sm:text-xs md:text-2xl lg:text-4xl">
-                    <div className="relative m-2 w-[15px] sm:w-[30px] md:w-[50px] lg:w-[60px]">
+                    <div className="relative m-2 w-[15px] sm:w-[30px] md:w-[50px] lg:w-[60px] cursor-pointer">
                         <MdSettings className="w-fit" size={50} color="#FFFFFF" onClick={settings}/>
                     </div>
                     <div className="flex justify-center">

@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 body {
+  --navbar-height: 50px;
   margin: 0;
   background-color: #131313;
   font-family: 'Segoe UI', 'Roboto', 'Oxygen',
@@ -11,8 +12,13 @@ body {
   color: #FFF;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   --main_gradient: linear-gradient(45deg, #fe934c 0%, #fc686f  51%, #fe934c  100%);
+}
+
+.body_section {
+  padding-top: var(--navbar-height);
 }
 
 code {
@@ -88,8 +94,16 @@ code {
 }
 
 .navbar {
+  transition: 500ms;
+  z-index: 102;
+  position: fixed;
   display: flex;
-  background-color: black;
+  height: var(--navbar-height);
+  width: 100%;
+  background-image: linear-gradient(to top, rgba(0,0,0,0), rgba(0,0,0,1));
+}
+.navbar--hidden {
+  transform: translateY(calc(var(--navbar-height) * -1));
 }
 
 .navbar-title {
@@ -114,6 +128,7 @@ code {
   padding: 10px;
   align-self: center;
   size: auto;
+  cursor: pointer;
 }
 .navbar_item:first-child {
   margin-left: 5%;
