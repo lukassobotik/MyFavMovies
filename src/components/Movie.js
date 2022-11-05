@@ -7,7 +7,7 @@ import {useHistory} from "react-router-dom";
 let loaded = false;
 export default function Movie() {
     const movieId = window.location.hash.slice(8, 15);
-    const movieRequest = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${requests.key}&language=en-US&append_to_response=videos,images,alternative_titles,watch/providers`;
+    const movieRequest = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${requests.key}&language=en-US&append_to_response=videos,images,alternative_titles,watch/providers,release_dates`;
     const [item, setItem] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
