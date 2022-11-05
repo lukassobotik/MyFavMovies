@@ -115,9 +115,6 @@ export default function Settings() {
                         renderValue={() => document.getElementById("root")?.getAttribute('locvalue')}
                         onChange={setLocationHandler}
                         sx={{color: "#F09819"}}>
-                    <MenuItem value={document.getElementById("root")?.getAttribute('locvalue')}>
-                        <div className="text_field_color">{document.getElementById("location-select")?.getAttribute('locvalue')}</div>
-                    </MenuItem>
                     {locationOptions.map((item, id) => (
                         <MenuItem key={id} value={item?.iso_3166_1}><div className="text_field_color">{item.english_name ? item.english_name : document.getElementById("location-select")?.getAttribute('locvalue')}</div></MenuItem>
                     ))}
@@ -130,9 +127,6 @@ export default function Settings() {
                         renderValue={() => document.getElementById("root")?.getAttribute('langvalue')}
                         onChange={setLanguageHandler}
                         sx={{color: "#F09819"}}>
-                    <MenuItem value={document.getElementById("root")?.getAttribute('langvalue')}>
-                        <div className="text_field_color">{document.getElementById("root")?.getAttribute('langvalue')}</div>
-                    </MenuItem>
                     {languageOptions.map((item, id) => (
                         <MenuItem key={id} value={item?.iso_639_1}><div className="text_field_color">{item.english_name ? item.english_name : document.getElementById("location-select")?.getAttribute('langvalue')}</div></MenuItem>
                     ))}
