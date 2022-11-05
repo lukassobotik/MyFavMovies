@@ -10,8 +10,7 @@ import React from "react";
 
 export default function BrowseMovieCard({item, index, rowId, type}) {
     const history = useHistory();
-    const logoPath = `https://api.themoviedb.org/3/movie/${item?.id}/images?api_key=${requests.key}`;
-    const trailerPath = `https://api.themoviedb.org/3/movie/${item?.id}/videos?api_key=${requests.key}`;
+    const movieRequest = `https://api.themoviedb.org/3/movie/${item?.id}?api_key=${requests.key}&language=en&append_to_response=videos,images`;
     const [isLoading, setIsLoading] = useState(true);
     const [playTrailer, setPlayTrailer] = useState(false);
     const [isOnWatchlist, setIsOnWatchlist] = useState(false);
@@ -23,28 +22,25 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
     const popoverId = isRatingPopoverOpen ? 'rating-popover' : undefined;
 
     useEffect(() => {
-        axios.get(logoPath).then((response) => {
-            response.data?.backdrops.map((bg_item) => {
-                let lang = bg_item?.iso_639_1;
-                if (lang === "en") {
-                    item.backdrop_path = bg_item.file_path;
-                }
+        axios.get(movieRequest).then((response) => {
+            console.log(response.data);
+            response.data?.images?.backdrops.map((bg_item) => {
+                item.backdrop_path = bg_item.file_path;
             })
-            setIsLoading(false);
-        }).catch((err) => {
-            console.log(err);
-        })
-        axios.get(trailerPath).then((response) => {
-            response.data.results.map((trailer_item) => {
-                let lang = trailer_item?.iso_639_1;
+            response.data?.videos?.results?.map((trailer_item) => {
                 let vid_key = trailer_item?.key;
                 let type = trailer_item?.type;
+                if (response.data?.videos?.results?.length === 0 || trailer_item?.site !== "YouTube") {
+                    return;
+                }
 
-                if (lang === "en" && type === "Trailer") {
+                if (type === "Trailer") {
+                    item.trailer_path = vid_key;
+                } else {
                     item.trailer_path = vid_key;
                 }
             })
-
+            setIsLoading(false);
         }).catch((err) => {
             console.log(err);
         })
