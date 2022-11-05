@@ -23,7 +23,6 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
 
     useEffect(() => {
         axios.get(movieRequest).then((response) => {
-            console.log(response.data);
             response.data?.images?.backdrops.map((bg_item) => {
                 item.backdrop_path = bg_item.file_path;
             })
@@ -33,7 +32,6 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
                 if (response.data?.videos?.results?.length === 0 || trailer_item?.site !== "YouTube") {
                     return;
                 }
-
                 if (type === "Trailer") {
                     item.trailer_path = vid_key;
                 } else {
@@ -56,7 +54,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
 
     useHistory().listen(() => {
         loaded = false;
-    })
+    });
 
     async function loadData() {
         const watchlistSnapshot = await getDocs(collection(db, "users", auth.currentUser.uid.toString(), "watchlist"));

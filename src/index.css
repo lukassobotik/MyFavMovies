@@ -80,6 +80,13 @@ code {
   background: transparent;
   margin-bottom: 10px;
 }
+.text_field_color {
+  color: #F09819;
+}
+.text_field_border {
+  border: 2px solid #FF512F;
+  border-radius: 10px;
+}
 
 .settings-btn {
   width: 100%;

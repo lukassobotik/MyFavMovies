@@ -1,17 +1,25 @@
 import Layout from "./Layout";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {getAuth, updateProfile} from "firebase/auth";
-import {Alert, Collapse, IconButton} from "@mui/material";
+import {Alert, Collapse, IconButton, MenuItem, Select} from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
+import {collection, doc, getDocs, setDoc} from "firebase/firestore";
+import {db} from "../firebase";
+import requests from "./requests";
+import axios from "axios";
+import {useHistory} from "react-router-dom";
 
+let loaded = false;
 export default function Settings() {
     const [pfpUrl, setPfpUrl] = useState('');
     const [isPfpUrlFocused, setIsPfpUrlFocused] = useState(false);
     const auth = getAuth();
+    const languagesRequest = `https://api.themoviedb.org/3/configuration?api_key=${requests.key}&append_to_response=countries,languages`;
     const [successAlert, setSuccessAlert] = useState('');
     const [error, setError] = useState('');
     const [open, setOpen] = useState(false);
-    console.log(auth.currentUser);
+    const [locationOptions, setLocationOptions] = React.useState([]);
+    const [languageOptions, setLanguageOptions] = React.useState([]);
 
     document.onmousedown = () => {
         return true;
@@ -21,32 +29,114 @@ export default function Settings() {
         auth.onAuthStateChanged(user => {
             if (user && !isPfpUrlFocused) {
                 setPfpUrl(auth.currentUser.photoURL);
-                console.log(auth.currentUser);
+                loadData().then(() => {});
             }
         });
+        if (!loaded) {
+            axios.get(languagesRequest).then((response) => {
+                setLanguageOptions(response?.data?.languages);
+                setLocationOptions(response?.data?.countries);
+            }).catch((err) => {
+                console.log(err);
+            });
+            loaded = true;
+        }
+    });
+
+    async function loadData() {
+        const ratingSnapshot = await getDocs(collection(db, "users", auth.currentUser.uid.toString(), "settings"));
+        ratingSnapshot.forEach((doc) => {
+            if (doc.data().loc_iso !== undefined && doc.data().loc_iso !== null) {
+                document.getElementById("root").setAttribute("locvalue", doc.data().loc_iso);
+            }
+            if (doc.data().lang_iso !== undefined && doc.data().lang_iso !== null) {
+                document.getElementById("root").setAttribute("langvalue", doc.data().lang_iso);
+            }
+        });
+    }
+
+    useHistory().listen(() => {
+        loaded = false;
     });
 
     function setPfpUrlHandler(evt) {
         setPfpUrl(evt.target.value);
     }
+    const setLocationHandler = (event) => {
+        document.getElementById("location-select").value = "A"
+        document.getElementById("root").setAttribute("locvalue", event.target.value.toString());
+    };
+    const setLanguageHandler = (event) => {
+        document.getElementById("root").setAttribute("langvalue", event.target.value.toString());
+    };
+
+    function delay(time) {
+        return new Promise(resolve => setTimeout(resolve, time));
+    }
 
     async function save() {
+        const user = auth.currentUser.uid.toString().trim();
+        const lang = document.getElementById("root")?.getAttribute('langvalue');
+        const loc = document.getElementById("root")?.getAttribute('locvalue');
         await updateProfile(auth.currentUser, {
             photoURL: pfpUrl
         }).then(() => {
-            setSuccessAlert("Successfully Saved!");
-            setOpen(true);
+
         }).catch((error) => {
             console.log(error);
             setError(error.message);
         })
+        await setDoc(doc(db, "users", user, "settings", "Language"), {
+            lang_iso: lang
+        }).then(async () => {
+            await setDoc(doc(db, "users", user, "settings", "Location"), {
+                loc_iso: loc
+            }).then(async () => {
+                setSuccessAlert("Successfully Saved!");
+                setOpen(true);
+                await delay(5000);
+                setOpen(false);
+            });
+        });
     }
 
     return (
-        <Layout>
+        document.getElementById("root")?.getAttribute('locvalue') !== null
+        && document.getElementById("root")?.getAttribute('locvalue') !== undefined
+        && <Layout>
             <div className="settings-panel w-[75%]">
                 <div className="text-left font-bold mb-2">Profile Picture URL</div>
                 <input className="text_field w-full" type="text" placeholder="Photo URL" onChange={setPfpUrlHandler} value={pfpUrl} onFocus={() => {setIsPfpUrlFocused(true)}}/>
+                <div className="text-left font-bold mb-2">Country</div>
+                <Select className="w-full h-full text_field_border"
+                        labelId="location-select-label"
+                        id="location-select"
+                        value={document.getElementById("root")?.getAttribute('locvalue')}
+                        renderValue={() => document.getElementById("root")?.getAttribute('locvalue')}
+                        onChange={setLocationHandler}
+                        sx={{color: "#F09819"}}>
+                    <MenuItem value={document.getElementById("root")?.getAttribute('locvalue')}>
+                        <div className="text_field_color">{document.getElementById("location-select")?.getAttribute('locvalue')}</div>
+                    </MenuItem>
+                    {locationOptions.map((item, id) => (
+                        <MenuItem key={id} value={item?.iso_3166_1}><div className="text_field_color">{item.english_name ? item.english_name : document.getElementById("location-select")?.getAttribute('locvalue')}</div></MenuItem>
+                    ))}
+                </Select>
+                <div className="text-left font-bold mb-2 mt-2">Language</div>
+                <Select className="w-full h-full text_field_border mb-5"
+                        labelId="language-select-label"
+                        id="language-select"
+                        value={document.getElementById("root")?.getAttribute('langvalue')}
+                        renderValue={() => document.getElementById("root")?.getAttribute('langvalue')}
+                        onChange={setLanguageHandler}
+                        sx={{color: "#F09819"}}>
+                    <MenuItem value={document.getElementById("root")?.getAttribute('langvalue')}>
+                        <div className="text_field_color">{document.getElementById("root")?.getAttribute('langvalue')}</div>
+                    </MenuItem>
+                    {languageOptions.map((item, id) => (
+                        <MenuItem key={id} value={item?.iso_639_1}><div className="text_field_color">{item.english_name ? item.english_name : document.getElementById("location-select")?.getAttribute('langvalue')}</div></MenuItem>
+                    ))}
+                </Select>
                 <button className="settings-btn button" onClick={save}>Save</button>
                 {successAlert ? <Collapse in={open}><Alert className="mt-2" variant="filled" severity="success" action={
                     <IconButton
@@ -55,8 +145,7 @@ export default function Settings() {
                         size="small"
                         onClick={() => {
                             setOpen(false);
-                        }}
-                    >
+                        }}>
                         <CloseIcon fontSize="inherit" />
                     </IconButton>
                 }>{successAlert.toString()}</Alert></Collapse> : null}
