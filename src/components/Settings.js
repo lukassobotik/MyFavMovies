@@ -18,6 +18,7 @@ export default function Settings() {
     const [successAlert, setSuccessAlert] = useState('');
     const [error, setError] = useState('');
     const [open, setOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [locationOptions, setLocationOptions] = React.useState([]);
     const [languageOptions, setLanguageOptions] = React.useState([]);
 
@@ -53,6 +54,7 @@ export default function Settings() {
                 document.getElementById("root").setAttribute("langvalue", doc.data().lang_iso);
             }
         });
+        setIsLoading(false);
     }
 
     useHistory().listen(() => {
@@ -101,9 +103,7 @@ export default function Settings() {
     }
 
     return (
-        document.getElementById("root")?.getAttribute('locvalue') !== null
-        && document.getElementById("root")?.getAttribute('locvalue') !== undefined
-        && <Layout>
+        !isLoading && <Layout>
             <div className="settings-panel w-[75%]">
                 <div className="text-left font-bold mb-2">Profile Picture URL</div>
                 <input className="text_field w-full" type="text" placeholder="Photo URL" onChange={setPfpUrlHandler} value={pfpUrl} onFocus={() => {setIsPfpUrlFocused(true)}}/>
