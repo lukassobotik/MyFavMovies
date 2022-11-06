@@ -10,7 +10,6 @@ import React from "react";
 
 export default function BrowseMovieCard({item, index, rowId, type}) {
     const history = useHistory();
-    const movieRequest = `https://api.themoviedb.org/3/movie/${item?.id}?api_key=${requests.key}&language=en&append_to_response=videos,images`;
     const [isLoading, setIsLoading] = useState(true);
     const [playTrailer, setPlayTrailer] = useState(false);
     const [isOnWatchlist, setIsOnWatchlist] = useState(false);
@@ -22,9 +21,12 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
     const popoverId = isRatingPopoverOpen ? 'rating-popover' : undefined;
 
     useEffect(() => {
-        axios.get(movieRequest).then((response) => {
+        axios.get(`https://api.themoviedb.org/3/movie/${item?.id}?api_key=${requests.key}&language=${document.getElementById("root")?.getAttribute('langvalue')}&append_to_response=videos,images`
+        ).then((response) => {
             response.data?.images?.backdrops.map((bg_item) => {
-                item.backdrop_path = bg_item.file_path;
+                if (bg_item.iso_639_1 === document.getElementById("root")?.getAttribute('langvalue')){
+                    item.backdrop_path = bg_item.file_path;
+                }
             })
             response.data?.videos?.results?.map((trailer_item) => {
                 let vid_key = trailer_item?.key;
@@ -38,8 +40,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
                     item.trailer_path = vid_key;
                 }
             })
-            setIsLoading(false);
-        }).catch((err) => {
+        }).then(() => setIsLoading(false)).catch((err) => {
             console.log(err);
         })
         if (!loaded) {
