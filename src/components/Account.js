@@ -46,6 +46,7 @@ export default function Account() {
     const [value, setValue] = React.useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [watchlist, setWatchlist] = useState([]);
+    const [ratedItems, setRatedItems] = useState([]);
 
     document.onmousedown = () => {
         return true;
@@ -58,13 +59,21 @@ export default function Account() {
     useEffect(() => {
         auth.onAuthStateChanged(async (user) => {
             if (user) {
-                const querySnapshot = await getDocs(collection(db, "users", auth.currentUser.uid.toString(), "watchlist"));
-                const items = [];
-                querySnapshot.forEach((doc) => {
-                    items.push(doc.data().item);
+                const watchlistSnapshot = await getDocs(collection(db, "users", auth.currentUser.uid.toString(), "watchlist"));
+                const watchlistItems = [];
+                watchlistSnapshot.forEach((doc) => {
+                    watchlistItems.push(doc.data().item);
                 });
-                setWatchlist(items);
-                console.log(watchlist);
+                setWatchlist(watchlistItems);
+                const ratingsSnapshot = await getDocs(collection(db, "users", auth.currentUser.uid.toString(), "ratings"));
+                const ratedItems = [];
+                let index = 0;
+                ratingsSnapshot.forEach((doc) => {
+                    ratedItems.push(doc.data().item);
+                    ratedItems.at(index).rating = doc.data().rating;
+                    index++;
+                });
+                setRatedItems(ratedItems);
                 setIsLoading(false);
             }
         });
@@ -137,7 +146,26 @@ export default function Account() {
                             </div>
                         </TabPanel>
                         <TabPanel value={value} index={1}>
-                            <div>Rated Panel</div>
+                            <div className="whitespace-nowrap">
+                                {ratedItems.map((item, id) => {
+                                    return (
+                                        <div className="w-full h-[100px] sm:h-[150px] md:h-[250px] lg:h-[350px] mb-5 rounded-3xl flex border-2 border-[#fc686f] bg-[#2b2b2b]" key={id}>
+                                            <img className="h-[96px] sm:h-[146px] md:h-[246px] lg:h-[346px] rounded-l-3xl" src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} alt={item?.title}/>
+                                            <div className="relative overflow-y-auto overflow-x-hidden text-xs sm:text-xs md:text-xl lg:text-2xl h-full">
+                                                <div className="m-3 mb-0 w-full text-left break-words">
+                                                    <div className="flex font-extrabold">
+                                                        <div className="relative">{item?.title}</div>
+                                                    </div>
+                                                    <div className="inline-block w-fit relative">
+                                                        <div className="italic text-[#878787]">Your rating: {item?.rating}</div>
+                                                    </div>
+                                                </div>
+                                                <div className="inline-block w-fit h-fit whitespace-pre-wrap mr-3 ml-3 text-left">{item?.overview}</div>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
                         </TabPanel>
                         <TabPanel value={value} index={2}>
                             <div>Lists Panel</div>
