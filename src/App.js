@@ -9,6 +9,9 @@ import Account from "./components/Account";
 import Settings from "./components/Settings";
 import {createTheme, ThemeProvider} from "@mui/material";
 import Movie from "./components/Movie";
+import LoadSettingsData from "./components/LoadData";
+import {useEffect} from "react";
+import {auth} from "./firebase";
 
 function App() {
     document.onmousedown = () => {
@@ -22,6 +25,18 @@ function App() {
             }
         }
     });
+
+    useEffect(() => {
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                loadData().then(() => console.log("loaded")).catch((err) => console.log(err));
+            }
+        });
+    });
+
+    async function loadData() {
+        await LoadSettingsData();
+    }
 
     return (
         <ThemeProvider theme={theme}>

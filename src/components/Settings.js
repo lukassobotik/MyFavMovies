@@ -3,11 +3,12 @@ import React, {useEffect, useState} from "react";
 import {getAuth, updateProfile} from "firebase/auth";
 import {Alert, Collapse, IconButton, MenuItem, Select} from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
-import {collection, doc, getDocs, setDoc} from "firebase/firestore";
+import {doc, setDoc} from "firebase/firestore";
 import {db} from "../firebase";
 import requests from "./requests";
 import axios from "axios";
 import {useHistory} from "react-router-dom";
+import LoadSettingsData from "./LoadData";
 
 let loaded = false;
 export default function Settings() {
@@ -45,15 +46,7 @@ export default function Settings() {
     });
 
     async function loadData() {
-        const ratingSnapshot = await getDocs(collection(db, "users", auth.currentUser.uid.toString(), "settings"));
-        ratingSnapshot.forEach((doc) => {
-            if (doc.data().loc_iso !== undefined && doc.data().loc_iso !== null) {
-                document.getElementById("root").setAttribute("locvalue", doc.data().loc_iso);
-            }
-            if (doc.data().lang_iso !== undefined && doc.data().lang_iso !== null) {
-                document.getElementById("root").setAttribute("langvalue", doc.data().lang_iso);
-            }
-        });
+        await LoadSettingsData();
         setIsLoading(false);
     }
 
