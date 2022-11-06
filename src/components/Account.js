@@ -1,7 +1,6 @@
 import Layout from "./Layout";
 import {UserAuth} from "../context/AuthContext";
-import {useHistory} from "react-router-dom";
-import {MdPerson, MdRemoveCircle, MdSettings} from "react-icons/md"
+import {MdPerson, MdRemoveCircle} from "react-icons/md"
 import React, {useEffect, useState} from "react"
 import {Box, Tab, Tabs, Typography} from "@mui/material";
 import {collection, deleteDoc, doc, getDocs} from "firebase/firestore";
@@ -42,7 +41,6 @@ function a11yProps(index: number) {
 
 export default function Account() {
     const {user} = UserAuth();
-    const history = useHistory();
     const [value, setValue] = React.useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [watchlist, setWatchlist] = useState([]);
@@ -51,10 +49,6 @@ export default function Account() {
     document.onmousedown = () => {
         return true;
     };
-
-    function settings() {
-        history.push('/settings')
-    }
 
     useEffect(() => {
         auth.onAuthStateChanged(async (user) => {
@@ -95,14 +89,29 @@ export default function Account() {
         }
     }
 
+    window.addEventListener('resize', (() => {
+        console.log('resized to: ', window.innerWidth, 'x', window.innerHeight)
+        changeMargins()
+    }))
+
+    function changeMargins() {
+        if (window.innerWidth <= 750) {
+            document.getElementById("account_list_panel").style.marginRight = "0";
+            document.getElementById("account_list_panel").style.marginLeft = "0";
+            document.getElementById("account_list_panel_box").style.width = "100vw";
+        }
+        if (window.innerWidth >= 750) {
+            document.getElementById("account_list_panel").style.marginRight = "10%";
+            document.getElementById("account_list_panel").style.marginLeft = "10%";
+            document.getElementById("account_list_panel_box").style.width = "80vw";
+        }
+    }
+
     return (
         !isLoading && <Layout>
-            <div className="flex h-screen">
-                <div className="w-1/4 h-fit rounded-3xl border-r-2 border-b-2 border-r-[#fc686f] border-b-[#fc686f] flex profile_overview text-xs sm:text-xs md:text-2xl lg:text-4xl">
-                    <div className="relative m-2 w-[15px] sm:w-[30px] md:w-[50px] lg:w-[60px] cursor-pointer">
-                        <MdSettings className="w-fit" size={50} color="#FFFFFF" onClick={settings}/>
-                    </div>
-                    <div className="flex justify-center">
+            <div className="inline-block h-screen w-full">
+                <div className="h-fit w-full border-b-2 border-b-[#FFFFFF] flex justify-center items-center profile_overview text-xs sm:text-xs md:text-2xl lg:text-4xl">
+                    <div className="flex justify-center w-fit">
                         <div className="h-fit aspect-square w-3/5 text-justify flex items-center justify-center rounded-full bg-gradient-to-r p-1 from-[#fe934c] to-[#fc686f]">
                             <div className="w-full h-full text-justify flex items-center justify-center rounded-full overflow-hidden">
                                 {user.photoURL ? <img src={user.photoURL} alt="Invalid URl"/> :
@@ -110,11 +119,11 @@ export default function Account() {
                             </div>
                         </div>
                     </div>
-                    <div className="mt-5 mb-5 w-full">{user ? user.displayName : 'Username'}</div>
+                    <div className="mt-5 mb-5 w-1/4">{user ? user.displayName : 'Username'}</div>
                 </div>
-                <div className="w-3/4 h-full">
+                <div id="account_list_panel" className="h-full w-fit ml-[10%] mr-[10%]" onLoad={changeMargins}>
                     <Box sx={{width: '100%'}}>
-                        <Box>
+                        <Box id="account_list_panel_box" className="flex justify-center w-[80vw]">
                             <Tabs value={value} onChange={(event, newValue) => {
                                 setValue(newValue)
                             }} aria-label="" textColor="secondary" indicatorColor="secondary">
@@ -127,13 +136,13 @@ export default function Account() {
                             <div className="whitespace-nowrap">
                                 {watchlist.map((item, id) => {
                                     return (
-                                        <div className="w-full h-[100px] sm:h-[150px] md:h-[250px] lg:h-[350px] mb-5 rounded-3xl flex border-2 border-[#fc686f] bg-[#2b2b2b]" key={id}>
-                                            <img className="h-[96px] sm:h-[146px] md:h-[246px] lg:h-[346px] rounded-l-3xl" src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} alt={item?.title}/>
+                                        <div className="w-full h-[150px] sm:h-[150px] md:h-[250px] lg:h-[350px] mb-5 rounded-3xl flex border-2 border-[#FFFFFF] bg-[#2b2b2b]" key={id}>
+                                            <img className="h-[146px] sm:h-[146px] md:h-[246px] lg:h-[346px] rounded-l-3xl" src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} alt={item?.title}/>
                                             <div className="relative overflow-y-auto overflow-x-hidden text-xs sm:text-xs md:text-xl lg:text-2xl h-full">
                                                 <div className="font-extrabold m-3 w-full text-left break-words">
                                                     <div className="flex">
                                                         <div className="relative">{item?.title}</div>
-                                                        <div className="w-full h-full relative mt-auto mb-auto ml-3">
+                                                        <div className="w-fit h-full relative mt-auto mb-auto ml-3">
                                                             <MdRemoveCircle className="w-fit h-fit" onClick={() => {removeItem(item).then(() => {})}}/>
                                                         </div>
                                                     </div>
@@ -149,8 +158,8 @@ export default function Account() {
                             <div className="whitespace-nowrap">
                                 {ratedItems.map((item, id) => {
                                     return (
-                                        <div className="w-full h-[100px] sm:h-[150px] md:h-[250px] lg:h-[350px] mb-5 rounded-3xl flex border-2 border-[#fc686f] bg-[#2b2b2b]" key={id}>
-                                            <img className="h-[96px] sm:h-[146px] md:h-[246px] lg:h-[346px] rounded-l-3xl" src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} alt={item?.title}/>
+                                        <div className="w-full h-[150px] sm:h-[150px] md:h-[250px] lg:h-[350px] mb-5 rounded-3xl flex border-2 border-[#FFFFFF] bg-[#2b2b2b]" key={id}>
+                                            <img className="h-[146px] sm:h-[146px] md:h-[246px] lg:h-[346px] rounded-l-3xl" src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} alt={item?.title}/>
                                             <div className="relative overflow-y-auto overflow-x-hidden text-xs sm:text-xs md:text-xl lg:text-2xl h-full">
                                                 <div className="m-3 mb-0 w-full text-left break-words">
                                                     <div className="flex font-extrabold">
@@ -168,7 +177,18 @@ export default function Account() {
                             </div>
                         </TabPanel>
                         <TabPanel value={value} index={2}>
-                            <div>Lists Panel</div>
+                            <div className="whitespace-nowrap flex justify-center h-full w-full">
+                                <div className="w-full h-[150px] sm:h-[150px] md:h-[250px] lg:h-[350px] mb-5 rounded-3xl flex border-2 border-[#FFFFFF] bg-[#2b2b2b]">
+                                    <div className="relative overflow-y-auto overflow-x-hidden text-xs sm:text-xs md:text-xl lg:text-2xl h-full">
+                                        <div className="m-3 mb-0 w-full text-left break-words">
+                                            <div className="flex font-extrabold">
+                                            </div>
+                                            <div className="inline-block w-fit relative">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </TabPanel>
                     </Box>
                 </div>
