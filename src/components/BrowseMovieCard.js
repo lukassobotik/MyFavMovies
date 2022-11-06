@@ -2,7 +2,14 @@ import {useHistory} from "react-router-dom";
 import requests from "./requests";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import {MdCheckCircle, MdCircle, MdOutlineAddCircle, MdPlayCircle, MdStars} from "react-icons/md"
+import {
+    IoAddCircleOutline,
+    IoCaretForwardCircleOutline,
+    IoCheckmarkCircleOutline,
+    IoEllipseOutline,
+    IoHeartCircleOutline
+} from "react-icons/io5";
+import {HiHeart, HiOutlineHeart} from "react-icons/hi";
 import {collection, deleteDoc, doc, getDocs, setDoc} from "firebase/firestore";
 import {auth, db} from "../firebase";
 import {Popover, Rating} from "@mui/material";
@@ -161,9 +168,10 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
                     {item?.title}
                 </div>
                 <div className="flex items-center justify-center text-center">
-                    <MdPlayCircle size={30} onClick={playClick} className="movie_card_button"/>
-                    {isOnWatchlist ? <MdCheckCircle size={30} onClick={listClick} className="movie_card_button"/> : <MdOutlineAddCircle size={30} onClick={listClick} className="movie_card_button"/>}
-                    {isRated ? <div onClick={ratingClick} className="movie_card_button items-center flex justify-center"><div className="absolute text-black font-bold mb-1">{rating}</div><MdCircle size={30}/></div> : <MdStars size={30} onClick={ratingClick} className="movie_card_button"/>}
+                    <IoCaretForwardCircleOutline size={30} onClick={playClick} className="movie_card_button"/>
+                    {isOnWatchlist ? <IoCheckmarkCircleOutline size={30} onClick={listClick} className="movie_card_button"/> : <IoAddCircleOutline size={30} onClick={listClick} className="movie_card_button"/>}
+                    {isRated ? <div onClick={ratingClick} className="movie_card_button items-center flex justify-center"><div className="absolute text-white font-bold mb-1">{rating}</div><IoEllipseOutline size={30}/></div>
+                        : <IoHeartCircleOutline size={30} onClick={ratingClick} className="movie_card_button"/>}
                     <Popover id={popoverId} open={isRatingPopoverOpen} anchorEl={ratingPopoverAnchorEl} onClose={handleRatingClose} anchorOrigin={{
                             vertical: 'center',
                             horizontal: 'center',
@@ -171,8 +179,8 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
                             vertical: 'center',
                             horizontal: 'center'
                     }}>
-                        <Rating name="rating" value={rating / 2} precision={0.5} defaultValue={0} onChange={(event, newValue) => {
-                                saveRating(newValue * 2).then(() => {});
+                        <Rating name="rating" value={rating} defaultValue={0} max={10} icon={<HiHeart/>} emptyIcon={<HiOutlineHeart/>} onChange={(event, newValue) => {
+                                saveRating(newValue).then(() => {handleRatingClose()});
                             }}
                         />
                     </Popover>

@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
 import BrowseMovieCard from "./BrowseMovieCard";
-import {MdChevronLeft, MdChevronRight} from "react-icons/md"
+import {HiChevronLeft, HiChevronRight} from "react-icons/hi"
 import {useHistory} from "react-router-dom";
 
 const scrollAmountPerClick = 3;
@@ -90,18 +90,18 @@ export default function Row({title, fetchURL, rowId}) {
 
     return (
         !isLoading && <div className="">
-            <h2 className='text-white font-bold md:text-xl p-4 text-left'> {title} </h2>
+            <h2 className='ml-[50px] text-white font-bold md:text-xl p-4 text-left'> {title} </h2>
             <div id={"row:" + rowId} className="carousel_row relative flex whitespace-nowrap items-center group">
                 <div id={'slider' + rowId}
-                     className="slider w-full h-full relative"
+                     className="slider ml-[50px] w-full h-full relative"
                      numvalue={1}>
                     {movies?.map((item, id) => {
                         index++;
                         return (<BrowseMovieCard key={id} item={item} index={index} rowId={rowId} type={item.media_type ? item.media_type : "movie"}/>)
                     })}
                 </div>
-                <MdChevronRight className="arrow bg-red-500 rounded-full absolute opacity-50 hover:opacity-100 cursor-pointer z-10 right-0 hidden group-hover:block" size={40} onClick={right}/>
-                <MdChevronLeft className="arrow bg-red-500 rounded-full absolute opacity-50 hover:opacity-100 cursor-pointer z-10 left-0 hidden group-hover:block" size={40} onClick={left}/>
+                <HiChevronRight color="#000000" className="arrow bg-[#FFFFFF] h-full rounded-xl absolute opacity-50 hover:opacity-100 cursor-pointer z-10 right-0 hidden group-hover:block" size={40} onClick={right}/>
+                <HiChevronLeft color="#000000" className="arrow bg-[#FFFFFF] h-full rounded-xl absolute opacity-50 hover:opacity-100 cursor-pointer z-10 left-0 hidden group-hover:block" size={40} onClick={left}/>
             </div>
         </div>
     )

@@ -1,6 +1,7 @@
 import Layout from "./Layout";
 import {UserAuth} from "../context/AuthContext";
-import {MdPerson, MdRemoveCircle} from "react-icons/md"
+import {MdPerson} from "react-icons/md";
+import {IoCloseCircleOutline} from "react-icons/io5";
 import React, {useEffect, useState} from "react"
 import {Box, Tab, Tabs, Typography} from "@mui/material";
 import {collection, deleteDoc, doc, getDocs} from "firebase/firestore";
@@ -143,7 +144,7 @@ export default function Account() {
                                                     <div className="flex">
                                                         <div className="relative">{item?.title}</div>
                                                         <div className="w-fit h-full relative mt-auto mb-auto ml-3">
-                                                            <MdRemoveCircle className="w-fit h-fit" onClick={() => {removeItem(item).then(() => {})}}/>
+                                                            <IoCloseCircleOutline className="w-fit h-fit cursor-pointer" onClick={() => {removeItem(item).then(() => {})}}/>
                                                         </div>
                                                     </div>
                                                 </div>
