@@ -19,7 +19,7 @@ export default function Browse() {
                 loadData().then(() => {}).catch((err) => console.log(err));
             }
         });
-    });
+    }, [isLoading]);
 
     async function loadData() {
         await LoadSettingsData();

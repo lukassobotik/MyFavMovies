@@ -26,7 +26,7 @@ export function AuthContextProvider({children}) {
         return () => {
             unsubscribe();
         }
-    })
+    }, [user]);
 
     return (
         <AuthContext.Provider value={{signUp, logIn, logOut, user}}>

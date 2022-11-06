@@ -2,9 +2,7 @@ import Layout from "./Layout";
 import {useEffect, useState} from "react";
 import requests from "./requests";
 import axios from "axios";
-import {useHistory} from "react-router-dom";
 
-let loaded = false;
 export default function Movie() {
     const movieId = window.location.hash.slice(8, 15);
     const movieRequest = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${requests.key}&language=${document.getElementById("root")?.getAttribute('langvalue')}&append_to_response=videos,images,alternative_titles,watch/providers,release_dates`;
@@ -16,19 +14,12 @@ export default function Movie() {
     };
 
     useEffect(() => {
-        if (!loaded) {
-            axios.get(movieRequest).then((response) => {
-                console.log(response.data);
-                setItem(response.data);
-            })
-            setIsLoading(false);
-            loaded = true;
-        }
-    });
-
-    useHistory().listen(() => {
-        loaded = false;
-    })
+        axios.get(movieRequest).then((response) => {
+            console.log(response.data);
+            setItem(response.data);
+        })
+        setIsLoading(false);
+    }, [movieRequest]);
 
     return (
         !isLoading && <Layout>

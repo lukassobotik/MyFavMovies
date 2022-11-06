@@ -1,12 +1,11 @@
 import {useHistory} from "react-router-dom";
 import requests from "./requests";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
-import {MdOutlineAddCircle, MdPlayCircle, MdStars, MdCheckCircle, MdCircle} from "react-icons/md"
-import {setDoc, deleteDoc, doc, getDocs, collection} from "firebase/firestore";
+import {MdCheckCircle, MdCircle, MdOutlineAddCircle, MdPlayCircle, MdStars} from "react-icons/md"
+import {collection, deleteDoc, doc, getDocs, setDoc} from "firebase/firestore";
 import {auth, db} from "../firebase";
 import {Popover, Rating} from "@mui/material";
-import React from "react";
 
 export default function BrowseMovieCard({item, index, rowId, type}) {
     const history = useHistory();
@@ -16,7 +15,6 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
     const [rating, setRating] = React.useState(0);
     const [isRated, setIsRated] = useState(false);
     const [ratingPopoverAnchorEl, setRatingPopoverAnchorEl] = React.useState(null);
-    let loaded = false;
     const isRatingPopoverOpen = Boolean(ratingPopoverAnchorEl);
     const popoverId = isRatingPopoverOpen ? 'rating-popover' : undefined;
 
@@ -43,35 +41,24 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
         }).then(() => setIsLoading(false)).catch((err) => {
             console.log(err);
         })
-        if (!loaded) {
-            auth.onAuthStateChanged(user => {
-                if (user) {
-                    loadData().then(() => {});
-                }
-            });
-            loaded = true;
-        }
-    });
-
-    useHistory().listen(() => {
-        loaded = false;
-    });
-
-    async function loadData() {
-        const watchlistSnapshot = await getDocs(collection(db, "users", auth.currentUser.uid.toString(), "watchlist"));
-        watchlistSnapshot.forEach((doc) => {
-            if (doc.data().item.id.toString() === item.id.toString()) {
-                setIsOnWatchlist(true);
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                const watchlistSnapshot = await getDocs(collection(db, "users", auth.currentUser.uid.toString(), "watchlist"));
+                watchlistSnapshot.forEach((doc) => {
+                    if (doc.data().item.id.toString() === item.id.toString()) {
+                        setIsOnWatchlist(true);
+                    }
+                });
+                const ratingSnapshot = await getDocs(collection(db, "users", auth.currentUser.uid.toString(), "ratings"));
+                ratingSnapshot.forEach((doc) => {
+                    if (doc.data().item.id.toString() === item.id.toString()) {
+                        setRating(doc.data().rating);
+                        setIsRated(true);
+                    }
+                });
             }
         });
-        const ratingSnapshot = await getDocs(collection(db, "users", auth.currentUser.uid.toString(), "ratings"));
-        ratingSnapshot.forEach((doc) => {
-            if (doc.data().item.id.toString() === item.id.toString()) {
-                setRating(doc.data().rating);
-                setIsRated(true);
-            }
-        });
-    }
+    }, [item]);
 
     const showDetails = () => {
         document.getElementById("itemInRowId" + index + "-" + rowId).style.zIndex = "10";

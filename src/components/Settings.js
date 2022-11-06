@@ -7,10 +7,8 @@ import {doc, setDoc} from "firebase/firestore";
 import {db} from "../firebase";
 import requests from "./requests";
 import axios from "axios";
-import {useHistory} from "react-router-dom";
 import LoadSettingsData from "./LoadData";
 
-let loaded = false;
 export default function Settings() {
     const [pfpUrl, setPfpUrl] = useState('');
     const [isPfpUrlFocused, setIsPfpUrlFocused] = useState(false);
@@ -34,25 +32,19 @@ export default function Settings() {
                 loadData().then(() => {});
             }
         });
-        if (!loaded) {
-            axios.get(languagesRequest).then((response) => {
-                setLanguageOptions(response?.data?.languages);
-                setLocationOptions(response?.data?.countries);
-            }).catch((err) => {
-                console.log(err);
-            });
-            loaded = true;
-        }
-    });
+        axios.get(languagesRequest).then((response) => {
+            setLanguageOptions(response?.data?.languages);
+            setLocationOptions(response?.data?.countries);
+            console.log(response)
+        }).catch((err) => {
+            console.log(err);
+        });
+    }, [languagesRequest, auth, isPfpUrlFocused]);
 
     async function loadData() {
         await LoadSettingsData();
         setIsLoading(false);
     }
-
-    useHistory().listen(() => {
-        loaded = false;
-    });
 
     function setPfpUrlHandler(evt) {
         setPfpUrl(evt.target.value);

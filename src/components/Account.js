@@ -1,12 +1,11 @@
 import Layout from "./Layout";
 import {UserAuth} from "../context/AuthContext";
 import {useHistory} from "react-router-dom";
-import {MdPerson, MdSettings} from "react-icons/md"
+import {MdPerson, MdRemoveCircle, MdSettings} from "react-icons/md"
 import React, {useEffect, useState} from "react"
 import {Box, Tab, Tabs, Typography} from "@mui/material";
 import {collection, deleteDoc, doc, getDocs} from "firebase/firestore";
 import {auth, db} from "../firebase";
-import {MdRemoveCircle} from "react-icons/md"
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -40,7 +39,6 @@ function a11yProps(index: number) {
         'aria-controls': `simple-tabpanel-${index}`,
     };
 }
-let loaded = false;
 
 export default function Account() {
     const {user} = UserAuth();
@@ -58,34 +56,20 @@ export default function Account() {
     }
 
     useEffect(() => {
-        if (!loaded) {
-            auth.onAuthStateChanged(user => {
-                if (user) {
-                    loadData().then(r => {
-                        console.log(r)
-                        console.log(user);
-                    });
-                }
-            });
-            setIsLoading(false);
-            loaded = true;
-        }
-    })
-
-    async function loadData(){
-        const querySnapshot = await getDocs(collection(db, "users", auth.currentUser.uid.toString(), "watchlist"));
-        const items = [];
-        querySnapshot.forEach((doc) => {
-            items.push(doc.data().item);
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                const querySnapshot = await getDocs(collection(db, "users", auth.currentUser.uid.toString(), "watchlist"));
+                const items = [];
+                querySnapshot.forEach((doc) => {
+                    items.push(doc.data().item);
+                });
+                setWatchlist(items);
+                console.log(watchlist);
+                setIsLoading(false);
+            }
         });
-        setWatchlist(items);
-        console.log(watchlist);
         setIsLoading(false);
-    }
-
-    useHistory().listen(() => {
-        loaded = false;
-    })
+    }, [isLoading]);
 
     async function removeItem(item) {
         try {
