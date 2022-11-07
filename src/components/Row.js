@@ -4,7 +4,7 @@ import BrowseMovieCard from "./BrowseMovieCard";
 import {HiChevronLeft, HiChevronRight} from "react-icons/hi"
 import {useHistory} from "react-router-dom";
 
-const scrollAmountPerClick = 3;
+const scrollAmountPerClick = 6;
 const movieItemWidth = 300;
 
 let pos = 1;
