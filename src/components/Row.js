@@ -3,6 +3,7 @@ import axios from "axios";
 import BrowseMovieCard from "./BrowseMovieCard";
 import {HiChevronLeft, HiChevronRight} from "react-icons/hi"
 import {useHistory} from "react-router-dom";
+import {screenSizeGroups} from "./Constants";
 
 const scrollAmountPerClick = 6;
 const movieItemWidth = 300;
@@ -19,13 +20,27 @@ export default function Row({title, fetchURL, rowId}) {
             setAllMovies(response.data.results);
             console.log(response.data.results);
             setIsLoading(false);
-            // setMovies(response.data.results.slice(0, width));
         }).catch((err) => {
             console.log(err);
         })
     }, [fetchURL]);
 
     let index = 0;
+
+    window.addEventListener('resize', (() => {
+        if (window.innerWidth >= screenSizeGroups.sixItems) {
+            document.querySelectorAll(".movie_card_item").forEach(el => el.style.width = "16%");
+        } else if (window.innerWidth >= screenSizeGroups.fiveItems && window.innerWidth <= screenSizeGroups.sixItems) {
+            document.querySelectorAll(".movie_card_item").forEach(el => el.style.width = "19%");
+        } else if (window.innerWidth >= screenSizeGroups.fourItems && window.innerWidth <= screenSizeGroups.fiveItems) {
+            document.querySelectorAll(".movie_card_item").forEach(el => el.style.width = "24%");
+        } else if (window.innerWidth >= screenSizeGroups.threeItems && window.innerWidth <= screenSizeGroups.fourItems) {
+            document.querySelectorAll(".movie_card_item").forEach(el => el.style.width = "31.5%");
+        } else if (window.innerWidth <= screenSizeGroups.threeItems) {
+            document.querySelectorAll(".movie_card_item").forEach(el => el.style.width = "46%");
+        }
+    }))
+
 
     const setLeftOrigin = () => {
         let numvalue = parseInt(document.getElementById("slider" + rowId)?.getAttribute('numvalue'));

@@ -1,6 +1,6 @@
 import Layout from "./Layout";
 import {useEffect, useState} from "react";
-import requests from "./requests";
+import requests from "./Constants";
 import axios from "axios";
 
 export default function Movie() {

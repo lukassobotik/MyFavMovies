@@ -8,4 +8,12 @@ const requests = {
     trending_this_week: `https://api.themoviedb.org/3/trending/movie/week?api_key=${key}`
 };
 
+export const screenSizeGroups = {
+    twoItems: 600,
+    threeItems: 800,
+    fourItems: 1000,
+    fiveItems: 1400,
+    sixItems: 1800
+}
+
 export default requests;
