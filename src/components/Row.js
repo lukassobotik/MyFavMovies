@@ -55,18 +55,6 @@ export default function Row({title, fetchURL, rowId}) {
         }
     }
 
-    const setLeftOrigin = () => {
-        let numvalue = parseInt(document.getElementById("slider" + rowId)?.getAttribute('numvalue'));
-        let card = document.getElementById("itemInRowId" + numvalue + "-" + rowId);
-        card.style.transformOrigin = "left";
-    }
-    const resetOrigin = (pos) => {
-        for (let i = pos; i <= allMovies.length; i++) {
-            let card = document.getElementById("itemInRowId" + i + "-" + rowId);
-            if (card) card.style.transformOrigin = "center";
-        }
-    }
-
     const setAnimation = (direction) => {
         if (direction !== "left" && direction !== "right") {
             console.error("wrong direction attribute");
@@ -75,7 +63,6 @@ export default function Row({title, fetchURL, rowId}) {
         let element = document.getElementById("slider" + rowId);
         movieItemWidth = document.getElementById("itemId1-1").clientWidth;
 
-        console.log("pos by division: ", ((-parseInt(element.style.left.substring(0, element.style.left.length - 2)) / movieItemWidth) + 1))
         firstVisibleItemPosition = (-parseInt(element.style.left.substring(0, element.style.left.length - 2)) / movieItemWidth) + 1;
         if (direction === "right" && firstVisibleItemPosition + (scrollAmountPerClick - 1) >= allMovies.length) return;
         if (direction === "left" && firstVisibleItemPosition - 1 <= 0) return;
@@ -90,11 +77,9 @@ export default function Row({title, fetchURL, rowId}) {
 
     let triggerAmount = 0;
     const left = () => {
-        resetOrigin(firstVisibleItemPosition);
         for (let i = 0; i <= scrollAmountPerClick; i++) {
             setAnimation("left");
         }
-        setLeftOrigin();
 
         triggerAmount = 0;
     }
@@ -103,7 +88,6 @@ export default function Row({title, fetchURL, rowId}) {
         for (let i = 0; i < scrollAmountPerClick; i++) {
             setAnimation("right");
         }
-        setLeftOrigin();
 
         if (firstVisibleItemPosition !== (allMovies.length - (scrollAmountPerClick - 1))) return;
         if (triggerAmount === 1) {
@@ -127,8 +111,8 @@ export default function Row({title, fetchURL, rowId}) {
                         return (<BrowseMovieCard key={id} item={item} index={index} rowId={rowId} type={item.media_type ? item.media_type : "movie"}/>)
                     })}
                 </div>
-                <HiChevronRight color="#000000" className="arrow bg-[#FFFFFF] h-full rounded-xl absolute opacity-50 hover:opacity-100 cursor-pointer z-10 right-0 hidden group-hover:block" size={40} onClick={right}/>
-                <HiChevronLeft color="#000000" className="arrow bg-[#FFFFFF] h-full rounded-xl absolute opacity-50 hover:opacity-100 cursor-pointer z-10 left-0 hidden group-hover:block" size={40} onClick={left}/>
+                <HiChevronRight color="#FFFFFF" className="arrow w-[60px] h-full absolute opacity-100 hover:bg-opacity-50 hover:bg-[#131313] cursor-pointer z-10 right-0 hidden group-hover:block" onClick={right}/>
+                <HiChevronLeft color="#FFFFFF" className="arrow w-[60px] h-full absolute opacity-100 hover:bg-opacity-50 hover:bg-[#131313] cursor-pointer z-10 left-0 hidden group-hover:block" onClick={left}/>
             </div>
         </div>
     )
