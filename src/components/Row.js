@@ -53,6 +53,25 @@ export default function Row({title, fetchURL, rowId}) {
             document.getElementById("root").setAttribute("itemsonscreen", "2");
             scrollAmountPerClick = 2;
         }
+        setOrigins();
+    }
+
+    function setOrigins() {
+        document.getElementById("slider" + rowId).querySelectorAll(".row_item").forEach(el => el.style.transformOrigin = "center");
+        let index = 0;
+        let rightOrigins = [];
+        document.getElementById("slider" + rowId).querySelectorAll(".row_item").forEach(el => {
+            if (index % scrollAmountPerClick === 0) {
+                el.style.transformOrigin = "left";
+                rightOrigins.push((index + scrollAmountPerClick) - 1);
+            }
+            rightOrigins.forEach(item => {
+                if (item === index) {
+                    el.style.transformOrigin = "right";
+                }
+            })
+            index++;
+        })
     }
 
     const setAnimation = (direction) => {
@@ -77,7 +96,7 @@ export default function Row({title, fetchURL, rowId}) {
 
     let triggerAmount = 0;
     const left = () => {
-        for (let i = 0; i <= scrollAmountPerClick; i++) {
+        for (let i = 0; i < scrollAmountPerClick; i++) {
             setAnimation("left");
         }
 
