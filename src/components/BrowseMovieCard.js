@@ -1,5 +1,5 @@
 import {useHistory} from "react-router-dom";
-import requests from "./requests";
+import requests from "./Constants";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {
@@ -151,7 +151,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
     }
 
     return (
-        !isLoading && <div id={"itemId" + index + "-" + rowId} className='w-[300px] inline-block cursor-pointer relative p-2 group' data-index={index}>
+        !isLoading && <div id={"itemId" + index + "-" + rowId} className='movie_card_item w-[300px] inline-block cursor-pointer relative p-2 group' data-index={index}>
         <div id={"itemInRowId" + index + "-" + rowId} className="row_item" style={{left: 0}} onMouseOver={showDetails} onMouseLeave={hideDetails}>
             <div id={"player" + index + "-" + rowId} className="player" onClick={generalClick}>
                 <img className='w-full h-auto block overflow-visible rounded'

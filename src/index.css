@@ -192,6 +192,7 @@ code {
 
 .slider {
   overflow: visible;
+  transition: all 450ms;
 }
 
 .carousel_row {
