@@ -37,8 +37,8 @@ export default function Movie() {
                                     else return <div key={id}>, {item.name}</div>;
                                 })}</div>
                             </div>
-                            <div className="mr-5 font-bold">Overview:</div>
-                            <div className="mb-5 mr-5 text-[#878787] italic">{item.overview}</div>
+                            {item.overview ? <div><div className="mr-5 font-bold">Overview:</div>
+                                <div className="mb-5 mr-5 text-[#878787] italic">{item.overview}</div></div> : null}
                             {item.tagline ? <div><div className="mr-5 font-bold">Tagline:</div>
                                 <div className="mb-5 mr-5 text-[#878787] italic">{item.tagline}</div></div> : null}
                         </div>
