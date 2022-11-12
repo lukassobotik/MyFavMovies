@@ -3,6 +3,7 @@ import axios from "axios";
 import BrowseMovieCard from "./BrowseMovieCard";
 import {HiChevronLeft, HiChevronRight} from "react-icons/hi"
 import {screenSizeGroups} from "./Constants";
+import {useHistory} from "react-router-dom";
 
 export default function Row({title, fetchURL, rowId}) {
     const [allMovies, setAllMovies] = useState([]);
@@ -21,13 +22,15 @@ export default function Row({title, fetchURL, rowId}) {
         })
     }, [fetchURL]);
 
-    window.addEventListener('resize', (() => {
+    function handleScreenResize() {
         let element = document.getElementById("slider" + rowId);
         movieItemWidth = document.getElementById("itemId1-" + rowId).clientWidth;
         element.style.left = (-firstVisibleItemPosition * movieItemWidth) + "px";
 
         setItemScaling();
-    }))
+    }
+
+    window.addEventListener('resize', handleScreenResize);
 
     function setItemScaling() {
         if (window.innerWidth >= screenSizeGroups.sixItems) {
@@ -53,6 +56,9 @@ export default function Row({title, fetchURL, rowId}) {
         }
 
         if (window.innerWidth < screenSizeGroups.twoItems) {
+            document.querySelectorAll(".movie_card_item").forEach(el => el.style.width = "50%");
+            document.getElementById("root").setAttribute("itemsonscreen", "2");
+            scrollAmountPerClick = 2;
             const item = document.getElementById("slider" + rowId);
             item.style.marginLeft = "0";
             item.style.marginRight = "0";
@@ -68,6 +74,10 @@ export default function Row({title, fetchURL, rowId}) {
 
         setOrigins();
     }
+
+    useHistory().listen(() => {
+        window.removeEventListener('resize', handleScreenResize);
+    });
 
     function setOrigins() {
         document.getElementById("slider" + rowId).querySelectorAll(".row_item").forEach(el => el.style.transformOrigin = "center");

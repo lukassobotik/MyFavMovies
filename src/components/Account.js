@@ -6,6 +6,7 @@ import React, {useEffect, useState} from "react"
 import {Box, Tab, Tabs, Typography} from "@mui/material";
 import {collection, deleteDoc, doc, getDocs} from "firebase/firestore";
 import {auth, db} from "../firebase";
+import {useHistory} from "react-router-dom";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -90,10 +91,15 @@ export default function Account() {
         }
     }
 
-    window.addEventListener('resize', (() => {
-        console.log('resized to: ', window.innerWidth, 'x', window.innerHeight)
-        changeMargins()
-    }))
+    function handleScreenResize() {
+        changeMargins();
+    }
+
+    window.addEventListener('resize', handleScreenResize);
+
+    useHistory().listen(() => {
+        window.removeEventListener('resize', handleScreenResize);
+    });
 
     function changeMargins() {
         if (window.innerWidth <= 750) {
