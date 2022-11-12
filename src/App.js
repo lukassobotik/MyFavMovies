@@ -29,7 +29,7 @@ function App() {
                 <div className="App">
                     <Switch>
                         <Route path="/" exact>
-                            <Redirect to="/browse"/>
+                            <Redirect to="/browse/"/>
                         </Route>
                         <Route path="/login/" exact>
                             <Login/>
@@ -37,17 +37,16 @@ function App() {
                         <Route path="/signup/" exact>
                             <SignUp/>
                         </Route>
-                        <Route path="/browse" exact>
+                        <Route path="/browse/" exact>
                             <Browse/>
                         </Route>
                         <Route path="/account" exact>
                             <AccountProtectedRoute><Account/></AccountProtectedRoute>
                         </Route>
-                        <Route path="/settings" exact>
+                        <Route path="/settings/" exact>
                             <AccountProtectedRoute><Settings/></AccountProtectedRoute>
                         </Route>
-                        <Route path="/movie/*" exact>
-                            <Movie/>
+                        <Route path="/movie/:movieId/" component={Movie}>
                         </Route>
                     </Switch>
                 </div>

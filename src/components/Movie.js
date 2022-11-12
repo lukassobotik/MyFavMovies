@@ -2,9 +2,10 @@ import Layout from "./Layout";
 import {useEffect, useState} from "react";
 import requests from "./Constants";
 import axios from "axios";
+import {useParams} from "react-router-dom";
 
 export default function Movie() {
-    const movieId = window.location.hash.slice(8, 15);
+    let { movieId } = useParams();
     const movieRequest = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${requests.key}&language=${document.getElementById("root")?.getAttribute('langvalue')}&append_to_response=videos,images,alternative_titles,watch/providers,release_dates`;
     const [item, setItem] = useState([]);
     const [isLoading, setIsLoading] = useState(true);

@@ -79,7 +79,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
     }
 
     const generalClick = () => {
-        history.push("/" + type + "/" + item?.id);
+        history.push("/" + type + "/" + item?.id + "/");
     }
 
     const playClick = () => {
