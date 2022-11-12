@@ -9,7 +9,7 @@ const requests = {
 };
 
 export const screenSizeGroups = {
-    twoItems: 600,
+    twoItems: 500,
     threeItems: 800,
     fourItems: 1000,
     fiveItems: 1400,

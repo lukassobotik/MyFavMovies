@@ -51,6 +51,21 @@ export default function Row({title, fetchURL, rowId}) {
             document.getElementById("root").setAttribute("itemsonscreen", "2");
             scrollAmountPerClick = 2;
         }
+
+        if (window.innerWidth < screenSizeGroups.twoItems) {
+            const item = document.getElementById("slider" + rowId);
+            item.style.marginLeft = "0";
+            item.style.marginRight = "0";
+            const title = document.getElementById("rowTitle" + rowId);
+            title.style.marginLeft = "0";
+        } else {
+            const item = document.getElementById("slider" + rowId);
+            item.style.marginLeft = "50px";
+            item.style.marginRight = "50px";
+            const title = document.getElementById("rowTitle" + rowId);
+            title.style.marginLeft = "50px"
+        }
+
         setOrigins();
     }
 
@@ -116,7 +131,7 @@ export default function Row({title, fetchURL, rowId}) {
 
     return (
         <div className="">
-            <h2 className='ml-[50px] text-white font-bold md:text-xl p-4 text-left'> {title} </h2>
+            <h2 id={"rowTitle" + rowId} className='ml-[50px] text-white font-bold md:text-xl p-4 text-left'> {title} </h2>
             <div id={"row:" + rowId} className="carousel_row relative flex whitespace-nowrap items-center group">
                 <div id={'slider' + rowId}
                      className="slider ml-[50px] mr-[50px] w-full h-full relative"
