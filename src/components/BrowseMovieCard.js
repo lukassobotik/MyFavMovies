@@ -13,9 +13,12 @@ import {HiHeart, HiOutlineHeart} from "react-icons/hi";
 import {collection, deleteDoc, doc, getDocs, setDoc} from "firebase/firestore";
 import {auth, db} from "../firebase";
 import {Popover, Rating} from "@mui/material";
+import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 export default function BrowseMovieCard({item, index, rowId, type}) {
     const history = useHistory();
+    const [backdrop, setBackdrop] = useState(item.backdrop_path);
     const [isLoading, setIsLoading] = useState(true);
     const [playTrailer, setPlayTrailer] = useState(false);
     const [isOnWatchlist, setIsOnWatchlist] = useState(false);
@@ -30,7 +33,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
         ).then((response) => {
             response.data?.images?.backdrops.map((bg_item) => {
                 if (bg_item.iso_639_1 === document.getElementById("root")?.getAttribute('langvalue')){
-                    item.backdrop_path = bg_item.file_path;
+                    setBackdrop(bg_item?.file_path);
                 }
             })
             response.data?.videos?.results?.map((trailer_item) => {
@@ -151,11 +154,17 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
     }
 
     return (
-        !isLoading && <div id={"itemId" + index + "-" + rowId} className='movie_card_item w-[300px] inline-block cursor-pointer relative p-2 group' data-index={index}>
+        <div id={"itemId" + index + "-" + rowId} className='movie_card_item w-[300px] inline-block cursor-pointer relative p-2 group' data-index={index}>
         <div id={"itemInRowId" + index + "-" + rowId} className="row_item" style={{left: 0}} onMouseOver={showDetails} onMouseLeave={hideDetails}>
             <div id={"player" + index + "-" + rowId} className="player" onClick={generalClick}>
-                <img className='w-full h-auto block overflow-visible rounded'
-                     src={`https://image.tmdb.org/t/p/w500/${item.backdrop_path}`} alt={item.title}/>
+                {!isLoading ?
+                    <img className='w-full h-auto block overflow-visible rounded'
+                                   src={`https://image.tmdb.org/t/p/w500/${backdrop}`} alt={item.title}/>
+                    : <SkeletonTheme baseColor="#a9b7c1" highlightColor="#5e6c77">
+                    <p>
+                    <Skeleton className="w-[300px] aspect-video" duration={2} />
+                    </p>
+                    </SkeletonTheme>}
                 <div className="ml-5 mt-5 w-[0px] h-auto left-0 top-0 absolute"/>
                 {playTrailer ? <div className="youtube-container rounded-t">
                     <iframe src={`https://www.youtube.com/embed/${item?.trailer_path}?autoplay=1&controls=0&autohide=1?rel=0&amp&modestbranding=1`}

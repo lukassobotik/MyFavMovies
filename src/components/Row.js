@@ -7,7 +7,6 @@ import {screenSizeGroups} from "./Constants";
 export default function Row({title, fetchURL, rowId}) {
     const [allMovies, setAllMovies] = useState([]);
     const [movies, setMovies] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
     let scrollAmountPerClick = 3;
     let movieItemWidth = 300;
     let firstVisibleItemPosition = 0;
@@ -17,7 +16,6 @@ export default function Row({title, fetchURL, rowId}) {
             setMovies(response.data.results);
             setAllMovies(response.data.results);
             console.log(response.data.results);
-            setIsLoading(false);
         }).catch((err) => {
             console.log(err);
         })
@@ -48,7 +46,7 @@ export default function Row({title, fetchURL, rowId}) {
             document.querySelectorAll(".movie_card_item").forEach(el => el.style.width = "33.333%");
             document.getElementById("root").setAttribute("itemsonscreen", "3");
             scrollAmountPerClick = 3;
-        } else if (window.innerWidth <= screenSizeGroups.threeItems) {
+        } else if (window.innerWidth >= screenSizeGroups.twoItems && window.innerWidth <= screenSizeGroups.threeItems) {
             document.querySelectorAll(".movie_card_item").forEach(el => el.style.width = "50%");
             document.getElementById("root").setAttribute("itemsonscreen", "2");
             scrollAmountPerClick = 2;
@@ -117,7 +115,7 @@ export default function Row({title, fetchURL, rowId}) {
     let index = 0;
 
     return (
-        !isLoading && <div className="">
+        <div className="">
             <h2 className='ml-[50px] text-white font-bold md:text-xl p-4 text-left'> {title} </h2>
             <div id={"row:" + rowId} className="carousel_row relative flex whitespace-nowrap items-center group">
                 <div id={'slider' + rowId}

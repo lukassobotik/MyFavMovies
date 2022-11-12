@@ -28,7 +28,7 @@ export default function Layout({children}) {
             </div>
         </header>
         <section className="body_section">{children}</section>
-        <footer className="h-[250px]">
+        <footer className="h-[25vh]">
 
         </footer>
     </>

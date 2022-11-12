@@ -46,8 +46,7 @@ function App() {
                         <Route path="/settings/" exact>
                             <AccountProtectedRoute><Settings/></AccountProtectedRoute>
                         </Route>
-                        <Route path="/movie/:movieId/" component={Movie}>
-                        </Route>
+                        <Route path="/movie/:movieId/" component={Movie}/>
                     </Switch>
                 </div>
             </AuthContextProvider>
