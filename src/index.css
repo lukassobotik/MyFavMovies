@@ -106,7 +106,7 @@ code {
   position: fixed;
   display: flex;
   height: var(--navbar-height);
-  width: 100%;
+  width: 100vw;
   background-image: linear-gradient(to top, rgba(0,0,0,0), rgba(0,0,0,1));
 }
 .navbar--hidden {
@@ -158,9 +158,13 @@ code {
 }
 
 .browse_container {
+  overflow-x: hidden;
   display: inline;
   height: 100%;
   background-color: #131313;
+}
+.browse_container img{
+  overflow-x: visible;
 }
 
 .movie_card_button {
