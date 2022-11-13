@@ -64,7 +64,7 @@ export default function Movie() {
     return (
         !isLoading && <Layout>
             <div className="h-fit" onLoad={appendGenres}>
-                <div className="w-full bg-black h-full mt-10 border-b-2 border-t-2 border-[#FFFFFF] justify-center overflow-scroll">
+                <div className="w-full bg-black h-full mt-10 border-b-2 border-t-2 border-[#FFFFFF] justify-center overflow-scroll" onLoad={handleScreenResize}>
                     <div id="movie_ribbon_items" className="flex w-fit h-[60vh] ml-[15%] mr-[15%] justify-center movie_ribbon">
                         <div id="movie_ribbon_poster" className="mt-auto mb-auto ml-5 rounded-3xl"><img src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} alt={"Poster"} className="rounded-3xl w-[35vh] max-w-[none] border-2"/></div>
                         <div id="movie_ribbon_info" className="inline-block ml-5 mt-auto mb-auto text-[3vh] text-left overflow-scroll">
