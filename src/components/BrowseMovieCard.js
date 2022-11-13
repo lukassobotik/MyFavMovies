@@ -31,11 +31,14 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
     useEffect(() => {
         axios.get(`https://api.themoviedb.org/3/movie/${item?.id}?api_key=${requests.key}&language=${document.getElementById("root")?.getAttribute('langvalue')}&append_to_response=videos,images`
         ).then((response) => {
-            response.data?.images?.backdrops.map((bg_item) => {
-                if (bg_item.iso_639_1 === document.getElementById("root")?.getAttribute('langvalue')){
-                    setBackdrop(bg_item?.file_path);
+            let backdrops = response.data?.images?.backdrops;
+            for (let i = 0; i < backdrops.length; i++) {
+                if (backdrops[i].iso_639_1 === document.getElementById("root")?.getAttribute('langvalue')){
+                    setBackdrop(backdrops[i]?.file_path);
+                    break;
                 }
-            })
+            }
+
             response.data?.videos?.results?.map((trailer_item) => {
                 let vid_key = trailer_item?.key;
                 let type = trailer_item?.type;
