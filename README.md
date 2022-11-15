@@ -5,7 +5,6 @@
 - [ ] What movies do you know an actor from
 - [ ] Movies where two or more of your favorite actors co-star
 - [ ] Favorite actor list
-- [ ] Proper UI design
 
 ## How will the website decide what movies are relevant to you?
 The website will take all tags on the current movie (for example "based on novel or book" or "based on comic") and the genres of the movie, after that it will put it in a list how many times you've liked that specific genre a tag and what rating you gave it. From that the website will find similar movies with similar tags and genres.
