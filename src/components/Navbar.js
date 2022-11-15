@@ -64,7 +64,7 @@ export default function Navbar() {
     return (<nav onLoad={handleMobileSize}>
         <div className="navbar">
             <div className="navbar_item">
-                <img id="logo" src={Logo} alt="Home" width={25} height={25} onClick={() => {history.push('/browse/')}}/>
+                <Link to="/browse/"><img id="logo" src={Logo} alt="Home" width={25} height={25}/></Link>
             </div>
             <div id="navbar_search" className="navbar_item">
                 <Link to="/" className="navbar-btn"><MdSearch size={25}/></Link>
@@ -84,7 +84,7 @@ export default function Navbar() {
                         <button id={"logout_btn"} className="logout-btn button" onClick={logout}>Log Out</button>
                 </div> :
                     <div className="account flex">
-                        <button className="logout-btn button" onClick={() => history.push('/login/')}>Sign In</button>
+                        <Link to="/login/" className="logout-btn button"><button>Sign In</button></Link>
                     </div>}
                 <Popover id={popoverId} open={isAccountPopoverOpen} anchorEl={accountPopoverAnchorEl} onClose={handleAccountMenuClose} anchorOrigin={{
                     vertical: 'bottom',
