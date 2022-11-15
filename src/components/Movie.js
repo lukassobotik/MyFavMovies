@@ -3,12 +3,16 @@ import {useEffect, useState} from "react";
 import requests from "./Constants";
 import axios from "axios";
 import {useHistory, useParams} from "react-router-dom";
+import LoadSettingsData from "./LoadData";
+import {auth} from "../firebase";
 
 export default function Movie() {
     let { movieId } = useParams();
     const movieRequest = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${requests.key}&language=${document.getElementById("root")?.getAttribute('langvalue')}&append_to_response=videos,images,alternative_titles,watch/providers,release_dates`;
     const [item, setItem] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [releaseDate, setReleaseDate] = useState('');
+    const [releaseDateType, setReleaseDateType] = useState('');
     let genres = ' ';
 
     document.onmousedown = () => {
@@ -16,18 +20,24 @@ export default function Movie() {
     };
 
     useEffect(() => {
-        axios.get(movieRequest).then((response) => {
-            console.log(response.data);
-            setItem(response.data);
-            appendGenres();
-        }).then(() => {
-            setIsLoading(false);
-        })
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                await LoadSettingsData().then(() => {
+                    axios.get(movieRequest).then((response) => {
+                        console.log(response.data);
+                        setItem(response.data);
+                        appendGenres();
+                        getReleaseDateItem();
+                    }).then(() => {
+                        setIsLoading(false);
+                    })
+                })
+            }
+        });
     }, [movieRequest]);
 
     function handleScreenResize() {
         let ratio = window.innerWidth / window.innerHeight;
-        console.log(ratio);
         if (window.innerWidth < 1200) {
             document.getElementById("movie_ribbon_items").style.marginLeft = "0";
             document.getElementById("movie_ribbon_items").style.marginRight = "0";
@@ -45,6 +55,39 @@ export default function Movie() {
         }
     }
 
+    function getReleaseDateItem() {
+        let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        item?.release_dates?.results.map((date) => {
+            if (date.iso_3166_1.toString() === document.getElementById("root")?.getAttribute('locvalue')) {
+                date.release_dates?.map((date_item) => {
+                    let parsedDate = new Date(date_item?.release_date?.substring(0, (date_item?.release_date?.length - 5))).toLocaleDateString(document.getElementById("root")?.getAttribute('locvalue'), options);
+                    setReleaseDate(parsedDate);
+
+                    switch (date_item.type) {
+                        case 1:
+                            setReleaseDateType("(Premiere)");
+                            break;
+                        case 2:
+                            setReleaseDateType("(Theatrical (limited))");
+                            break;
+                        case 3:
+                            setReleaseDateType("(Theatrical)");
+                            break;
+                        case 4:
+                            setReleaseDateType("(Digital)");
+                            break;
+                        case 5:
+                            setReleaseDateType("(Physical)");
+                            break;
+                        case 6:
+                            setReleaseDateType("(TV)");
+                            break;
+                    }
+                })
+            }
+        })
+    }
+
     function appendGenres() {
         item?.genres?.map((item, id) => {
             if (id === 0) genres = genres + item.name;
@@ -52,7 +95,6 @@ export default function Movie() {
         })
         let el = document.getElementById("movie_ribbon_genres");
         if (el !== null) el.innerText = genres;
-        console.log(genres);
     }
 
     window.addEventListener('resize', handleScreenResize);
@@ -80,6 +122,9 @@ export default function Movie() {
                                 <div className="mr-5 text-[#878787] italic">{item.tagline}</div></div> : null}
                         </div>
                     </div>
+                </div>
+                <div className="w-full bg-black h-full border-b-2 border-[#FFFFFF] justify-center overflow-scroll">
+                    <div>{releaseDate} {releaseDateType}</div>
                 </div>
             </div>
         </Layout>
