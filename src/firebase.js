@@ -4,13 +4,13 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 export const firebaseConfig = {
-    apiKey: "AIzaSyCykk7heLz99AXyELMA_SCODnFEYVboQHs",
-    authDomain: "myfavorite-movies.firebaseapp.com",
-    projectId: "myfavorite-movies",
-    storageBucket: "myfavorite-movies.appspot.com",
-    messagingSenderId: "436588163845",
-    appId: "1:436588163845:web:05f80fca5f1b190e247d6c",
-    measurementId: "G-ESM60CKBEP"
+    apiKey: process.env.REACT_APP_API_KEY,
+    authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+    projectId: process.env.REACT_APP_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+    appId: process.env.REACT_APP_APP_ID,
+    measurementId: process.env.REACT_APP_MEASUREMENT_ID
 };
 
 export const app = initializeApp(firebaseConfig);
