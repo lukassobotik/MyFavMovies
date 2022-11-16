@@ -16,7 +16,7 @@ REACT_APP_TMDB_API_KEY=''
 ```
 In between the apostrophes, add your Firstore Database and TMDb API Keys
 
-For more Informations checkout the [Documentation](https://github.com/PuckyEU/MyFavMovies/wiki)
+For more info, checkout the [Documentation](https://github.com/PuckyEU/MyFavMovies/wiki)
 
 ## Features in the future
 - [ ] What movies do you know an actor from
