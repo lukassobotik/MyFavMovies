@@ -2,6 +2,13 @@
 [**MyFavMovies**](https://puckyeu.github.io/MyFavMovies/) is a website, which is made for you to **Discover** what movies or tv shows you would want to watch. It is in a streaming service like fashion, and all results will be **Personalized** depending on **Your Ratings** of previous movies. The website will contain every bit of information you would **need** or **want** to know about the movie like **Release Dates, Cast, Crew** and so on.
 
 ## How to clone this repository
+
+### Prerequisites
+* NodeJS & npm - [Download & Install NodeJS & npm](https://nodejs.org/en/download/)
+* Git - [Download & Install Git](https://git-scm.com/downloads). OSX and Linux machines typically have this already installed.
+
+Once you clone this repository, run `npm install` to download all the required plugins
+
 1. In the root of this repository, create a new file named `.env`
 2. In the file, add these keywords: 
 ```env
