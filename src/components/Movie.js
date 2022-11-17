@@ -55,38 +55,37 @@ export default function Movie() {
 
     function getReleaseDateItem() {
         let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        item?.release_dates?.results.map((date) => {
-            if (date.iso_3166_1.toString() === document.getElementById("root")?.getAttribute('locvalue')) {
-                let dates = [];
-                date.release_dates?.map((date_item) => {
-                    let parsedDate = new Date(date_item?.release_date?.substring(0, (date_item?.release_date?.length - 5))).toLocaleDateString(document.getElementById("root")?.getAttribute('locvalue'), options);
+        let dates = [];
 
-                    switch (date_item.type) {
-                        case 1:
-                            dates.push(parsedDate + " (Premiere)");
-                            break;
-                        case 2:
-                            dates.push(parsedDate + " (Theatrical (limited))");
-                            break;
-                        case 3:
-                            dates.push(parsedDate + " (Theatrical)");
-                            break;
-                        case 4:
-                            dates.push(parsedDate + " (Digital)");
-                            break;
-                        case 5:
-                            dates.push(parsedDate + " (Physical)");
-                            break;
-                        case 6:
-                            dates.push(parsedDate + " (TV)");
-                            break;
-                        default:
-                            console.error("Wrong Type of Release Date");
-                    }
-                })
-                setReleaseDates(dates);
+        const date_item = item.release_dates.results.find(date => date.iso_3166_1.toString() === document.getElementById("root")?.getAttribute('locvalue'));
+        date_item?.release_dates?.map((date) => {
+            let parsedDate = new Date(date?.release_date?.substring(0, (date?.release_date?.length - 5))).toLocaleDateString(document.getElementById("root")?.getAttribute('locvalue'), options);
+
+            switch (date.type) {
+                case 1:
+                    dates.push(parsedDate + " (Premiere)");
+                    break;
+                case 2:
+                    dates.push(parsedDate + " (Theatrical (limited))");
+                    break;
+                case 3:
+                    dates.push(parsedDate + " (Theatrical)");
+                    break;
+                case 4:
+                    dates.push(parsedDate + " (Digital)");
+                    break;
+                case 5:
+                    dates.push(parsedDate + " (Physical)");
+                    break;
+                case 6:
+                    dates.push(parsedDate + " (TV)");
+                    break;
+                default:
+                    console.error("Wrong Type of Release Date");
             }
         })
+        setReleaseDates(dates);
+        console.log(date_item);
     }
 
     function appendGenres() {
@@ -126,8 +125,8 @@ export default function Movie() {
                     </div>
                 </div>
                 <div className="w-full bg-black h-full border-b-2 border-[#FFFFFF] justify-center overflow-scroll">
-                    <div>{releaseDates.map((date) => (
-                        <div>{date}</div>
+                    <div>{releaseDates.map((date, id) => (
+                        <div key={id}>{date}</div>
                     ))}</div>
                 </div>
             </div>
