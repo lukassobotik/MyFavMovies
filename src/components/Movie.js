@@ -90,6 +90,7 @@ export default function Movie() {
     }
 
     function appendGenres() {
+        genres = '';
         item?.genres?.map((item, id) => {
             if (id === 0) genres = genres + item.name;
             else genres = genres + ", " + item.name;
