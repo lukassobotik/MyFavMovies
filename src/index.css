@@ -228,3 +228,27 @@ code {
 .profile_overview {
   flex-direction: column;
 }
+
+table {
+  width: 70%;
+}
+
+th, td {
+  border: 1px solid;
+}
+thead {
+  border-bottom-width: 1px;
+}
+
+td:first-child {
+  width: 10%;
+}
+td:nth-child(2) {
+  width: 50%;
+}
+td:nth-child(3) {
+  width: 15%;
+}
+td:nth-child(4) {
+  width: 5%;
+}
