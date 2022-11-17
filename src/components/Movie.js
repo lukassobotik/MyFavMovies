@@ -11,8 +11,7 @@ export default function Movie() {
     const movieRequest = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${requests.key}&language=${document.getElementById("root")?.getAttribute('langvalue')}&append_to_response=videos,images,alternative_titles,watch/providers,release_dates`;
     const [item, setItem] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [releaseDate, setReleaseDate] = useState('');
-    const [releaseDateType, setReleaseDateType] = useState('');
+    const [releaseDates, setReleaseDates] = useState([]);
     let genres = ' ';
 
     document.onmousedown = () => {
@@ -27,11 +26,10 @@ export default function Movie() {
                         console.log(response.data);
                         setItem(response.data);
                         appendGenres();
-                        getReleaseDateItem();
                     }).then(() => {
                         setIsLoading(false);
-                    })
-                })
+                    }).catch((err) => console.log(err))
+                }).catch((err) => console.log(err))
             }
         });
     }, [movieRequest]);
@@ -59,31 +57,34 @@ export default function Movie() {
         let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         item?.release_dates?.results.map((date) => {
             if (date.iso_3166_1.toString() === document.getElementById("root")?.getAttribute('locvalue')) {
+                let dates = [];
                 date.release_dates?.map((date_item) => {
                     let parsedDate = new Date(date_item?.release_date?.substring(0, (date_item?.release_date?.length - 5))).toLocaleDateString(document.getElementById("root")?.getAttribute('locvalue'), options);
-                    setReleaseDate(parsedDate);
 
                     switch (date_item.type) {
                         case 1:
-                            setReleaseDateType("(Premiere)");
+                            dates.push(parsedDate + " (Premiere)");
                             break;
                         case 2:
-                            setReleaseDateType("(Theatrical (limited))");
+                            dates.push(parsedDate + " (Theatrical (limited))");
                             break;
                         case 3:
-                            setReleaseDateType("(Theatrical)");
+                            dates.push(parsedDate + " (Theatrical)");
                             break;
                         case 4:
-                            setReleaseDateType("(Digital)");
+                            dates.push(parsedDate + " (Digital)");
                             break;
                         case 5:
-                            setReleaseDateType("(Physical)");
+                            dates.push(parsedDate + " (Physical)");
                             break;
                         case 6:
-                            setReleaseDateType("(TV)");
+                            dates.push(parsedDate + " (TV)");
                             break;
+                        default:
+                            console.error("Wrong Type of Release Date");
                     }
                 })
+                setReleaseDates(dates);
             }
         })
     }
@@ -107,7 +108,7 @@ export default function Movie() {
         !isLoading && <Layout>
             <div className="h-fit" onLoad={appendGenres}>
                 <div className="w-full bg-black h-full mt-10 border-b-2 border-t-2 border-[#FFFFFF] justify-center overflow-scroll" onLoad={handleScreenResize}>
-                    <div id="movie_ribbon_items" className="flex w-fit h-[60vh] ml-[15%] mr-[15%] justify-center movie_ribbon">
+                    <div id="movie_ribbon_items" className="flex w-fit h-[60vh] ml-[15%] mr-[15%] justify-center movie_ribbon" onLoad={getReleaseDateItem}>
                         <div id="movie_ribbon_poster" className="mt-auto mb-auto ml-5 rounded-3xl"><img src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} alt={"Poster"} className="rounded-3xl w-[35vh] max-w-[none] border-2"/></div>
                         <div id="movie_ribbon_info" className="inline-block ml-5 mt-auto mb-auto text-[3vh] text-left overflow-scroll">
                             <div className="font-bold text-[4vh]">{item.title}</div>
@@ -124,7 +125,9 @@ export default function Movie() {
                     </div>
                 </div>
                 <div className="w-full bg-black h-full border-b-2 border-[#FFFFFF] justify-center overflow-scroll">
-                    <div>{releaseDate} {releaseDateType}</div>
+                    <div>{releaseDates.map((date) => (
+                        <div>{date}</div>
+                    ))}</div>
                 </div>
             </div>
         </Layout>
