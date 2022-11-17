@@ -11,6 +11,7 @@ export default function Row({title, fetchURL, rowId}) {
     let scrollAmountPerClick = 3;
     let movieItemWidth = 300;
     let firstVisibleItemPosition = 0;
+    let triggerAmountLimit = 1;
 
     useEffect(() => {
         axios.get(fetchURL).then((response) => {
@@ -28,6 +29,12 @@ export default function Row({title, fetchURL, rowId}) {
         element.style.left = (-firstVisibleItemPosition * movieItemWidth) + "px";
 
         setItemScaling();
+
+        if (allMovies.length % scrollAmountPerClick === 0) {
+            triggerAmountLimit = 0;
+        } else {
+            triggerAmountLimit = 1;
+        }
     }
 
     window.addEventListener('resize', handleScreenResize);
@@ -132,7 +139,7 @@ export default function Row({title, fetchURL, rowId}) {
         }
 
         if (firstVisibleItemPosition !== (allMovies.length - (scrollAmountPerClick - 1))) return;
-        if (triggerAmount === 1) {
+        if (triggerAmount === triggerAmountLimit) {
             triggerAmount = 0;
             element.style.left = "0";
         } else triggerAmount++;
@@ -147,7 +154,7 @@ export default function Row({title, fetchURL, rowId}) {
                      className="slider ml-[50px] mr-[50px] w-full h-full relative"
                      style={{left: 0}}
                      numvalue={1}
-                     onLoad={setItemScaling}>
+                     onLoad={handleScreenResize}>
                     {movies?.map((item, id) => {
                         index++;
                         return (<BrowseMovieCard key={id} item={item} index={index} rowId={rowId} type={item.media_type ? item.media_type : "movie"}/>)
