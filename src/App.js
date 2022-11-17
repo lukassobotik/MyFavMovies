@@ -9,6 +9,7 @@ import Account from "./components/Account";
 import Settings from "./components/Settings";
 import {createTheme, ThemeProvider} from "@mui/material";
 import Movie from "./components/Movie";
+import MovieReleases from "./components/MovieReleases";
 
 function App() {
     document.onmousedown = () => {
@@ -46,7 +47,8 @@ function App() {
                         <Route path="/settings/" exact>
                             <AccountProtectedRoute><Settings/></AccountProtectedRoute>
                         </Route>
-                        <Route path="/movie/:movieId/" component={Movie}/>
+                        <Route path="/movie/:movieId/" component={Movie} exact/>
+                        <Route path="/movie/:movieId/releases" component={MovieReleases}/>
                     </Switch>
                 </div>
             </AuthContextProvider>

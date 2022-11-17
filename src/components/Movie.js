@@ -2,7 +2,7 @@ import Layout from "./Layout";
 import {useEffect, useState} from "react";
 import requests from "./Constants";
 import axios from "axios";
-import {useHistory, useParams} from "react-router-dom";
+import {useHistory, useParams, Link} from "react-router-dom";
 import LoadSettingsData from "./LoadData";
 import {auth} from "../firebase";
 
@@ -47,9 +47,11 @@ export default function Movie() {
         if (ratio < 1) {
             document.getElementById("movie_ribbon_items").style.display = "inline";
             document.getElementById("movie_ribbon_poster").style.marginTop = "1.25rem";
+            document.getElementById("release_dates_ribbon").style.textAlign = "left";
         } else {
             document.getElementById("movie_ribbon_items").style.display = "flex";
             document.getElementById("movie_ribbon_poster").style.marginTop = "auto";
+            document.getElementById("release_dates_ribbon").style.textAlign = "center";
         }
     }
 
@@ -124,10 +126,11 @@ export default function Movie() {
                         </div>
                     </div>
                 </div>
-                <div className="w-full bg-black h-full border-b-2 border-[#FFFFFF] justify-center overflow-scroll">
-                    <div>{releaseDates.map((date, id) => (
+                <div id="release_dates_ribbon" className="w-full bg-black h-full border-b-2 border-[#FFFFFF] justify-center overflow-scroll p-5">
+                    <Link to={`/movie/${movieId}/releases/`}><div className="font-bold text-[3vh]">Release Dates ({document.getElementById("root")?.getAttribute('locvalue')})</div></Link>
+                    <div className="text-[2vh]">{releaseDates[0] ? releaseDates.map((date, id) => (
                         <div key={id}>{date}</div>
-                    ))}</div>
+                    )) : <div className="text-[2vh]">There are no release dates added</div>}</div>
                 </div>
             </div>
         </Layout>
