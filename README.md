@@ -4,7 +4,7 @@
 ## How to clone this repository
 
 ### Prerequisites
-* NodeJS & npm - [Download & Install NodeJS & npm](https://nodejs.org/en/download/)
+* NodeJS and npm - [Download & Install NodeJS and npm](https://nodejs.org/en/download/)
 * Git - [Download & Install Git](https://git-scm.com/downloads). OSX and Linux machines typically have this already installed.
 
 Once you clone this repository, run `npm install` to download all the required plugins
