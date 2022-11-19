@@ -87,9 +87,17 @@ export default function Movie() {
             }
         })
         if (location === document.getElementById("root")?.getAttribute('locvalue')) setReleaseDates(dates);
-        console.log(date_item);
         return dates;
     }
+
+    const formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+
+        // These options are needed to round to whole numbers if that's what you want.
+        //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+        maximumFractionDigits: 0
+    });
 
     function appendGenres() {
         genres = '';
@@ -137,6 +145,50 @@ export default function Movie() {
                                 <div key={id}>{date}</div>
                         ))}</div>
                     </div>}</div>
+                </div>
+                <div id="general_info_ribbon" className="w-full bg-black h-full border-b-2 border-[#FFFFFF] inline-block justify-center overflow-scroll p-5">
+                    <div className="flex">
+                        <div className="inline-block w-[100%]">
+                            <div className="font-bold w-[100%] text-[3vh]">Production Companies</div>
+                            <div className="w-[100%] text-[2vh] inline-block">{item.production_companies?.map((company, id) => (
+                                <div key={id} className="w-[100%] inline-block">
+                                    <div className="w-[100%] text-[2vh]">{company.name}</div>
+                                </div>
+                            ))}</div>
+                        </div>
+                        <div className="inline-block w-[100%]">
+                            <div className="font-bold w-[100%] text-[3vh]">Production Countries</div>
+                            <div className="w-[100%] text-[2vh] inline-block">{item.production_countries?.map((country, id) => (
+                                <div key={id} className="w-[100%] inline-block">
+                                    <div className="w-[100%] text-[2vh]">{country.name} ({country.iso_3166_1})</div>
+                                </div>
+                            ))}</div>
+                        </div>
+                    </div>
+                    <div className="flex mt-5">
+                        <div className="inline-block w-[100%]">
+                            <div className="font-bold w-[100%] text-[3vh]">Budget</div>
+                            <div className="w-[100%] text-[2vh]">{formatter.format(item.budget)}</div>
+                        </div>
+                        <div className="inline-block w-[100%]">
+                            <div className="font-bold w-[100%] text-[3vh]">Revenue</div>
+                            <div className="w-[100%] text-[2vh]">{formatter.format(item.revenue)}</div>
+                        </div>
+                    </div>
+                    <div className="flex mt-5">
+                        <div className="inline-block w-[100%]">
+                            <div className="font-bold w-[100%] text-[3vh]">Spoken Languages</div>
+                            <div className="w-[100%] text-[2vh] inline-block">{item.spoken_languages?.map((languages, id) => (
+                                <div key={id} className="w-[100%] inline-block">
+                                    <div className="w-[100%] text-[2vh]">{languages.name}</div>
+                                </div>
+                            ))}</div>
+                        </div>
+                        <div className="inline-block w-[100%]">
+                            <div className="font-bold w-[100%] text-[3vh]">Status</div>
+                            <div className="w-[100%] text-[2vh]">{item.status}</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </Layout>
