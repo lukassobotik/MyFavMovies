@@ -231,7 +231,7 @@ code {
 
 .flex_break {
   flex-grow: 1;
-  flex-basis: 100%
+  flex-basis: 100%;
 }
 
 table {
@@ -256,4 +256,12 @@ td:nth-child(3) {
 }
 td:nth-child(4) {
   width: 5%;
+}
+
+.index_one {
+  z-index: 1;
+  position: absolute;
+}
+.center {
+  position: center;
 }

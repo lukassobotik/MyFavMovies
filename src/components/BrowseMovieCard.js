@@ -182,7 +182,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
                 <div className="flex items-center justify-center text-center">
                     <IoCaretForwardCircleOutline size={30} onClick={playClick} className="movie_card_button"/>
                     {isOnWatchlist ? <IoCheckmarkCircleOutline size={30} onClick={listClick} className="movie_card_button"/> : <IoAddCircleOutline size={30} onClick={listClick} className="movie_card_button"/>}
-                    {isRated ? <div onClick={ratingClick} className="movie_card_button items-center flex justify-center"><div className="absolute text-white font-bold mb-1">{rating}</div><IoEllipseOutline size={30}/></div>
+                    {isRated ? <div onClick={ratingClick} className="movie_card_button flex justify-center items-center text-center"><div className="block w-[30px] text-center text-white font-bold center">{rating}</div><IoEllipseOutline size={30} className="overflow-visible absolute"></IoEllipseOutline></div>
                         : <IoHeartCircleOutline size={30} onClick={ratingClick} className="movie_card_button"/>}
                     <Popover id={popoverId} open={isRatingPopoverOpen} anchorEl={ratingPopoverAnchorEl} onClose={handleRatingClose} anchorOrigin={{
                             vertical: 'center',
