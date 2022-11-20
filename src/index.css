@@ -265,3 +265,8 @@ td:nth-child(4) {
 .center {
   position: center;
 }
+.flex_center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

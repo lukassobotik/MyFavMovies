@@ -161,14 +161,14 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
         <div id={"itemInRowId" + index + "-" + rowId} className="row_item" style={{left: 0}} onMouseOver={showDetails} onMouseLeave={hideDetails}>
             <div id={"player" + index + "-" + rowId} className="player" onClick={generalClick}>
                 {!isLoading ?
-                    <img className='w-full h-auto block overflow-visible rounded'
-                                   src={`https://image.tmdb.org/t/p/w500/${backdrop}`} alt={item.title}/>
+                    <img id={"img" + index + "-" + rowId} className='w-full h-auto block overflow-visible rounded'
+                         src={`https://image.tmdb.org/t/p/w500/${backdrop}`} alt={item.title}/>
                     : <SkeletonTheme baseColor="#a9b7c1" highlightColor="#5e6c77">
-                    <p>
+                    <p id={"browse_movie_card_skeleton" + index + "-" + rowId}>
                     <Skeleton className="w-[300px] aspect-video" duration={2} />
                     </p>
                     </SkeletonTheme>}
-                <div className="ml-5 mt-5 w-[0px] h-auto left-0 top-0 absolute"/>
+                <div className="w-full h-full left-0 top-0"/>
                 {playTrailer ? <div className="youtube-container rounded-t">
                     <iframe src={`https://www.youtube.com/embed/${item?.trailer_path}?autoplay=1&controls=0&autohide=1?rel=0&amp&modestbranding=1`}
                             title={item.title + " Trailer"}
@@ -182,7 +182,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
                 <div className="flex items-center justify-center text-center">
                     <IoCaretForwardCircleOutline size={30} onClick={playClick} className="movie_card_button"/>
                     {isOnWatchlist ? <IoCheckmarkCircleOutline size={30} onClick={listClick} className="movie_card_button"/> : <IoAddCircleOutline size={30} onClick={listClick} className="movie_card_button"/>}
-                    {isRated ? <div onClick={ratingClick} className="movie_card_button flex justify-center items-center text-center"><div className="block w-[30px] text-center text-white font-bold center">{rating}</div><IoEllipseOutline size={30} className="overflow-visible absolute"></IoEllipseOutline></div>
+                    {isRated ? <div onClick={ratingClick} className="movie_card_button flex_center text-center"><div className="block w-[30px] text-center text-white font-bold center">{rating}</div><IoEllipseOutline size={30} className="overflow-visible absolute"></IoEllipseOutline></div>
                         : <IoHeartCircleOutline size={30} onClick={ratingClick} className="movie_card_button"/>}
                     <Popover id={popoverId} open={isRatingPopoverOpen} anchorEl={ratingPopoverAnchorEl} onClose={handleRatingClose} anchorOrigin={{
                             vertical: 'center',
