@@ -162,14 +162,14 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
             <div id={"player" + index + "-" + rowId} className="player" onClick={generalClick}>
                 {!isLoading ?
                     <img id={"img" + index + "-" + rowId} className='w-full h-auto block overflow-visible rounded'
-                         src={`https://image.tmdb.org/t/p/w500/${backdrop}`} alt={item.title}/>
+                         src={`https://image.tmdb.org/t/p/w500/${backdrop}`} alt={item.title} onError={() => setIsLoading(true)}/>
                     : <SkeletonTheme baseColor="#a9b7c1" highlightColor="#5e6c77">
                     <p id={"browse_movie_card_skeleton" + index + "-" + rowId}>
-                    <Skeleton className="w-[300px] aspect-video" duration={2} />
+                    <Skeleton className="w-full aspect-video" duration={2} />
                     </p>
                     </SkeletonTheme>}
                 <div className="w-full h-full left-0 top-0"/>
-                {playTrailer ? <div className="youtube-container rounded-t">
+                {playTrailer && !isLoading ? <div className="youtube-container rounded-t">
                     <iframe src={`https://www.youtube.com/embed/${item?.trailer_path}?autoplay=1&controls=0&autohide=1?rel=0&amp&modestbranding=1`}
                             title={item.title + " Trailer"}
                             allowFullScreen loading="lazy"></iframe>
