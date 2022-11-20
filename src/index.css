@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+[id="root"] {
+  overflow-x: hidden;
+}
+
 body {
   --navbar-height: 50px;
   margin: 0;
