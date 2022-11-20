@@ -23,10 +23,11 @@ export default function Row({title, fetchURL, rowId}) {
         })
     }, [fetchURL]);
 
-    function handleScreenResize() {
-        let element = document.getElementById("slider" + rowId);
+    function handleScreenResize(ev) {
+        if (ev.type !== "resize") return;
+
         movieItemWidth = document.getElementById("itemId1-" + rowId).clientWidth;
-        element.style.left = (-firstVisibleItemPosition * movieItemWidth) + "px";
+        document.getElementById("slider" + rowId).style.left = (-firstVisibleItemPosition * movieItemWidth) + "px";
 
         setItemScaling();
 
@@ -154,7 +155,7 @@ export default function Row({title, fetchURL, rowId}) {
                      className="slider ml-[50px] mr-[50px] w-full h-full relative"
                      style={{left: 0}}
                      numvalue={1}
-                     onLoad={handleScreenResize}>
+                     onLoad={() => handleScreenResize({type: "resize"})}>
                     {movies?.map((item, id) => {
                         index++;
                         return (<BrowseMovieCard key={id} item={item} index={index} rowId={rowId} type={item.media_type ? item.media_type : "movie"}/>)
