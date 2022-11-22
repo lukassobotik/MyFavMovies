@@ -42,7 +42,7 @@ function a11yProps(index: number) {
 }
 
 export default function Account() {
-    const {user} = UserAuth();
+    const user = auth.currentUser;
     const [value, setValue] = React.useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [watchlist, setWatchlist] = useState([]);

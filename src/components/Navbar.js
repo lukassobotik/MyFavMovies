@@ -6,10 +6,13 @@ import React, {useState} from "react";
 import AccountProtectedRoute from "./AccountProtectedRoute";
 import {screenSizeGroups} from "./Constants";
 import Popover from '@mui/material/Popover';
+import {signOut} from "firebase/auth";
+import {auth} from "../firebase";
 
 export default function Navbar() {
     const history = useHistory();
-    const {user, logOut} = UserAuth();
+    console.log(auth.currentUser);
+    const user = auth.currentUser;
     const [isMobileSized, setIsMobileSized] = useState(false);
     const [accountPopoverAnchorEl, setAccountPopoverAnchorEl] = React.useState(null);
     const isAccountPopoverOpen = Boolean(accountPopoverAnchorEl);
@@ -17,7 +20,7 @@ export default function Navbar() {
 
     const logout = async () => {
         try {
-            await logOut();
+            await signOut(auth);
             history.push('/');
         } catch (error) {
             console.log(error);

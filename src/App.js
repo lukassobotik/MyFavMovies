@@ -26,32 +26,30 @@ function App() {
 
     return (
         <ThemeProvider theme={theme}>
-            <AuthContextProvider>
-                <div className="App">
-                    <Switch>
-                        <Route path="/" exact>
-                            <Redirect to="/browse/"/>
-                        </Route>
-                        <Route path="/login/" exact>
-                            <Login/>
-                        </Route>
-                        <Route path="/signup/" exact>
-                            <SignUp/>
-                        </Route>
-                        <Route path="/browse/" exact>
-                            <Browse/>
-                        </Route>
-                        <Route path="/account" exact>
-                            <AccountProtectedRoute><Account/></AccountProtectedRoute>
-                        </Route>
-                        <Route path="/settings/" exact>
-                            <AccountProtectedRoute><Settings/></AccountProtectedRoute>
-                        </Route>
-                        <Route path="/movie/:movieId/" component={Movie} exact/>
-                        <Route path="/movie/:movieId/releases" component={MovieReleases}/>
-                    </Switch>
-                </div>
-            </AuthContextProvider>
+            <div className="App">
+                <Switch>
+                    <Route path="/" exact>
+                        <Redirect to="/browse/"/>
+                    </Route>
+                    <Route path="/login/" exact>
+                        <Login/>
+                    </Route>
+                    <Route path="/signup/" exact>
+                        <SignUp/>
+                    </Route>
+                    <Route path="/browse/" exact>
+                        <Browse/>
+                    </Route>
+                    <Route path="/account" exact>
+                        <AccountProtectedRoute><Account/></AccountProtectedRoute>
+                    </Route>
+                    <Route path="/settings/" exact>
+                        <AccountProtectedRoute><Settings/></AccountProtectedRoute>
+                    </Route>
+                    <Route path="/movie/:movieId/" component={Movie} exact/>
+                    <Route path="/movie/:movieId/releases" component={MovieReleases}/>
+                </Switch>
+            </div>
         </ThemeProvider>
     );
 }

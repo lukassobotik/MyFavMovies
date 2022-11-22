@@ -2,16 +2,15 @@ import Layout from "./Layout";
 import {useState} from "react";
 import {Link, useHistory} from "react-router-dom";
 import {UserAuth} from "../context/AuthContext";
-import {getAuth, updateProfile} from "firebase/auth"
+import {createUserWithEmailAndPassword, getAuth, signOut, updateProfile} from "firebase/auth"
 import {Alert} from "@mui/material";
+import {auth} from "../firebase";
 
 export default function SignUp() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
     const [error, setError] = useState('');
-    const {signUp, logOut} = UserAuth();
-    const auth = getAuth();
     const history = useHistory();
 
     document.onmousedown = () => {
@@ -33,7 +32,7 @@ export default function SignUp() {
     const signup = async (e) => {
         e.preventDefault();
         try {
-            await (signUp(email, password)).then(async () => {
+            await (createUserWithEmailAndPassword(auth, email, password)).then(async () => {
                 await updateProfile(auth.currentUser, {
                     displayName: username
                 }).then(() => {
@@ -54,7 +53,7 @@ export default function SignUp() {
 
     const logout = async () => {
         try {
-            await logOut();
+            await signOut(auth);
             history.push('/login');
         } catch (error) {
             console.log(error);
