@@ -1,10 +1,10 @@
-import Layout from "./Layout";
+import Layout from "../Layout";
 import {useEffect, useState} from "react";
-import requests from "./Constants";
+import requests from "../../Constants";
 import axios from "axios";
 import {useHistory, useParams, Link} from "react-router-dom";
-import LoadSettingsData from "./LoadData";
-import {auth} from "../firebase";
+import LoadSettingsData from "../../LoadData";
+import {auth} from "../../firebase";
 
 export default function Movie() {
     let { movieId } = useParams();

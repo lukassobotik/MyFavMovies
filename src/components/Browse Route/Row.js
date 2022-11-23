@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import BrowseMovieCard from "./BrowseMovieCard";
 import {HiChevronLeft, HiChevronRight} from "react-icons/hi"
-import {screenSizeGroups} from "./Constants";
+import {screenSizeGroups} from "../../Constants";
 import {useHistory} from "react-router-dom";
 
 export default function Row({title, fetchURL, rowId}) {

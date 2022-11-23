@@ -1,9 +1,9 @@
-import Layout from "./Layout";
-import requests from "./Constants";
+import Layout from "../Layout";
+import requests from "../../Constants";
 import Row from "./Row";
 import {useEffect} from "react";
-import {auth} from "../firebase";
-import LoadSettingsData from "./LoadData";
+import {auth} from "../../firebase";
+import LoadSettingsData from "../../LoadData";
 import {useState} from "react";
 
 export default function Browse() {

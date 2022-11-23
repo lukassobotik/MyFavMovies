@@ -1,14 +1,14 @@
-import Layout from "./Layout";
+import Layout from "../Layout";
 import {useState} from "react";
 import {Link, useHistory} from "react-router-dom";
-import {UserAuth} from "../context/AuthContext";
 import {Alert} from "@mui/material";
+import {signInWithEmailAndPassword} from "firebase/auth";
+import {auth} from "../../firebase";
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const {logIn} = UserAuth();
     const history = useHistory();
 
     document.onmousedown = () => {
@@ -26,7 +26,7 @@ export default function Login() {
     const login = async (e) => {
         e.preventDefault();
         try {
-            await (logIn(email, password)).then(() => {
+            await (signInWithEmailAndPassword(auth, email, password)).then(() => {
                 history.push('/');
             }).catch((error) => {
                 setError(error.message);

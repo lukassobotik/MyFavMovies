@@ -1,11 +1,10 @@
-import Layout from "./Layout";
-import {UserAuth} from "../context/AuthContext";
+import Layout from "../Layout";
 import {MdPerson} from "react-icons/md";
 import {IoCloseCircleOutline} from "react-icons/io5";
 import React, {useEffect, useState} from "react"
 import {Box, Tab, Tabs, Typography} from "@mui/material";
 import {collection, deleteDoc, doc, getDocs} from "firebase/firestore";
-import {auth, db} from "../firebase";
+import {auth, db} from "../../firebase";
 import {useHistory} from "react-router-dom";
 
 interface TabPanelProps {
@@ -42,7 +41,7 @@ function a11yProps(index: number) {
 }
 
 export default function Account() {
-    const {user} = UserAuth();
+    const user = auth.currentUser;
     const [value, setValue] = React.useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [watchlist, setWatchlist] = useState([]);
