@@ -5,9 +5,9 @@ import {Alert, Collapse, IconButton, MenuItem, Select} from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import {doc, setDoc} from "firebase/firestore";
 import {db} from "../firebase";
-import requests from "./Constants";
+import requests from "../Constants";
 import axios from "axios";
-import LoadSettingsData from "./LoadData";
+import LoadSettingsData from "../LoadData";
 
 export default function Settings() {
     const [pfpUrl, setPfpUrl] = useState('');

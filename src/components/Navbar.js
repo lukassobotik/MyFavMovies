@@ -1,10 +1,9 @@
 import {Link, useHistory} from "react-router-dom";
-import Logo from "./icons/MyFavMovies-transparent.png";
-import {UserAuth} from "../context/AuthContext";
+import Logo from "../Icons/MyFavMovies-transparent.png";
 import {MdAccountCircle, MdSearch, MdSettings} from "react-icons/md";
 import React, {useState} from "react";
-import AccountProtectedRoute from "./AccountProtectedRoute";
-import {screenSizeGroups} from "./Constants";
+import AccountProtectedRoute from "./Account Route/AccountProtectedRoute";
+import {screenSizeGroups} from "../Constants";
 import Popover from '@mui/material/Popover';
 import {signOut} from "firebase/auth";
 import {auth} from "../firebase";

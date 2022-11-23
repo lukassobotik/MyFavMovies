@@ -1,10 +1,9 @@
-import Layout from "./Layout";
+import Layout from "../Layout";
 import {useState} from "react";
 import {Link, useHistory} from "react-router-dom";
-import {UserAuth} from "../context/AuthContext";
 import {Alert} from "@mui/material";
 import {signInWithEmailAndPassword} from "firebase/auth";
-import {auth} from "../firebase";
+import {auth} from "../../firebase";
 
 export default function Login() {
     const [email, setEmail] = useState('');

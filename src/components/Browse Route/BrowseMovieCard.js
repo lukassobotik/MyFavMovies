@@ -1,5 +1,5 @@
 import {useHistory} from "react-router-dom";
-import requests from "./Constants";
+import requests from "../../Constants";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {
@@ -11,7 +11,7 @@ import {
 } from "react-icons/io5";
 import {HiHeart, HiOutlineHeart} from "react-icons/hi";
 import {collection, deleteDoc, doc, getDocs, setDoc} from "firebase/firestore";
-import {auth, db} from "../firebase";
+import {auth, db} from "../../firebase";
 import {Popover, Rating} from "@mui/material";
 import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'

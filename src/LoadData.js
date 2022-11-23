@@ -1,5 +1,5 @@
 import {collection, getDocs} from "firebase/firestore";
-import {auth, db} from "../firebase";
+import {auth, db} from "./firebase";
 
 export default async function LoadSettingsData() {
     const ratingSnapshot = await getDocs(collection(db, "users", auth.currentUser.uid.toString(), "settings"));

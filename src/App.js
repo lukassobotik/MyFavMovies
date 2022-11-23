@@ -1,15 +1,14 @@
 import {Redirect, Route, Switch} from 'react-router-dom';
 import './App.css';
-import Login from "./components/Login";
-import Browse from "./components/Browse";
-import {AuthContextProvider} from "./context/AuthContext";
-import SignUp from "./components/SignUp";
-import AccountProtectedRoute from "./components/AccountProtectedRoute";
-import Account from "./components/Account";
+import Login from "./components/Account Route/Login";
+import Browse from "./components/Browse Route/Browse";
+import SignUp from "./components/Account Route/SignUp";
+import AccountProtectedRoute from "./components/Account Route/AccountProtectedRoute";
+import Account from "./components/Account Route/Account";
 import Settings from "./components/Settings";
 import {createTheme, ThemeProvider} from "@mui/material";
-import Movie from "./components/Movie";
-import MovieReleases from "./components/MovieReleases";
+import Movie from "./components/Movie Route/Movie";
+import MovieReleases from "./components/Movie Route/MovieReleases";
 
 function App() {
     document.onmousedown = () => {
