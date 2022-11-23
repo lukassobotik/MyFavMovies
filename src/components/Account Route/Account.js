@@ -2,7 +2,7 @@ import Layout from "../Layout";
 import {MdPerson} from "react-icons/md";
 import {IoCloseCircleOutline} from "react-icons/io5";
 import React, {useEffect, useState} from "react"
-import {Box, Tab, Tabs, Typography} from "@mui/material";
+import {Box, createTheme, Tab, Tabs, ThemeProvider, Typography} from "@mui/material";
 import {collection, deleteDoc, doc, getDocs} from "firebase/firestore";
 import {auth, db} from "../../firebase";
 import {useHistory} from "react-router-dom";
@@ -130,13 +130,21 @@ export default function Account() {
                 <div id="account_list_panel" className="h-full w-fit ml-[10%] mr-[10%]" onLoad={changeMargins}>
                     <Box sx={{width: '100%'}}>
                         <Box id="account_list_panel_box" className="flex justify-center w-[80vw]">
+                            <ThemeProvider theme={createTheme({
+                                palette: {
+                                    secondary: {
+                                        main: '#FFFFFF'
+                                    }
+                                }
+                            })}>
                             <Tabs value={value} onChange={(event, newValue) => {
                                 setValue(newValue)
-                            }} aria-label="" textColor="secondary" indicatorColor="secondary">
+                            }} aria-label="" textColor="secondary" indicatorColor={'secondary'} sx={{indicatorColor: '#FFFFFF', color: '#000000'}}>
                                 <Tab label="Watchlist" {...a11yProps(0)} sx={{color: '#FFFFFF', fontWeight: 800}}/>
                                 <Tab label="Rated" {...a11yProps(1)} sx={{color: '#FFFFFF', fontWeight: 800}}/>
                                 <Tab label="Lists" {...a11yProps(2)} sx={{color: '#FFFFFF', fontWeight: 800}}/>
                             </Tabs>
+                            </ThemeProvider>
                         </Box>
                         <TabPanel value={value} index={0}>
                             <div className="whitespace-nowrap">

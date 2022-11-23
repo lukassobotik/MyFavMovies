@@ -6,7 +6,6 @@ import SignUp from "./components/Account Route/SignUp";
 import AccountProtectedRoute from "./components/Account Route/AccountProtectedRoute";
 import Account from "./components/Account Route/Account";
 import Settings from "./components/Settings";
-import {createTheme, ThemeProvider} from "@mui/material";
 import Movie from "./components/Movie Route/Movie";
 import MovieReleases from "./components/Movie Route/MovieReleases";
 
@@ -15,41 +14,31 @@ function App() {
         return false;
     };
 
-    const theme = createTheme({
-        palette: {
-            secondary: {
-                main: '#FFFFFF'
-            }
-        }
-    });
-
     return (
-        <ThemeProvider theme={theme}>
-            <div className="App">
-                <Switch>
-                    <Route path="/" exact>
-                        <Redirect to="/browse/"/>
-                    </Route>
-                    <Route path="/login/" exact>
-                        <Login/>
-                    </Route>
-                    <Route path="/signup/" exact>
-                        <SignUp/>
-                    </Route>
-                    <Route path="/browse/" exact>
-                        <Browse/>
-                    </Route>
-                    <Route path="/account" exact>
-                        <AccountProtectedRoute><Account/></AccountProtectedRoute>
-                    </Route>
-                    <Route path="/settings/" exact>
-                        <AccountProtectedRoute><Settings/></AccountProtectedRoute>
-                    </Route>
-                    <Route path="/movie/:movieId/" component={Movie} exact/>
-                    <Route path="/movie/:movieId/releases" component={MovieReleases}/>
-                </Switch>
-            </div>
-        </ThemeProvider>
+        <div className="App">
+            <Switch>
+                <Route path="/" exact>
+                    <Redirect to="/browse/"/>
+                </Route>
+                <Route path="/login/" exact>
+                    <Login/>
+                </Route>
+                <Route path="/signup/" exact>
+                    <SignUp/>
+                </Route>
+                <Route path="/browse/" exact>
+                    <Browse/>
+                </Route>
+                <Route path="/account" exact>
+                    <AccountProtectedRoute><Account/></AccountProtectedRoute>
+                </Route>
+                <Route path="/settings/" exact>
+                    <AccountProtectedRoute><Settings/></AccountProtectedRoute>
+                </Route>
+                <Route path="/movie/:movieId/" component={Movie} exact/>
+                <Route path="/movie/:movieId/releases" component={MovieReleases}/>
+            </Switch>
+        </div>
     );
 }
 
