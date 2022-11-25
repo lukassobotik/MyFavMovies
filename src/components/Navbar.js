@@ -10,7 +10,6 @@ import {auth} from "../firebase";
 
 export default function Navbar() {
     const history = useHistory();
-    console.log(auth.currentUser);
     const user = auth.currentUser;
     const [isMobileSized, setIsMobileSized] = useState(false);
     const [accountPopoverAnchorEl, setAccountPopoverAnchorEl] = React.useState(null);

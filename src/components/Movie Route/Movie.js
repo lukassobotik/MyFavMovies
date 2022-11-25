@@ -1,14 +1,15 @@
 import Layout from "../Layout";
 import {useEffect, useState} from "react";
-import requests from "../../Constants";
+import requests, {ratioGroups} from "../../Constants";
 import axios from "axios";
-import {useHistory, useParams, Link} from "react-router-dom";
+import {Link, useHistory, useParams} from "react-router-dom";
 import LoadSettingsData from "../../LoadData";
 import {auth} from "../../firebase";
+import personWithNoImage from "../../Icons/no-person.svg";
 
 export default function Movie() {
     let { movieId } = useParams();
-    const movieRequest = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${requests.key}&language=${document.getElementById("root")?.getAttribute('langvalue')}&append_to_response=videos,images,alternative_titles,watch/providers,release_dates`;
+    const movieRequest = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${requests.key}&language=${document.getElementById("root")?.getAttribute('langvalue')}&append_to_response=videos,images,alternative_titles,watch/providers,release_dates,credits`;
     const [item, setItem] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [releaseDates, setReleaseDates] = useState([]);
@@ -52,6 +53,12 @@ export default function Movie() {
             document.getElementById("movie_ribbon_items").style.display = "flex";
             document.getElementById("movie_ribbon_poster").style.marginTop = "auto";
             document.getElementById("release_dates_ribbon").style.textAlign = "center";
+        }
+
+        if (ratio > ratioGroups.movieCast) {
+            document.querySelectorAll(".cast_names").forEach(el => el.style.width = "15vw")
+        } else {
+            document.querySelectorAll(".cast_names").forEach(el => el.style.width = "25vh")
         }
     }
 
@@ -188,6 +195,20 @@ export default function Movie() {
                             <div className="font-bold w-[100%] text-[3vh]">Status</div>
                             <div className="w-[100%] text-[2vh]">{item.status}</div>
                         </div>
+                    </div>
+                </div>
+                <div id="cast_ribbon" className="w-full bg-black h-full border-b-2 border-[#FFFFFF] inline-block whitespace-nowrap overflow-x-scroll p-5">
+                    <div className="font-bold text-[3vh] mt-[-2.5vh] absolute">Cast</div>
+                    <div className="flex mt-[3vh]">
+                        {item.credits?.cast?.map((cast, id) => (
+                            <div key={id} className="mr-5 whitespace-pre-wrap bg-[#131313] rounded-2xl overflow-y-clip">
+                                <img src={cast.profile_path ? `https://image.tmdb.org/t/p/w500/${cast.profile_path}` : personWithNoImage} alt={cast.name} className="w-full rounded-t-2xl"/>
+                                <div className="w-[25vh] text-[2vh] cast_names h-full">
+                                    <div className="font-bold">{cast.name}</div>
+                                    <div>{cast.character}</div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>

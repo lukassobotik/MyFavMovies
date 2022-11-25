@@ -16,4 +16,8 @@ export const screenSizeGroups = {
     sixItems: 1800
 }
 
+export const ratioGroups = {
+    movieCast: 1.85
+}
+
 export default requests;
