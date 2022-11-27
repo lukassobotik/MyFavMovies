@@ -274,3 +274,9 @@ td:nth-child(4) {
   justify-content: center;
   align-items: center;
 }
+
+.grid-container {
+  grid-template-columns: repeat(6, 1fr);
+  display: grid;
+  gap: 50px;
+}

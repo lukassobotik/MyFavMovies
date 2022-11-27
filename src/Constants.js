@@ -20,4 +20,10 @@ export const ratioGroups = {
     movieCast: 1.85
 }
 
+export const gridScreenSizeGroups = {
+    sixItems: 1500,
+    threeItems: 900,
+    oneItem: 500
+}
+
 export default requests;

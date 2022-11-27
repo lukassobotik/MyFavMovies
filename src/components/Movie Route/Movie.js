@@ -1,6 +1,6 @@
 import Layout from "../Layout";
 import {useEffect, useState} from "react";
-import requests, {ratioGroups} from "../../Constants";
+import requests, {gridScreenSizeGroups, ratioGroups} from "../../Constants";
 import axios from "axios";
 import {Link, useHistory, useParams} from "react-router-dom";
 import LoadSettingsData from "../../LoadData";
@@ -59,6 +59,20 @@ export default function Movie() {
             document.querySelectorAll(".cast_names").forEach(el => el.style.width = "15vw")
         } else {
             document.querySelectorAll(".cast_names").forEach(el => el.style.width = "25vh")
+        }
+
+        if (window.innerWidth >= gridScreenSizeGroups.sixItems) {
+            document.getElementById("movie_general_info_grid").style.gridTemplateColumns = "repeat(6, 1fr)";
+            document.getElementById("general_info_ribbon").style.textAlign = "center";
+        } else if (window.innerWidth >= gridScreenSizeGroups.threeItems && window.innerWidth < gridScreenSizeGroups.sixItems) {
+            document.getElementById("movie_general_info_grid").style.gridTemplateColumns = "repeat(3, 1fr)";
+            document.getElementById("general_info_ribbon").style.textAlign = "center";
+        } else if (window.innerWidth >= gridScreenSizeGroups.oneItem && window.innerWidth < gridScreenSizeGroups.threeItems) {
+            document.getElementById("movie_general_info_grid").style.gridTemplateColumns = "repeat(2, 1fr)";
+            document.getElementById("general_info_ribbon").style.textAlign = "center";
+        } else if (window.innerWidth <= gridScreenSizeGroups.oneItem) {
+            document.getElementById("movie_general_info_grid").style.gridTemplateColumns = "repeat(1, 1fr)";
+            document.getElementById("general_info_ribbon").style.textAlign = "left";
         }
     }
 
@@ -158,8 +172,8 @@ export default function Movie() {
                         ))}</div>
                     </div>}</div>
                 </div>
-                <div id="general_info_ribbon" className="w-full bg-black h-full border-b-2 border-[#FFFFFF] inline-block justify-center overflow-scroll p-5">
-                    <div className="flex">
+                <div id="general_info_ribbon" className="w-full bg-black h-full border-b-2 border-[#FFFFFF] inline-block overflow-scroll p-5">
+                    <div id="movie_general_info_grid" className="grid-container">
                         <div className="inline-block w-[100%]">
                             <div className="font-bold w-[100%] text-[2vh]">Production Companies</div>
                             <div className="w-[100%] text-[2vh] inline-block">{item.production_companies?.map((company, id) => (
@@ -176,8 +190,6 @@ export default function Movie() {
                                 </div>
                             ))}</div>
                         </div>
-                    </div>
-                    <div className="flex mt-5">
                         <div className="inline-block w-[100%]">
                             <div className="font-bold w-[100%] text-[2vh]">Budget</div>
                             <div className="w-[100%] text-[2vh]">{formatNumber(item.budget)}</div>
@@ -186,8 +198,6 @@ export default function Movie() {
                             <div className="font-bold w-[100%] text-[2vh]">Revenue</div>
                             <div className="w-[100%] text-[2vh]">{formatNumber(item.revenue)}</div>
                         </div>
-                    </div>
-                    <div className="flex mt-5">
                         <div className="inline-block w-[100%]">
                             <div className="font-bold w-[100%] text-[2vh]">Spoken Languages</div>
                             <div className="w-[100%] text-[2vh] inline-block">{item.spoken_languages?.map((languages, id) => (
