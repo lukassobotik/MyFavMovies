@@ -226,6 +226,20 @@ export default function Movie() {
                         ))}
                     </div>
                 </div>
+                <div id="crew_ribbon" className="w-full bg-black h-full border-b-2 border-[#FFFFFF] inline-block whitespace-nowrap overflow-x-scroll p-5">
+                    <div className="font-bold text-[3vh] mt-[-2.5vh] absolute">Crew</div>
+                    <div className="flex mt-[3vh]">
+                        {item.credits?.crew?.map((crew, id) => (
+                            <div key={id} className="mr-5 whitespace-pre-wrap bg-[#131313] rounded-2xl overflow-y-clip">
+                                <img src={crew.profile_path ? `https://image.tmdb.org/t/p/w500/${crew.profile_path}` : personWithNoImage} alt={crew.name} className="w-full rounded-t-2xl"/>
+                                <div className="w-[25vh] text-[2vh] cast_names h-full">
+                                    <div className="font-bold">{crew.name}</div>
+                                    <div>{crew.job}</div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
         </Layout>
     )
