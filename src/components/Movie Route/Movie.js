@@ -48,10 +48,14 @@ export default function Movie() {
         if (ratio < 1) {
             document.getElementById("movie_ribbon_items").style.display = "inline";
             document.getElementById("movie_ribbon_poster").style.marginTop = "1.25rem";
+            document.getElementById("movie_ribbon_poster").style.marginLeft = "0";
+            document.getElementById("movie_ribbon_poster").style.width = "100%";
             document.getElementById("release_dates_ribbon").style.textAlign = "left";
         } else {
             document.getElementById("movie_ribbon_items").style.display = "flex";
             document.getElementById("movie_ribbon_poster").style.marginTop = "auto";
+            document.getElementById("movie_ribbon_poster").style.marginLeft = "1.25rem";
+            document.getElementById("movie_ribbon_poster").style.width = "";
             document.getElementById("release_dates_ribbon").style.textAlign = "center";
         }
 
@@ -63,15 +67,19 @@ export default function Movie() {
 
         if (window.innerWidth >= gridScreenSizeGroups.sixItems) {
             document.getElementById("movie_general_info_grid").style.gridTemplateColumns = "repeat(6, 1fr)";
+            document.getElementById("movie_general_info_grid").style.gap = "50px";
             document.getElementById("general_info_ribbon").style.textAlign = "center";
         } else if (window.innerWidth >= gridScreenSizeGroups.threeItems && window.innerWidth < gridScreenSizeGroups.sixItems) {
             document.getElementById("movie_general_info_grid").style.gridTemplateColumns = "repeat(3, 1fr)";
+            document.getElementById("movie_general_info_grid").style.gap = "50px";
             document.getElementById("general_info_ribbon").style.textAlign = "center";
         } else if (window.innerWidth >= gridScreenSizeGroups.oneItem && window.innerWidth < gridScreenSizeGroups.threeItems) {
             document.getElementById("movie_general_info_grid").style.gridTemplateColumns = "repeat(2, 1fr)";
+            document.getElementById("movie_general_info_grid").style.gap = "50px";
             document.getElementById("general_info_ribbon").style.textAlign = "center";
         } else if (window.innerWidth <= gridScreenSizeGroups.oneItem) {
             document.getElementById("movie_general_info_grid").style.gridTemplateColumns = "repeat(1, 1fr)";
+            document.getElementById("movie_general_info_grid").style.gap = "20px";
             document.getElementById("general_info_ribbon").style.textAlign = "left";
         }
     }
@@ -144,9 +152,9 @@ export default function Movie() {
     return (
         !isLoading && <Layout>
             <div className="h-fit" onLoad={appendGenres}>
-                <div className="w-full bg-black h-full mt-10 border-b-2 border-t-2 border-[#FFFFFF] justify-center overflow-scroll" onLoad={handleScreenResize}>
+                <div className="w-full h-full mt-10 justify-center overflow-scroll" onLoad={handleScreenResize}>
                     <div id="movie_ribbon_items" className="flex w-fit h-[60vh] ml-[15%] mr-[15%] justify-center movie_ribbon" onLoad={() => getReleaseDateItem(document.getElementById("root")?.getAttribute('locvalue'))}>
-                        <div id="movie_ribbon_poster" className="mt-auto mb-auto ml-5 rounded-3xl"><img src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} alt={"Poster"} className="rounded-3xl w-[35vh] max-w-[none] border-2"/></div>
+                        <div id="movie_ribbon_poster" className="ml-5 mt-auto flex_center mb-auto rounded-3xl"><img src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} alt={"Poster"} className="rounded-3xl w-[35vh] max-w-[none] border-2"/></div>
                         <div id="movie_ribbon_info" className="inline-block ml-5 mt-auto mb-auto text-[3vh] text-left overflow-scroll">
                             <div className="font-bold text-[4vh]">{item.title}</div>
                             <div className="flex italic text-[2vh]">
@@ -161,18 +169,7 @@ export default function Movie() {
                         </div>
                     </div>
                 </div>
-                <div id="release_dates_ribbon" className="w-full bg-black h-full border-b-2 border-[#FFFFFF] justify-center overflow-scroll p-5">
-                    <Link to={`/movie/${movieId}/releases/`}><div className="font-bold text-[3vh]">Release Dates ({document.getElementById("root")?.getAttribute('locvalue')})</div></Link>
-                    <div className="text-[2vh]">{releaseDates[0] ? releaseDates.map((date, id) => (
-                        <div key={id}>{date}</div>
-                    )) : <div className="text-[2vh]">There are no release dates added
-                        <Link to={`/movie/${movieId}/releases/`}><div className="font-bold text-[3vh]">Release Dates (US)</div></Link>
-                        <div className="text-[2vh]">{getReleaseDateItem("US").map((date, id) => (
-                                <div key={id}>{date}</div>
-                        ))}</div>
-                    </div>}</div>
-                </div>
-                <div id="general_info_ribbon" className="w-full bg-black h-full border-b-2 border-[#FFFFFF] inline-block overflow-scroll p-5">
+                <div id="general_info_ribbon" className="w-full h-full border-b-2 border-[#FFFFFF] inline-block overflow-scroll p-5">
                     <div id="movie_general_info_grid" className="grid-container">
                         <div className="inline-block w-[100%]">
                             <div className="font-bold w-[100%] text-[2vh]">Production Companies</div>
@@ -212,11 +209,22 @@ export default function Movie() {
                         </div>
                     </div>
                 </div>
-                <div id="cast_ribbon" className="w-full bg-black h-full border-b-2 border-[#FFFFFF] inline-block whitespace-nowrap overflow-x-scroll p-5">
-                    <div className="font-bold text-[3vh] mt-[-2.5vh] absolute">Cast</div>
-                    <div className="flex mt-[3vh]">
+                <div id="release_dates_ribbon" className="w-full mt-[-5px] h-full border-b-2 border-[#FFFFFF] overflow-x-scroll p-5">
+                    <Link to={`/movie/${movieId}/releases/`}><div className="font-bold text-[3vh]">Release Dates ({document.getElementById("root")?.getAttribute('locvalue')})</div></Link>
+                    <div className="text-[2vh]">{releaseDates[0] ? releaseDates.map((date, id) => (
+                        <div key={id}>{date}</div>
+                    )) : <div className="text-[2vh]">There are no release dates added
+                        <Link to={`/movie/${movieId}/releases/`}><div className="font-bold text-[3vh]">Release Dates (US)</div></Link>
+                        <div className="text-[2vh]">{getReleaseDateItem("US").map((date, id) => (
+                            <div key={id}>{date}</div>
+                        ))}</div>
+                    </div>}</div>
+                </div>
+                <div id="cast_ribbon" className="w-full h-full inline-block whitespace-nowrap">
+                    <div className="font-bold text-[3vh] text-left ml-5 p-2">Cast</div>
+                    <div className="flex w-full h-full overflow-x-scroll p-5 pt-0">
                         {item.credits?.cast?.map((cast, id) => (
-                            <div key={id} className="mr-5 whitespace-pre-wrap bg-[#131313] rounded-2xl overflow-y-clip">
+                            <div key={id} className="mr-5 whitespace-pre-wrap bg-black rounded-2xl overflow-y-clip">
                                 <img src={cast.profile_path ? `https://image.tmdb.org/t/p/w500/${cast.profile_path}` : personWithNoImage} alt={cast.name} className="w-full rounded-t-2xl"/>
                                 <div className="w-[25vh] text-[2vh] cast_names h-full">
                                     <div className="font-bold">{cast.name}</div>
@@ -226,11 +234,11 @@ export default function Movie() {
                         ))}
                     </div>
                 </div>
-                <div id="crew_ribbon" className="w-full bg-black h-full border-b-2 border-[#FFFFFF] inline-block whitespace-nowrap overflow-x-scroll p-5">
-                    <div className="font-bold text-[3vh] mt-[-2.5vh] absolute">Crew</div>
-                    <div className="flex mt-[3vh]">
+                <div id="crew_ribbon" className="w-full h-full border-b-2 border-[#FFFFFF] inline-block whitespace-nowrap">
+                    <div className="font-bold text-[3vh] text-left ml-5 p-2">Crew</div>
+                    <div className="flex w-full h-full overflow-x-scroll p-5 pt-0">
                         {item.credits?.crew?.map((crew, id) => (
-                            <div key={id} className="mr-5 whitespace-pre-wrap bg-[#131313] rounded-2xl overflow-y-clip">
+                            <div key={id} className="mr-5 whitespace-pre-wrap bg-black rounded-2xl overflow-y-clip">
                                 <img src={crew.profile_path ? `https://image.tmdb.org/t/p/w500/${crew.profile_path}` : personWithNoImage} alt={crew.name} className="w-full rounded-t-2xl"/>
                                 <div className="w-[25vh] text-[2vh] cast_names h-full">
                                     <div className="font-bold">{crew.name}</div>
