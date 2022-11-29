@@ -280,3 +280,7 @@ td:nth-child(4) {
   display: grid;
   gap: 50px;
 }
+
+[id="movie_route_trailer"] {
+  transition: all 400ms;
+}

@@ -6,13 +6,19 @@ import {Link, useHistory, useParams} from "react-router-dom";
 import LoadSettingsData from "../../LoadData";
 import {auth} from "../../firebase";
 import personWithNoImage from "../../Icons/no-person.svg";
+import React from "react";
+import {IoClose} from "react-icons/io5"
 
+//TODO - images, collections, action buttons(rate, watchlist, user ratings)
 export default function Movie() {
     let { movieId } = useParams();
     const movieRequest = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${requests.key}&language=${document.getElementById("root")?.getAttribute('langvalue')}&append_to_response=videos,images,alternative_titles,watch/providers,release_dates,credits`;
     const [item, setItem] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [releaseDates, setReleaseDates] = useState([]);
+    const [playTrailer, setPlayTrailer] = useState(false);
+    const [trailerPath, setTrailerPath] = useState('');
+    const [hasAlreadyBeenLoaded, setHasBeenAlreadyLoaded] = useState(false);
     let genres = ' ';
 
     document.onmousedown = () => {
@@ -27,6 +33,7 @@ export default function Movie() {
                         console.log(response.data);
                         setItem(response.data);
                         appendGenres();
+                        setMainTrailer();
                     }).then(() => {
                         setIsLoading(false);
                     }).catch((err) => console.log(err))
@@ -143,6 +150,37 @@ export default function Movie() {
         if (el !== null) el.innerText = genres;
     }
 
+    function setMainTrailer() {
+        item.videos?.results?.map((trailer_item) => {
+            let vid_key = trailer_item?.key;
+            let type = trailer_item?.type;
+            if (item?.videos?.results?.length === 0 || trailer_item?.site !== "YouTube") {
+                return;
+            }
+            if (type === "Trailer") {
+                setTrailerPath(vid_key);
+            } else {
+                setTrailerPath(vid_key);
+            }
+        })
+        console.log(item);
+    }
+
+    function changePlayTrailer(value) {
+        if (value === true) {
+            document.getElementById("movie_route_trailer").style.width = "";
+            setPlayTrailer(true);
+        } else if (value === false) {
+            document.getElementById("movie_route_trailer").style.width = "100%";
+            setPlayTrailer(false);
+            console.log("close")
+        } else if (value.type === "load" && !hasAlreadyBeenLoaded) {
+            document.getElementById("movie_route_trailer").style.width = "100%";
+            setHasBeenAlreadyLoaded(true);
+        }
+        console.log(value);
+    }
+
     window.addEventListener('resize', handleScreenResize);
 
     useHistory().listen(() => {
@@ -154,7 +192,18 @@ export default function Movie() {
             <div className="h-fit" onLoad={appendGenres}>
                 <div className="w-full h-full mt-10 justify-center overflow-scroll" onLoad={handleScreenResize}>
                     <div id="movie_ribbon_items" className="flex w-fit h-[60vh] ml-[15%] mr-[15%] justify-center movie_ribbon" onLoad={() => getReleaseDateItem(document.getElementById("root")?.getAttribute('locvalue'))}>
-                        <div id="movie_ribbon_poster" className="ml-5 mt-auto flex_center mb-auto rounded-3xl"><img src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} alt={"Poster"} className="rounded-3xl w-[35vh] max-w-[none] border-2"/></div>
+                        <div id="movie_ribbon_poster" className="ml-5 mt-auto relative flex_center mb-auto rounded-3xl cursor-pointer" onLoad={changePlayTrailer}>
+                            <img src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} alt={"Poster"} className="rounded-3xl relative w-[35vh] max-w-[none] border-2"/>
+                            <div id="movie_route_trailer" className="absolute h-[101%] aspect-video left-0 top-0" onClick={() => changePlayTrailer(true)}>
+                                {playTrailer ? <div className="top-0 left-0 w-full h-full absolute overflow-hidden rounded-xl">
+                                    <iframe src={`https://www.youtube.com/embed/${trailerPath}?autoplay=1&autohide=1?rel=0&amp&modestbranding=1`}
+                                            title={item.title + " Trailer"}
+                                            allowFullScreen loading="lazy"
+                                            className="w-full h-full"></iframe>
+                                </div> : undefined}
+                            </div>
+                            <IoClose className={`absolute h-[7%] w-[10%] aspect-square bg-black rounded-full ${playTrailer ? "opacity-50 hover:opacity-100" : "opacity-0"} left-0 top-0 m-5`} onClick={() => changePlayTrailer(false)}/>
+                        </div>
                         <div id="movie_ribbon_info" className="inline-block ml-5 mt-auto mb-auto text-[3vh] text-left overflow-scroll">
                             <div className="font-bold text-[4vh]">{item.title}</div>
                             <div className="flex italic text-[2vh]">
