@@ -10,12 +10,11 @@ import {
     IoHeartCircleOutline
 } from "react-icons/io5";
 import {HiHeart, HiOutlineHeart} from "react-icons/hi";
-import {collection, getDocs} from "firebase/firestore";
-import {auth, db} from "../../firebase";
+import {auth} from "../../firebase";
 import {Popover, Rating} from "@mui/material";
 import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import addToWatchlist, {playClick, saveRating} from "../MovieActions";
+import addToWatchlist, {getMovieDataFromDB, playClick, saveRating} from "../MovieActions";
 
 export default function BrowseMovieCard({item, index, rowId, type}) {
     const history = useHistory();
@@ -27,7 +26,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
     const [isRated, setIsRated] = useState(false);
     const [ratingPopoverAnchorEl, setRatingPopoverAnchorEl] = React.useState(null);
     const isRatingPopoverOpen = Boolean(ratingPopoverAnchorEl);
-    const popoverId = isRatingPopoverOpen ? 'rating-popover' : undefined;
+    const popoverId = isRatingPopoverOpen ? 'browse-rating-popover' : undefined;
 
     useEffect(() => {
         axios.get(`https://api.themoviedb.org/3/movie/${item?.id}?api_key=${requests.key}&language=${document.getElementById("root")?.getAttribute('langvalue')}&append_to_response=videos,images`
@@ -57,19 +56,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
         })
         auth.onAuthStateChanged(async (user) => {
             if (user) {
-                const watchlistSnapshot = await getDocs(collection(db, "users", auth.currentUser.uid.toString(), "watchlist"));
-                watchlistSnapshot.forEach((doc) => {
-                    if (doc.data().item.id.toString() === item.id.toString()) {
-                        setIsOnWatchlist(true);
-                    }
-                });
-                const ratingSnapshot = await getDocs(collection(db, "users", auth.currentUser.uid.toString(), "ratings"));
-                ratingSnapshot.forEach((doc) => {
-                    if (doc.data().item.id.toString() === item.id.toString()) {
-                        setRating(doc.data().rating);
-                        setIsRated(true);
-                    }
-                });
+                getMovieDataFromDB(item).then((r) => { setIsOnWatchlist(r[0]); setRating(r[1]); setIsRated(r[2]); })
             }
         });
     }, [item]);
@@ -129,14 +116,8 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
                 </div>
                 <div className="flex items-center justify-center text-center">
                     <IoCaretForwardCircleOutline size={30} onClick={() => playClick()} className="movie_card_button"/>
-                    {isOnWatchlist ? <IoCheckmarkCircleOutline size={30} onClick={() => {
-                        addToWatchlist({item, isOnWatchlist}).then((r) => {console.log(r)});
-                    }
-                    } className="movie_card_button"/> : <IoAddCircleOutline size={30} onClick={() => {
-                        addToWatchlist({item, isOnWatchlist}).then((r) => {console.log(r)});
-                    }
-                    } className="movie_card_button"/>}
-                    {isRated ? <div onClick={ratingClick} className="movie_card_button flex_center text-center"><div className="block w-[30px] text-center text-white font-bold center">{rating}</div><IoEllipseOutline size={30} className="overflow-visible absolute"></IoEllipseOutline></div>
+                    {isOnWatchlist ? <IoCheckmarkCircleOutline size={30} onClick={() => { addToWatchlist({item, isOnWatchlist}).then((r) => { setIsOnWatchlist(r[0]); }); }} className="movie_card_button"/> : <IoAddCircleOutline size={30} onClick={() => { addToWatchlist({item, isOnWatchlist}).then(() => { setIsOnWatchlist(true); }); }} className="movie_card_button"/>}
+                    {isRated ? <div onClick={ratingClick} className="movie_card_button w-[30px] flex_center text-center relative p-0"><div className="block absolute w-fit h-fit text-center text-white font-bold center">{rating}</div><IoEllipseOutline size={30} className="overflow-visible absolute"/></div>
                         : <IoHeartCircleOutline size={30} onClick={ratingClick} className="movie_card_button"/>}
                     <Popover id={popoverId} open={isRatingPopoverOpen} anchorEl={ratingPopoverAnchorEl} onClose={() => {
                         setRatingPopoverAnchorEl(null);

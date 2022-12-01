@@ -6,9 +6,18 @@ import {Link, useHistory, useParams} from "react-router-dom";
 import LoadSettingsData from "../../LoadData";
 import {auth} from "../../firebase";
 import personWithNoImage from "../../Icons/no-person.svg";
-import {IoClose} from "react-icons/io5";
+import {
+    IoAddCircleOutline, IoCaretForwardCircleOutline,
+    IoCheckmarkCircleOutline,
+    IoClose,
+    IoEllipseOutline,
+    IoHeartCircleOutline
+} from "react-icons/io5";
+import addToWatchlist, {getMovieDataFromDB, playClick, saveRating} from "../MovieActions";
+import {Popover, Rating} from "@mui/material";
+import {HiHeart, HiOutlineHeart} from "react-icons/hi";
 
-//TODO - images, franchise collections, action buttons(rate, watchlist, user ratings)
+//TODO - images, franchise collections, external links
 export default function Movie() {
     let { movieId } = useParams();
     const movieRequest = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${requests.key}&language=${document.getElementById("root")?.getAttribute('langvalue')}&append_to_response=videos,images,alternative_titles,watch/providers,release_dates,credits`;
@@ -17,7 +26,13 @@ export default function Movie() {
     const [releaseDates, setReleaseDates] = useState([]);
     const [playTrailer, setPlayTrailer] = useState(false);
     const [trailerPath, setTrailerPath] = useState('');
+    const [isOnWatchlist, setIsOnWatchlist] = useState(false);
+    const [rating, setRating] = useState(0);
+    const [isRated, setIsRated] = useState(false);
     const [hasAlreadyBeenLoaded, setHasBeenAlreadyLoaded] = useState(false);
+    const [ratingPopoverAnchorEl, setRatingPopoverAnchorEl] = React.useState(null);
+    const isRatingPopoverOpen = Boolean(ratingPopoverAnchorEl);
+    const popoverId = isRatingPopoverOpen ? 'movie-rating-popover' : undefined;
     let genres = ' ';
 
     document.onmousedown = () => {
@@ -33,6 +48,14 @@ export default function Movie() {
                         setItem(response.data);
                         appendGenres();
                         setMainTrailer();
+                        getMovieDataFromDB(response.data).then((r) => {
+                            setIsOnWatchlist(r[0]);
+                            if (r[1] === null) {
+                                setRating(0);
+                                setIsRated(false);
+                                return;
+                            }
+                            setRating(r[1]); setIsRated(r[2]); })
                     }).then(() => {
                         setIsLoading(false);
                     }).catch((err) => console.log(err))
@@ -154,7 +177,13 @@ export default function Movie() {
                 setTrailerPath(vid_key);
             }
         })
-        console.log(item);
+    }
+    const handleRatingClose = () => {
+        setRatingPopoverAnchorEl(null);
+    };
+
+    const ratingClick = (event) => {
+        setRatingPopoverAnchorEl(event.currentTarget);
     }
 
     function changePlayTrailer(value) {
@@ -168,7 +197,6 @@ export default function Movie() {
             document.getElementById("movie_route_trailer").style.width = "100%";
             setHasBeenAlreadyLoaded(true);
         }
-        console.log(value);
     }
 
     window.addEventListener('resize', handleScreenResize);
@@ -208,7 +236,34 @@ export default function Movie() {
                         </div>
                     </div>
                 </div>
-                <div id="general_info_ribbon" className="w-full h-full border-b-2 border-[#FFFFFF] inline-block overflow-scroll p-5">
+                <div id="movie_action_buttons" className="w-full h-full flex_center overflow-x-scroll p-5">
+                    <IoCaretForwardCircleOutline onClick={() => playClick()} className="movie_card_button h-[7.5vh] w-[7.5vh]"/>
+                    {isOnWatchlist ? <IoCheckmarkCircleOutline onClick={() => { addToWatchlist({item, isOnWatchlist}).then((r) => { setIsOnWatchlist(r[0]); }); }} className="movie_card_button h-[7.5vh] w-[7.5vh]"/> : <IoAddCircleOutline onClick={() => { addToWatchlist({item, isOnWatchlist}).then(() => { setIsOnWatchlist(true); }); }} className="movie_card_button h-[7.5vh] w-[7.5vh]"/>}
+                    {isRated ? <div onClick={ratingClick} className="movie_card_button w-fit h-[7.5vh] flex_center text-[5vh] text-center relative p-0"><div className="block absolute w-fit h-fit text-center text-white font-bold center">{rating}</div><IoEllipseOutline className="overflow-visible h-[7.5vh] w-[7.5vh]"/></div>
+                        : <IoHeartCircleOutline onClick={ratingClick} className="movie_card_button h-[7.5vh] w-[7.5vh]"/>}
+                    <Popover id={popoverId} open={isRatingPopoverOpen} anchorEl={ratingPopoverAnchorEl} onClose={handleRatingClose} anchorOrigin={{
+                        vertical: 'center',
+                        horizontal: 'center',
+                    }} transformOrigin={{
+                        vertical: 'center',
+                        horizontal: 'center'
+                    }}>
+                        <Rating name="rating" value={rating} defaultValue={0} max={10} icon={<HiHeart/>} emptyIcon={<HiOutlineHeart/>} onChange={(event, newValue) => {
+                            saveRating(newValue, rating, item).then((r) => {
+                                handleRatingClose();
+                                if (r[1] === null) {
+                                    setRating(0);
+                                    setIsRated(false);
+                                    return;
+                                }
+                                setRating(r[1]);
+                                setIsRated(r[0]);
+                            });
+                        }}
+                        />
+                    </Popover>
+                </div>
+                <div id="general_info_ribbon" className="w-full h-full border-b-2 border-[#FFFFFF] inline-block overflow-scroll p-5 pt-0">
                     <div id="movie_general_info_grid" className="grid-container">
                         <div className="inline-block w-[100%]">
                             <div className="font-bold w-[100%] text-[2vh]">Production Companies</div>

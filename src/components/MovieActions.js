@@ -1,5 +1,5 @@
 import {auth, db} from "../firebase";
-import {deleteDoc, doc, setDoc} from "firebase/firestore";
+import {collection, deleteDoc, doc, getDocs, setDoc} from "firebase/firestore";
 
 export const playClick = () => {
 
@@ -7,7 +7,7 @@ export const playClick = () => {
 
 export default async function addToWatchlist({item, isOnWatchlist}) {
     const user = auth.currentUser.uid.toString().trim();
-    if (!isOnWatchlist) {
+    if (isOnWatchlist === false || isOnWatchlist === undefined) {
         try {
             await setDoc(doc(db, "users", user, "watchlist", item.id.toString()), {
                 item: item,
@@ -18,14 +18,32 @@ export default async function addToWatchlist({item, isOnWatchlist}) {
         } catch (e) {
             console.error("Error adding document: ", e);
         }
-    } else {
+    } else if (isOnWatchlist === true) {
         try {
             await deleteDoc(doc(db, "users", user, "watchlist", item.id.toString()));
             return false;
         } catch (e) {
             console.error("Error adding document: ", e);
         }
-    }
+    } else console.error("isOnWatchlist isn't a boolean or undefined: ", isOnWatchlist);
+}
+
+export async function getMovieDataFromDB(item) {
+    let isOnWatchlist, rating, isRated;
+    const watchlistSnapshot = await getDocs(collection(db, "users", auth.currentUser.uid.toString(), "watchlist"));
+    watchlistSnapshot.forEach((doc) => {
+        if (doc.data().movieId.toString() === item.id?.toString()) {
+            isOnWatchlist = true;
+        }
+    });
+    const ratingSnapshot = await getDocs(collection(db, "users", auth.currentUser.uid.toString(), "ratings"));
+    ratingSnapshot.forEach((doc) => {
+        if (doc.data().movieId.toString() === item.id?.toString()) {
+            rating = doc.data().rating;
+            isRated = true;
+        }
+    });
+    return [isOnWatchlist, rating, isRated];
 }
 
 export const saveRating = async (newValue, rating, item) => {
@@ -43,6 +61,7 @@ export const saveRating = async (newValue, rating, item) => {
             console.error("Error adding document: ", e);
         }
     } else {
+        console.log("enter");
         try {
             await deleteDoc(doc(db, "users", user, "ratings", item.id.toString()));
             return [false, newValue];
