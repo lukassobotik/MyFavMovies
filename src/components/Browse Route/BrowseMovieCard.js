@@ -10,11 +10,12 @@ import {
     IoHeartCircleOutline
 } from "react-icons/io5";
 import {HiHeart, HiOutlineHeart} from "react-icons/hi";
-import {collection, deleteDoc, doc, getDocs, setDoc} from "firebase/firestore";
+import {collection, getDocs} from "firebase/firestore";
 import {auth, db} from "../../firebase";
 import {Popover, Rating} from "@mui/material";
 import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import addToWatchlist, {playClick, saveRating} from "../MovieActions";
 
 export default function BrowseMovieCard({item, index, rowId, type}) {
     const history = useHistory();
@@ -88,33 +89,6 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
         history.push("/" + type + "/" + item?.id + "/");
     }
 
-    const playClick = () => {
-
-    }
-
-    async function listClick() {
-        const user = auth.currentUser.uid.toString().trim();
-        if (!isOnWatchlist) {
-            try {
-                await setDoc(doc(db, "users", user, "watchlist", item.id.toString()), {
-                    item: item,
-                    movieId: item?.id,
-                    name: item?.title
-                });
-                setIsOnWatchlist(true);
-            } catch (e) {
-                console.error("Error adding document: ", e);
-            }
-        } else {
-            try {
-                await deleteDoc(doc(db, "users", user, "watchlist", item.id.toString()));
-                setIsOnWatchlist(false);
-            } catch (e) {
-                console.error("Error adding document: ", e);
-            }
-        }
-    }
-
     const ratingClick = (event) => {
         setRatingPopoverAnchorEl(event.currentTarget);
         const element = document.getElementById("itemInRowId" + index + "-" + rowId);
@@ -129,32 +103,6 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
         element.style.transform = "";
         element.style.zIndex = "9";
     };
-
-    const saveRating = async (newValue) => {
-        const user = auth.currentUser.uid.toString().trim();
-        if (rating !== null) {
-            try {
-                await setDoc(doc(db, "users", user, "ratings", item.id.toString()), {
-                    item: item,
-                    movieId: item?.id,
-                    name: item?.title,
-                    rating: newValue
-                });
-                setRating(newValue);
-                setIsRated(true);
-            } catch (e) {
-                console.error("Error adding document: ", e);
-            }
-        } else {
-            try {
-                await deleteDoc(doc(db, "users", user, "ratings", item.id.toString()));
-                setRating(newValue);
-                setIsRated(false);
-            } catch (e) {
-                console.error("Error adding document: ", e);
-            }
-        }
-    }
 
     return (
         <div id={"itemId" + index + "-" + rowId} className='movie_card_item w-[300px] inline-block cursor-pointer relative p-2 group' data-index={index}>
@@ -180,11 +128,21 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
                     {item?.title}
                 </div>
                 <div className="flex items-center justify-center text-center">
-                    <IoCaretForwardCircleOutline size={30} onClick={playClick} className="movie_card_button"/>
-                    {isOnWatchlist ? <IoCheckmarkCircleOutline size={30} onClick={listClick} className="movie_card_button"/> : <IoAddCircleOutline size={30} onClick={listClick} className="movie_card_button"/>}
+                    <IoCaretForwardCircleOutline size={30} onClick={() => playClick()} className="movie_card_button"/>
+                    {isOnWatchlist ? <IoCheckmarkCircleOutline size={30} onClick={() => {
+                        addToWatchlist({item, isOnWatchlist}).then((r) => {console.log(r)});
+                    }
+                    } className="movie_card_button"/> : <IoAddCircleOutline size={30} onClick={() => {
+                        addToWatchlist({item, isOnWatchlist}).then((r) => {console.log(r)});
+                    }
+                    } className="movie_card_button"/>}
                     {isRated ? <div onClick={ratingClick} className="movie_card_button flex_center text-center"><div className="block w-[30px] text-center text-white font-bold center">{rating}</div><IoEllipseOutline size={30} className="overflow-visible absolute"></IoEllipseOutline></div>
                         : <IoHeartCircleOutline size={30} onClick={ratingClick} className="movie_card_button"/>}
-                    <Popover id={popoverId} open={isRatingPopoverOpen} anchorEl={ratingPopoverAnchorEl} onClose={handleRatingClose} anchorOrigin={{
+                    <Popover id={popoverId} open={isRatingPopoverOpen} anchorEl={ratingPopoverAnchorEl} onClose={() => {
+                        setRatingPopoverAnchorEl(null);
+                        hideDetails();
+                        handleRatingClose(rowId, index);
+                    }} anchorOrigin={{
                             vertical: 'center',
                             horizontal: 'center',
                         }} transformOrigin={{
@@ -192,7 +150,11 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
                             horizontal: 'center'
                     }}>
                         <Rating name="rating" value={rating} defaultValue={0} max={10} icon={<HiHeart/>} emptyIcon={<HiOutlineHeart/>} onChange={(event, newValue) => {
-                                saveRating(newValue).then(() => {handleRatingClose()});
+                                saveRating(newValue, rating, item).then((r) => {
+                                    handleRatingClose();
+                                    setRating(r[1]);
+                                    setIsRated(r[0]);
+                                });
                             }}
                         />
                     </Popover>
