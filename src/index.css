@@ -285,3 +285,7 @@ td:nth-child(4) {
 [id="movie_route_trailer"] {
   transition: all 400ms;
 }
+
+.img_bg img{
+  filter: brightness(30%);
+}
