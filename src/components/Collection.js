@@ -1,5 +1,5 @@
 import Layout from "./Layout";
-import {useParams} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 import requests from "../Constants";
 import React, {useEffect, useState} from "react";
 import {auth} from "../firebase";
@@ -12,6 +12,11 @@ export default function Collection() {
     const collectionRequest = `https://api.themoviedb.org/3/collection/${collectionId}?api_key=${requests.key}&language=${document.getElementById("root")?.getAttribute('langvalue')}`;
     const [item, setItem] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [itemPadding, setItemPadding] = useState('p-5');
+    const [titleDisplay, setTitleDisplay] = useState('flex_center absolute');
+    const [bgImageVisible, setBgImageVisible] = useState(true);
+    const [posterSize, setPosterSize] = useState('h-full');
+    const [scaleValue, setScaleValue] = useState('vw');
 
     useEffect(() => {
         auth.onAuthStateChanged(async (user) => {
@@ -29,21 +34,44 @@ export default function Collection() {
         });
     }, [collectionRequest]);
 
+    function handleScreenResize() {
+        const ratio = window.innerWidth / window.innerHeight;
+        if (ratio < 1) {
+            setItemPadding("p-0 pt-5");
+            setTitleDisplay('inline_block');
+            setBgImageVisible(false);
+            setPosterSize('w-[50%]')
+            setScaleValue('vh');
+        } else {
+            setItemPadding("p-5");
+            setTitleDisplay('flex_center absolute');
+            setBgImageVisible(true);
+            setPosterSize('h-full');
+            setScaleValue('vw');
+        }
+    }
+
+    window.addEventListener('resize', handleScreenResize);
+
+    useHistory().listen(() => {
+        window.removeEventListener('resize', handleScreenResize);
+    });
+
     return (
         !isLoading && <Layout>
-            <div id="collection_ribbon" className="w-full mt-5 h-[50vh] flex_center border-b-2 border-t-2 border-[#FFFFFF] whitespace-nowrap relative">
-                <div className="img_bg w-full h-full">
+            <div id="collection_ribbon" className="w-full mt-5 h-[fit-content] flex_center border-b-2 border-t-2 border-[#FFFFFF] whitespace-nowrap relative" onLoad={handleScreenResize}>
+                {bgImageVisible ? <div className="img_bg w-full h-full">
                     <img src={`https://image.tmdb.org/t/p/original/${item.backdrop_path}`} alt={""} className="w-full h-full"/>
-                </div>
-                <div className="p-5 absolute whitespace-pre-wrap w-full h-full flex_center">
-                    <img src={`https://image.tmdb.org/t/p/original/${item.poster_path}`} alt={""} className="h-full aspect-auto border-2 border-[#FFFFFF] rounded-3xl"/>
+                </div> : null}
+                <div className={`p-5 whitespace-pre-wrap w-full h-full ${titleDisplay}`}>
+                    <img src={`https://image.tmdb.org/t/p/original/${item.poster_path}`} alt={""} className={`${posterSize} aspect-auto border-2 border-[#FFFFFF] rounded-3xl`}/>
                     <div className="inline-block text-left">
-                        <div className="font-bold text-[4vw] ml-5">{item.name}</div>
-                        <div className="text-[2vw] ml-5">{item.overview}</div>
+                        <div className={`font-bold text-[4${scaleValue}] ml-5`}>{item.name}</div>
+                        <div className={`text-[2${scaleValue}] ml-5`}>{item.overview}</div>
                     </div>
                 </div>
             </div>
-            <div className="whitespace-nowrap p-5">
+            <div className={`whitespace-nowrap ${itemPadding}`}>
                 {item.parts.map((item, id) => (<MovieListCard key={id} item={item} deleteButton={false} showRating={false}/>))}
             </div>
         </Layout>

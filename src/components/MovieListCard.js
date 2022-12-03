@@ -1,4 +1,4 @@
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import React, {useState} from "react";
 import {IoCloseCircleOutline} from "react-icons/io5";
 import {deleteDoc, doc} from "firebase/firestore";
@@ -6,6 +6,7 @@ import {auth, db} from "../firebase";
 
 export default function MovieListCard({item, deleteButton, showRating}) {
     const [showItem, setShowItem] = useState(true);
+    const [scaleValue, setScaleValue] = useState('vh');
 
     async function removeItem(item) {
         try {
@@ -16,15 +17,26 @@ export default function MovieListCard({item, deleteButton, showRating}) {
         }
     }
 
+    function handleScreenResize() {
+        const ratio = window.innerWidth / window.innerHeight;
+        if (ratio < 1) setScaleValue("vw"); else setScaleValue("vh");
+    }
+
+    window.addEventListener('resize', handleScreenResize);
+
+    useHistory().listen(() => {
+        window.removeEventListener('resize', handleScreenResize);
+    });
+
     return (
-        showItem && <div className="w-full h-[40vh] mb-5 rounded-3xl flex border-2 border-[#FFFFFF] bg-[#2b2b2b]">
+        showItem && <div className={`w-full h-[40${scaleValue}] mb-5 rounded-3xl flex border-2 border-[#FFFFFF] bg-[#2b2b2b]`} onLoad={handleScreenResize}>
             <div className="relative w-full h-full flex">
-                <img className="h-[calc(40vh - 4px)] rounded-l-3xl border-r-2 border-[#FFFFFF]" src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} alt={item?.title}/>
+                <img className={`h-[calc(40${scaleValue} - 4px)] rounded-l-3xl border-r-2 border-[#FFFFFF]`} src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} alt={item?.title}/>
                 <div className="relative flex w-full">
                     <div className="w-full h-full img_bg brightness-[30%]">
                         <img src={`https://image.tmdb.org/t/p/original/${item.backdrop_path}`} alt={""} className="w-full h-full rounded-r-3xl"/>
                     </div>
-                    <div className="absolute overflow-y-auto overflow-x-hidden text-[3vh] h-full">
+                    <div className={`absolute overflow-y-auto overflow-x-hidden text-[3${scaleValue}] h-full`}>
                         <div className="font-extrabold m-3 w-full text-left break-words">
                             <div className={`${showRating ? "inline-block whitespace-pre-wrap" : "flex whitespace-pre-wrap"}`}>
                                 <Link to={`/movie/${item.id}/`}><div className="relative">{item?.title}</div></Link>
