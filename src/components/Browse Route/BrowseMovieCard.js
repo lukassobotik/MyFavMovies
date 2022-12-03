@@ -11,10 +11,10 @@ import {
 } from "react-icons/io5";
 import {HiHeart, HiOutlineHeart} from "react-icons/hi";
 import {auth} from "../../firebase";
-import {Popover, Rating} from "@mui/material";
+import {Popover, Rating, Tooltip} from "@mui/material";
 import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import addToWatchlist, {getMovieDataFromDB, playClick, saveRating} from "../MovieActions";
+import addToWatchlist, {getMovieDataFromDB, getWatchProviderLink, saveRating} from "../MovieActions";
 
 export default function BrowseMovieCard({item, index, rowId, type}) {
     const history = useHistory();
@@ -24,12 +24,13 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
     const [isOnWatchlist, setIsOnWatchlist] = useState(false);
     const [rating, setRating] = React.useState(0);
     const [isRated, setIsRated] = useState(false);
+    const [playLink, setPlayLink] = useState('');
     const [ratingPopoverAnchorEl, setRatingPopoverAnchorEl] = React.useState(null);
     const isRatingPopoverOpen = Boolean(ratingPopoverAnchorEl);
     const popoverId = isRatingPopoverOpen ? 'browse-rating-popover' : undefined;
 
     useEffect(() => {
-        axios.get(`https://api.themoviedb.org/3/movie/${item?.id}?api_key=${requests.key}&language=${document.getElementById("root")?.getAttribute('langvalue')}&append_to_response=videos,images`
+        axios.get(`https://api.themoviedb.org/3/movie/${item?.id}?api_key=${requests.key}&language=${document.getElementById("root")?.getAttribute('langvalue')}&append_to_response=videos,images,watch/providers`
         ).then((response) => {
             let backdrops = response.data?.images?.backdrops;
             for (let i = 0; i < backdrops.length; i++) {
@@ -51,6 +52,9 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
                     item.trailer_path = vid_key;
                 }
             })
+
+            setPlayLink(getWatchProviderLink(response.data));
+
         }).then(() => setIsLoading(false)).catch((err) => {
             console.log(err);
         })
@@ -115,7 +119,16 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
                     {item?.title}
                 </div>
                 <div className="flex items-center justify-center text-center">
-                    <IoCaretForwardCircleOutline size={30} onClick={() => playClick()} className="movie_card_button"/>
+                    {playLink ? <Tooltip title={
+                            <React.Fragment>
+                                <p className="text-center">Provided by:</p>
+                                <div className="flex_center">
+                                    <img src="https://www.themoviedb.org/assets/2/v4/logos/justwatch-c2e58adf5809b6871db650fb74b43db2b8f3637fe3709262572553fa056d8d0a.svg" alt="JustWatch" className="w-[10vw]"/>
+                                </div>
+                            </React.Fragment>} placement="bottom">
+                            <a href={playLink}><IoCaretForwardCircleOutline size={30} className="movie_card_button"/></a>
+                        </Tooltip>
+                        : <IoCaretForwardCircleOutline color={"#878787"} size={30} className="movie_card_button_no_cursor"/>}
                     {isOnWatchlist ? <IoCheckmarkCircleOutline size={30} onClick={() => { addToWatchlist({item, isOnWatchlist}).then((r) => { setIsOnWatchlist(r[0]); }); }} className="movie_card_button"/> : <IoAddCircleOutline size={30} onClick={() => { addToWatchlist({item, isOnWatchlist}).then(() => { setIsOnWatchlist(true); }); }} className="movie_card_button"/>}
                     {isRated ? <div onClick={ratingClick} className="movie_card_button w-[30px] flex_center text-center relative p-0"><div className="block absolute w-fit h-fit text-center text-white font-bold center">{rating}</div><IoEllipseOutline size={30} className="overflow-visible absolute"/></div>
                         : <IoHeartCircleOutline size={30} onClick={ratingClick} className="movie_card_button"/>}

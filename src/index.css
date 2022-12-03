@@ -175,6 +175,10 @@ code {
   font-family: "Times New Roman", sans-serif;
   cursor: pointer;
 }
+.movie_card_button_no_cursor {
+  font-family: "Times New Roman", sans-serif;
+  cursor: default;
+}
 
 .row_item {
   position: relative;

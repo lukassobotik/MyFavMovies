@@ -7,14 +7,15 @@ import LoadSettingsData from "../../LoadData";
 import {auth} from "../../firebase";
 import personWithNoImage from "../../Icons/no-person.svg";
 import {
-    IoAddCircleOutline, IoCaretForwardCircleOutline,
+    IoAddCircleOutline,
+    IoCaretForwardCircleOutline,
     IoCheckmarkCircleOutline,
     IoClose,
     IoEllipseOutline,
     IoHeartCircleOutline
 } from "react-icons/io5";
-import addToWatchlist, {getMovieDataFromDB, playClick, saveRating} from "../MovieActions";
-import {Popover, Rating} from "@mui/material";
+import addToWatchlist, {getMovieDataFromDB, getWatchProviderLink, saveRating} from "../MovieActions";
+import {Popover, Rating, Tooltip} from "@mui/material";
 import {HiHeart, HiOutlineHeart} from "react-icons/hi";
 
 //TODO - images, external links
@@ -30,11 +31,12 @@ export default function Movie() {
     const [rating, setRating] = useState(0);
     const [isRated, setIsRated] = useState(false);
     const [hasAlreadyBeenLoaded, setHasBeenAlreadyLoaded] = useState(false);
-    const [ratingPopoverAnchorEl, setRatingPopoverAnchorEl] = React.useState(null);
     const [scaleValue, setScaleValue] = useState('vw');
     const [showCollectionPoster, setShowCollectionPoster] = useState(true);
+    const [playLink, setPlayLink] = useState('');
+    const [ratingPopoverAnchorEl, setRatingPopoverAnchorEl] = React.useState(null);
     const isRatingPopoverOpen = Boolean(ratingPopoverAnchorEl);
-    const popoverId = isRatingPopoverOpen ? 'movie-rating-popover' : undefined;
+    const ratingPopoverId = isRatingPopoverOpen ? 'movie-rating-popover' : undefined;
     let genres = ' ';
 
     document.onmousedown = () => {
@@ -58,6 +60,8 @@ export default function Movie() {
                                 return;
                             }
                             setRating(r[1]); setIsRated(r[2]); })
+
+                        setPlayLink(getWatchProviderLink(response.data));
                     }).then(() => {
                         setIsLoading(false);
                     }).catch((err) => console.log(err))
@@ -184,10 +188,10 @@ export default function Movie() {
             }
         })
     }
+
     const handleRatingClose = () => {
         setRatingPopoverAnchorEl(null);
     };
-
     const ratingClick = (event) => {
         setRatingPopoverAnchorEl(event.currentTarget);
     }
@@ -243,11 +247,21 @@ export default function Movie() {
                     </div>
                 </div>
                 <div id="movie_action_buttons" className="w-full h-full flex_center overflow-x-scroll p-5">
-                    <IoCaretForwardCircleOutline onClick={() => playClick()} className="movie_card_button h-[7.5vh] w-[7.5vh]"/>
+                    {playLink ? <Tooltip title={
+                            <React.Fragment>
+                                <p className="text-center">Provided by:</p>
+                                <div className="flex_center">
+                                    <img src="https://www.themoviedb.org/assets/2/v4/logos/justwatch-c2e58adf5809b6871db650fb74b43db2b8f3637fe3709262572553fa056d8d0a.svg" alt="JustWatch" className="w-[10vw]"/>
+                                </div>
+                            </React.Fragment>} placement="top">
+                            <a href={playLink}><IoCaretForwardCircleOutline className="movie_card_button h-[7.5vh] w-[7.5vh]"/></a>
+                        </Tooltip>
+                        : <IoCaretForwardCircleOutline color={"#878787"} className="movie_card_button_no_cursor h-[7.5vh] w-[7.5vh]"/>}
+
                     {isOnWatchlist ? <IoCheckmarkCircleOutline onClick={() => { addToWatchlist({item, isOnWatchlist}).then((r) => { setIsOnWatchlist(r[0]); }); }} className="movie_card_button h-[7.5vh] w-[7.5vh]"/> : <IoAddCircleOutline onClick={() => { addToWatchlist({item, isOnWatchlist}).then(() => { setIsOnWatchlist(true); }); }} className="movie_card_button h-[7.5vh] w-[7.5vh]"/>}
                     {isRated ? <div onClick={ratingClick} className="movie_card_button w-fit h-[7.5vh] flex_center text-[5vh] text-center relative p-0"><div className="block absolute w-fit h-fit text-center text-white font-bold center">{rating}</div><IoEllipseOutline className="overflow-visible h-[7.5vh] w-[7.5vh]"/></div>
                         : <IoHeartCircleOutline onClick={ratingClick} className="movie_card_button h-[7.5vh] w-[7.5vh]"/>}
-                    <Popover id={popoverId} open={isRatingPopoverOpen} anchorEl={ratingPopoverAnchorEl} onClose={handleRatingClose} anchorOrigin={{
+                    <Popover id={ratingPopoverId} open={isRatingPopoverOpen} anchorEl={ratingPopoverAnchorEl} onClose={handleRatingClose} anchorOrigin={{
                         vertical: 'center',
                         horizontal: 'center',
                     }} transformOrigin={{

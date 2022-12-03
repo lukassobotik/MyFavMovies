@@ -1,10 +1,6 @@
 import {auth, db} from "../firebase";
 import {collection, deleteDoc, doc, getDocs, setDoc} from "firebase/firestore";
 
-export const playClick = () => {
-
-}
-
 export default async function addToWatchlist({item, isOnWatchlist}) {
     const user = auth.currentUser.uid.toString().trim();
     if (isOnWatchlist === false || isOnWatchlist === undefined) {
@@ -68,5 +64,14 @@ export const saveRating = async (newValue, rating, item) => {
         } catch (e) {
             console.error("Error adding document: ", e);
         }
+    }
+}
+
+export function getWatchProviderLink(data) {
+    const loc = document.getElementById("root")?.getAttribute('locvalue').toString();
+    if (data["watch/providers"]?.results[loc] !== undefined) {
+        return data["watch/providers"]?.results[loc].link;
+    } else if (data["watch/providers"]?.results["US"] !== undefined) {
+        return data["watch/providers"]?.results["US"].link;
     }
 }
