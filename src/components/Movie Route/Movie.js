@@ -18,7 +18,7 @@ import addToWatchlist, {getMovieDataFromDB, getWatchProviderLink, saveRating} fr
 import {Popover, Rating, Tooltip} from "@mui/material";
 import {HiHeart, HiOutlineHeart} from "react-icons/hi";
 
-//TODO - images, external links
+//TODO - images
 export default function Movie() {
     let { movieId } = useParams();
     const movieRequest = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${requests.key}&language=${document.getElementById("root")?.getAttribute('langvalue')}&append_to_response=videos,images,alternative_titles,watch/providers,release_dates,credits`;
@@ -31,7 +31,6 @@ export default function Movie() {
     const [rating, setRating] = useState(0);
     const [isRated, setIsRated] = useState(false);
     const [hasAlreadyBeenLoaded, setHasBeenAlreadyLoaded] = useState(false);
-    const [scaleValue, setScaleValue] = useState('vw');
     const [showCollectionPoster, setShowCollectionPoster] = useState(true);
     const [playLink, setPlayLink] = useState('');
     const [ratingPopoverAnchorEl, setRatingPopoverAnchorEl] = React.useState(null);
@@ -78,16 +77,16 @@ export default function Movie() {
             document.getElementById("movie_ribbon_poster").style.marginLeft = "0";
             document.getElementById("movie_ribbon_poster").style.width = "100%";
             document.getElementById("release_dates_ribbon").style.textAlign = "left";
+            document.getElementById("movie_collection_link").style.fontSize = "4vh";
             setShowCollectionPoster(false);
-            setScaleValue('vh');
         } else {
             document.getElementById("movie_ribbon_items").style.display = "flex";
             document.getElementById("movie_ribbon_poster").style.marginTop = "auto";
             document.getElementById("movie_ribbon_poster").style.marginLeft = "1.25rem";
             document.getElementById("movie_ribbon_poster").style.width = "";
             document.getElementById("release_dates_ribbon").style.textAlign = "center";
+            document.getElementById("movie_collection_link").style.fontSize = "4vw";
             setShowCollectionPoster(true);
-            setScaleValue('vw');
         }
 
         if (ratio > ratioGroups.movieCast) {
@@ -257,7 +256,6 @@ export default function Movie() {
                             <a href={playLink}><IoCaretForwardCircleOutline className="movie_card_button h-[7.5vh] w-[7.5vh]"/></a>
                         </Tooltip>
                         : <IoCaretForwardCircleOutline color={"#878787"} className="movie_card_button_no_cursor h-[7.5vh] w-[7.5vh]"/>}
-
                     {isOnWatchlist ? <IoCheckmarkCircleOutline onClick={() => { addToWatchlist({item, isOnWatchlist}).then((r) => { setIsOnWatchlist(r[0]); }); }} className="movie_card_button h-[7.5vh] w-[7.5vh]"/> : <IoAddCircleOutline onClick={() => { addToWatchlist({item, isOnWatchlist}).then(() => { setIsOnWatchlist(true); }); }} className="movie_card_button h-[7.5vh] w-[7.5vh]"/>}
                     {isRated ? <div onClick={ratingClick} className="movie_card_button w-fit h-[7.5vh] flex_center text-[5vh] text-center relative p-0"><div className="block absolute w-fit h-fit text-center text-white font-bold center">{rating}</div><IoEllipseOutline className="overflow-visible h-[7.5vh] w-[7.5vh]"/></div>
                         : <IoHeartCircleOutline onClick={ratingClick} className="movie_card_button h-[7.5vh] w-[7.5vh]"/>}
@@ -371,7 +369,7 @@ export default function Movie() {
                             {showCollectionPoster ?
                                 <img src={`https://image.tmdb.org/t/p/original/${item.belongs_to_collection.poster_path}`} alt={""} className="h-full aspect-auto border-2 border-[#FFFFFF] rounded-3xl"/>
                             : null}
-                            <Link to={`/collection/${item.belongs_to_collection.id}/`}><div className={`font-bold text-[4${scaleValue}] ml-5`}>Belongs to the {item.belongs_to_collection.name}</div></Link>
+                            <Link to={`/collection/${item.belongs_to_collection.id}/`}><div id="movie_collection_link" className={`font-bold text-[4vw] ml-5`}>Belongs to the {item.belongs_to_collection.name}</div></Link>
                         </div>
                     </div>
                     : null}
