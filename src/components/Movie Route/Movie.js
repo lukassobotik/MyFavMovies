@@ -17,7 +17,7 @@ import addToWatchlist, {getMovieDataFromDB, playClick, saveRating} from "../Movi
 import {Popover, Rating} from "@mui/material";
 import {HiHeart, HiOutlineHeart} from "react-icons/hi";
 
-//TODO - images, franchise collections, external links
+//TODO - images, external links
 export default function Movie() {
     let { movieId } = useParams();
     const movieRequest = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${requests.key}&language=${document.getElementById("root")?.getAttribute('langvalue')}&append_to_response=videos,images,alternative_titles,watch/providers,release_dates,credits`;
@@ -31,6 +31,8 @@ export default function Movie() {
     const [isRated, setIsRated] = useState(false);
     const [hasAlreadyBeenLoaded, setHasBeenAlreadyLoaded] = useState(false);
     const [ratingPopoverAnchorEl, setRatingPopoverAnchorEl] = React.useState(null);
+    const [scaleValue, setScaleValue] = useState('vw');
+    const [showCollectionPoster, setShowCollectionPoster] = useState(true);
     const isRatingPopoverOpen = Boolean(ratingPopoverAnchorEl);
     const popoverId = isRatingPopoverOpen ? 'movie-rating-popover' : undefined;
     let genres = ' ';
@@ -72,12 +74,16 @@ export default function Movie() {
             document.getElementById("movie_ribbon_poster").style.marginLeft = "0";
             document.getElementById("movie_ribbon_poster").style.width = "100%";
             document.getElementById("release_dates_ribbon").style.textAlign = "left";
+            setShowCollectionPoster(false);
+            setScaleValue('vh');
         } else {
             document.getElementById("movie_ribbon_items").style.display = "flex";
             document.getElementById("movie_ribbon_poster").style.marginTop = "auto";
             document.getElementById("movie_ribbon_poster").style.marginLeft = "1.25rem";
             document.getElementById("movie_ribbon_poster").style.width = "";
             document.getElementById("release_dates_ribbon").style.textAlign = "center";
+            setShowCollectionPoster(true);
+            setScaleValue('vw');
         }
 
         if (ratio > ratioGroups.movieCast) {
@@ -348,8 +354,10 @@ export default function Movie() {
                             <img src={`https://image.tmdb.org/t/p/original/${item.belongs_to_collection.backdrop_path}`} alt={""} className="w-full h-full"/>
                         </div>
                         <div className="p-5 absolute whitespace-pre-wrap w-full h-full flex_center">
-                            <img src={`https://image.tmdb.org/t/p/original/${item.belongs_to_collection.poster_path}`} alt={""} className="h-full aspect-auto border-2 border-[#FFFFFF] rounded-3xl"/>
-                            <Link to={`/collection/${item.belongs_to_collection.id}/`}><div className="font-bold text-[4vw] ml-5">Belongs to the {item.belongs_to_collection.name}</div></Link>
+                            {showCollectionPoster ?
+                                <img src={`https://image.tmdb.org/t/p/original/${item.belongs_to_collection.poster_path}`} alt={""} className="h-full aspect-auto border-2 border-[#FFFFFF] rounded-3xl"/>
+                            : null}
+                            <Link to={`/collection/${item.belongs_to_collection.id}/`}><div className={`font-bold text-[4${scaleValue}] ml-5`}>Belongs to the {item.belongs_to_collection.name}</div></Link>
                         </div>
                     </div>
                     : null}
