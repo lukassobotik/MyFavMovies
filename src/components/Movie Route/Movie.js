@@ -18,7 +18,6 @@ import addToWatchlist, {getMovieDataFromDB, getWatchProviderLink, saveRating} fr
 import {Popover, Rating, Tooltip} from "@mui/material";
 import {HiHeart, HiOutlineHeart} from "react-icons/hi";
 
-//TODO - images
 export default function Movie() {
     let { movieId } = useParams();
     const movieRequest = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${requests.key}&language=${document.getElementById("root")?.getAttribute('langvalue')}&append_to_response=videos,images,alternative_titles,watch/providers,release_dates,credits`;
@@ -232,6 +231,9 @@ export default function Movie() {
                             <IoClose className={`absolute h-[7%] w-[10%] aspect-square bg-black rounded-full ${playTrailer ? "opacity-50 hover:opacity-100" : "opacity-0"} left-0 top-0 m-5`} onClick={() => changePlayTrailer(false)}/>
                         </div>
                         <div id="movie_ribbon_info" className="inline-block ml-5 mt-auto mb-auto text-[3vh] text-left overflow-scroll">
+                            {item.imdb_id ?
+                                <a href={"https://www.imdb.com/title/" + item.imdb_id + "/"}><img src="https://ia.media-imdb.com/images/M/MV5BODc4MTA3NjkzNl5BMl5BcG5nXkFtZTgwMDg0MzQ2OTE@._V1_.png" alt="IMDb" className="w-[2vw]"/></a>
+                            : null}
                             <a href={`${item.homepage}`}><div className="font-bold text-[4vh]">{item.title}</div></a>
                             <div className="flex italic text-[2vh]">
                                 <div>{item.runtime}m</div>
