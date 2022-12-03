@@ -36,7 +36,7 @@ For more info, checkout the [Documentation](https://github.com/PuckyEU/MyFavMovi
 - [ ] Website Footer
 #### v0.9.0:
 - [ ] Movie Lists
-#### v0.1.0:
+#### v1.0.0:
 - [ ] Movie Recommendations
 
 ## How will the website decide what movies are relevant to you?
