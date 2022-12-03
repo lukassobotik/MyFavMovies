@@ -25,10 +25,19 @@ In between the apostrophes, add your Firstore Database and TMDb API Keys
 
 For more info, checkout the [Documentation](https://github.com/PuckyEU/MyFavMovies/wiki)
 
-## Features in the future
+## Plans for the future
+#### v0.7.0:
 - [ ] What movies do you know an actor from
 - [ ] Movies where two or more of your favorite actors co-star
+- [ ] Actor Page
 - [ ] Favorite actor list
+#### v0.8.0:
+- [ ] Movie Searching
+- [ ] Website Footer
+#### v0.9.0:
+- [ ] Movie Lists
+#### v0.1.0:
+- [ ] Movie Recommendations
 
 ## How will the website decide what movies are relevant to you?
 The website will take all tags on the current movie (for example "based on novel or book" or "based on comic") and the genres of the movie, after that it will put it in a list how many times you've liked that specific genre a tag and what rating you gave it. From that the website will find similar movies with similar tags and genres.
