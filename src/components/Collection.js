@@ -17,6 +17,7 @@ export default function Collection() {
     const [bgImageVisible, setBgImageVisible] = useState(true);
     const [posterSize, setPosterSize] = useState('h-full');
     const [scaleValue, setScaleValue] = useState('vw');
+    const [ribbonHeight, setRibbonHeight] = useState('50vh')
 
     useEffect(() => {
         auth.onAuthStateChanged(async (user) => {
@@ -27,7 +28,6 @@ export default function Collection() {
                         setItem(response.data);
                     }).then(() => {
                         setIsLoading(false);
-                        console.log(item);
                     }).catch((err) => console.log(err))
                 }).catch((err) => console.log(err))
             }
@@ -42,12 +42,14 @@ export default function Collection() {
             setBgImageVisible(false);
             setPosterSize('w-[50%]')
             setScaleValue('vh');
+            setRibbonHeight("fit-content");
         } else {
             setItemPadding("p-5");
             setTitleDisplay('flex_center absolute');
             setBgImageVisible(true);
             setPosterSize('h-full');
             setScaleValue('vw');
+            setRibbonHeight('50vh');
         }
     }
 
@@ -59,7 +61,7 @@ export default function Collection() {
 
     return (
         !isLoading && <Layout>
-            <div id="collection_ribbon" className="w-full mt-5 h-[fit-content] flex_center border-b-2 border-t-2 border-[#FFFFFF] whitespace-nowrap relative" onLoad={handleScreenResize}>
+            <div id="collection_ribbon" className={`w-full mt-5 h-[${ribbonHeight}] flex_center border-b-2 border-t-2 border-[#FFFFFF] whitespace-nowrap relative`} onLoad={handleScreenResize}>
                 {bgImageVisible ? <div className="img_bg w-full h-full">
                     <img src={`https://image.tmdb.org/t/p/original/${item.backdrop_path}`} alt={""} className="w-full h-full"/>
                 </div> : null}
