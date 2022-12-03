@@ -343,7 +343,7 @@ export default function Movie() {
                     </div>
                 </div>
                 {item.belongs_to_collection ?
-                    <div id="franchise_ribbon" className="w-full h-full flex_center border-b-2 border-[#FFFFFF] whitespace-nowrap relative">
+                    <div id="franchise_ribbon" className="w-full h-[50vh] flex_center border-b-2 border-[#FFFFFF] whitespace-nowrap relative">
                         <div className="img_bg w-full h-full">
                             <img src={`https://image.tmdb.org/t/p/original/${item.belongs_to_collection.backdrop_path}`} alt={""} className="w-full h-full"/>
                         </div>

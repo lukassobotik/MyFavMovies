@@ -8,6 +8,7 @@ import Account from "./components/Account Route/Account";
 import Settings from "./components/Settings";
 import Movie from "./components/Movie Route/Movie";
 import MovieReleases from "./components/Movie Route/MovieReleases";
+import Collection from "./components/Collection";
 
 function App() {
     document.onmousedown = () => {
@@ -37,6 +38,7 @@ function App() {
                 </Route>
                 <Route path="/movie/:movieId/" component={Movie} exact/>
                 <Route path="/movie/:movieId/releases" component={MovieReleases}/>
+                <Route path="/collection/:collectionId/" component={Collection} exact/>
             </Switch>
         </div>
     );

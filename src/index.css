@@ -288,4 +288,5 @@ td:nth-child(4) {
 
 .img_bg img{
   filter: brightness(30%);
+  object-fit: cover;
 }
