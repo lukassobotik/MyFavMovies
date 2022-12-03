@@ -10,7 +10,7 @@
 Once you clone this repository, run `npm install` to download all the required plugins
 
 1. In the root of this repository, create a new file named `.env`
-2. In the file, add these keywords: 
+2. In the file, add these keywords:
 ```env
 REACT_APP_API_KEY=''
 REACT_APP_AUTH_DOMAIN=''
@@ -27,15 +27,12 @@ For more info, checkout the [Documentation](https://github.com/PuckyEU/MyFavMovi
 
 ## Plans for the future
 #### v0.7.0:
-- [ ] What movies do you know an actor from
-- [ ] Movies where two or more of your favorite actors co-star
 - [ ] Actor Page
-- [ ] Favorite actor list
 #### v0.8.0:
 - [ ] Movie Searching
 - [ ] Website Footer
 #### v0.9.0:
-- [ ] Movie Lists
+- [ ] Movie & Actor Lists
 #### v1.0.0:
 - [ ] Movie Recommendations
 
