@@ -1,11 +1,11 @@
 import Layout from "../Layout";
 import {MdPerson} from "react-icons/md";
-import {IoCloseCircleOutline} from "react-icons/io5";
 import React, {useEffect, useState} from "react"
 import {Box, createTheme, Tab, Tabs, ThemeProvider, Typography} from "@mui/material";
-import {collection, deleteDoc, doc, getDocs} from "firebase/firestore";
+import {collection, getDocs} from "firebase/firestore";
 import {auth, db} from "../../firebase";
 import {useHistory} from "react-router-dom";
+import MovieListCard from "../MovieListCard";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -75,21 +75,6 @@ export default function Account() {
         setIsLoading(false);
     }, [isLoading]);
 
-    async function removeItem(item) {
-        try {
-            await deleteDoc(doc(db, "users", auth.currentUser.uid.toString(), "watchlist", item.id.toString()));
-            let newWatchlist = [];
-            watchlist.map((i) => {
-                if (i !== item) {
-                    newWatchlist.push(i);
-                }
-            })
-            setWatchlist(newWatchlist);
-        } catch (e) {
-            console.error("Error adding document: ", e);
-        }
-    }
-
     function handleScreenResize() {
         changeMargins();
     }
@@ -148,46 +133,12 @@ export default function Account() {
                         </Box>
                         <TabPanel value={value} index={0}>
                             <div className="whitespace-nowrap">
-                                {watchlist.map((item, id) => {
-                                    return (
-                                        <div className="w-full h-[150px] sm:h-[150px] md:h-[250px] lg:h-[350px] mb-5 rounded-3xl flex border-2 border-[#FFFFFF] bg-[#2b2b2b]" key={id}>
-                                            <img className="h-[146px] sm:h-[146px] md:h-[246px] lg:h-[346px] rounded-l-3xl" src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} alt={item?.title}/>
-                                            <div className="relative overflow-y-auto overflow-x-hidden text-xs sm:text-xs md:text-xl lg:text-2xl h-full">
-                                                <div className="font-extrabold m-3 w-full text-left break-words">
-                                                    <div className="flex">
-                                                        <div className="relative">{item?.title}</div>
-                                                        <div className="w-fit h-full relative mt-auto mb-auto ml-3">
-                                                            <IoCloseCircleOutline className="w-fit h-fit cursor-pointer" onClick={() => {removeItem(item).then(() => {})}}/>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="inline-block w-fit h-fit whitespace-pre-wrap mr-3 ml-3 text-left">{item?.overview}</div>
-                                            </div>
-                                        </div>
-                                    )
-                                })}
+                                {watchlist.map((item, id) => (<MovieListCard key={id} item={item} deleteButton={true} showRating={false}/>))}
                             </div>
                         </TabPanel>
                         <TabPanel value={value} index={1}>
                             <div className="whitespace-nowrap">
-                                {ratedItems.map((item, id) => {
-                                    return (
-                                        <div className="w-full h-[150px] sm:h-[150px] md:h-[250px] lg:h-[350px] mb-5 rounded-3xl flex border-2 border-[#FFFFFF] bg-[#2b2b2b]" key={id}>
-                                            <img className="h-[146px] sm:h-[146px] md:h-[246px] lg:h-[346px] rounded-l-3xl" src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} alt={item?.title}/>
-                                            <div className="relative overflow-y-auto overflow-x-hidden text-xs sm:text-xs md:text-xl lg:text-2xl h-full">
-                                                <div className="m-3 mb-0 w-full text-left break-words">
-                                                    <div className="flex font-extrabold">
-                                                        <div className="relative">{item?.title}</div>
-                                                    </div>
-                                                    <div className="inline-block w-fit relative">
-                                                        <div className="italic text-[#878787]">Your rating: {item?.rating}</div>
-                                                    </div>
-                                                </div>
-                                                <div className="inline-block w-fit h-fit whitespace-pre-wrap mr-3 ml-3 text-left">{item?.overview}</div>
-                                            </div>
-                                        </div>
-                                    )
-                                })}
+                                {ratedItems.map((item, id) => (<MovieListCard key={id} item={item} deleteButton={false} showRating={true}/>))}
                             </div>
                         </TabPanel>
                         <TabPanel value={value} index={2}>
