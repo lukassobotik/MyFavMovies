@@ -229,7 +229,7 @@ export default function Movie() {
                             <IoClose className={`absolute h-[7%] w-[10%] aspect-square bg-black rounded-full ${playTrailer ? "opacity-50 hover:opacity-100" : "opacity-0"} left-0 top-0 m-5`} onClick={() => changePlayTrailer(false)}/>
                         </div>
                         <div id="movie_ribbon_info" className="inline-block ml-5 mt-auto mb-auto text-[3vh] text-left overflow-scroll">
-                            <div className="font-bold text-[4vh]">{item.title}</div>
+                            <a href={`${item.homepage}`}><div className="font-bold text-[4vh]">{item.title}</div></a>
                             <div className="flex italic text-[2vh]">
                                 <div>{item.runtime}m</div>
                                 <div className="ml-2 mr-2 font-bold">·</div>
