@@ -15,10 +15,12 @@ import {Popover, Rating, Tooltip} from "@mui/material";
 import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import addToWatchlist, {getMovieDataFromDB, getWatchProviderLink, saveRating} from "../MovieActions";
+import emptyBackdrop from "../../Icons/empty_backdrop.png";
 
 export default function BrowseMovieCard({item, index, rowId, type}) {
     const history = useHistory();
     const [backdrop, setBackdrop] = useState(item.backdrop_path);
+    const [hasNoImage, setHasNoImage] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [playTrailer, setPlayTrailer] = useState(false);
     const [isOnWatchlist, setIsOnWatchlist] = useState(false);
@@ -100,12 +102,12 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
         <div id={"itemInRowId" + index + "-" + rowId} className="row_item" style={{left: 0}} onMouseOver={showDetails} onMouseLeave={hideDetails}>
             <div id={"player" + index + "-" + rowId} className="player" onClick={generalClick}>
                 {!isLoading ?
-                    <img id={"img" + index + "-" + rowId} className='w-full h-auto block overflow-visible rounded'
-                         src={`https://image.tmdb.org/t/p/w500/${backdrop}`} alt={item.title} onError={() => setIsLoading(true)}/>
+                    <div className="relative">
+                        <img id={"img" + index + "-" + rowId} className='w-full h-auto block overflow-visible rounded bg-black' src={!hasNoImage ? `https://image.tmdb.org/t/p/w500/${backdrop}` : emptyBackdrop} alt={item.title} onError={() => setHasNoImage(true)}/>
+                        <div className={`absolute ${!hasNoImage ? "opacity-0" : "opacity-100"} flex_center whitespace-pre-wrap font-bold text-[2vh] top-0 w-full h-full rounded`}>{item.title}</div>
+                    </div>
                     : <SkeletonTheme baseColor="#a9b7c1" highlightColor="#5e6c77">
-                    <p id={"browse_movie_card_skeleton" + index + "-" + rowId}>
-                    <Skeleton className="w-full aspect-video" duration={2} />
-                    </p>
+                    <p id={"browse_movie_card_skeleton" + index + "-" + rowId}><Skeleton className="w-full aspect-video" duration={2} /></p>
                     </SkeletonTheme>}
                 <div className="w-full h-full left-0 top-0"/>
                 {playTrailer && !isLoading ? <div className="youtube-container rounded-t">

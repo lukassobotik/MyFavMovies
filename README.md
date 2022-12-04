@@ -21,7 +21,7 @@ REACT_APP_APP_ID=''
 REACT_APP_MEASUREMENT_ID=''
 REACT_APP_TMDB_API_KEY=''
 ```
-In between the apostrophes, add your Firstore Database and TMDb API Keys
+In between the apostrophes, add your Firestore Database and TMDb API Keys
 
 For more info, checkout the [Documentation](https://github.com/PuckyEU/MyFavMovies/wiki)
 
