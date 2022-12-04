@@ -68,7 +68,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
     }, [item]);
 
     const showDetails = () => {
-        document.getElementById("itemInRowId" + index + "-" + rowId).style.zIndex = "10";
+        document.getElementById("itemInRowId" + index + "-" + rowId).style.zIndex = "100";
         document.getElementById("card" + index + "-" + rowId).style.visibility = "visible";
         setPlayTrailer(true);
     }
