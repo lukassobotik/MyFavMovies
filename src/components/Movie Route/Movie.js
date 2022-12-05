@@ -77,6 +77,8 @@ export default function Movie() {
             document.getElementById("movie_ribbon_poster").style.width = "100%";
             document.getElementById("release_dates_ribbon").style.textAlign = "left";
             document.getElementById("movie_collection_link").style.fontSize = "4vh";
+            document.getElementById("imdb_icon").style.width = "5vh";
+            document.getElementById("imdb_icon").style.marginTop = "1.25rem";
             setShowCollectionPoster(false);
         } else {
             document.getElementById("movie_ribbon_items").style.display = "flex";
@@ -85,6 +87,8 @@ export default function Movie() {
             document.getElementById("movie_ribbon_poster").style.width = "";
             document.getElementById("release_dates_ribbon").style.textAlign = "center";
             document.getElementById("movie_collection_link").style.fontSize = "4vw";
+            document.getElementById("imdb_icon").style.width = "2vw";
+            document.getElementById("imdb_icon").style.marginTop = "0";
             setShowCollectionPoster(true);
         }
 
@@ -232,7 +236,7 @@ export default function Movie() {
                         </div>
                         <div id="movie_ribbon_info" className="inline-block ml-5 mt-auto mb-auto text-[3vh] text-left overflow-scroll">
                             {item.imdb_id ?
-                                <a href={"https://www.imdb.com/title/" + item.imdb_id + "/"}><img src="https://ia.media-imdb.com/images/M/MV5BODc4MTA3NjkzNl5BMl5BcG5nXkFtZTgwMDg0MzQ2OTE@._V1_.png" alt="IMDb" className="w-[2vw]"/></a>
+                                <a href={"https://www.imdb.com/title/" + item.imdb_id + "/"}><img id="imdb_icon" src="https://ia.media-imdb.com/images/M/MV5BODc4MTA3NjkzNl5BMl5BcG5nXkFtZTgwMDg0MzQ2OTE@._V1_.png" alt="IMDb" className="w-[2vw]"/></a>
                             : null}
                             <a href={`${item.homepage}`}><div className="font-bold text-[4vh]">{item.title}</div></a>
                             <div className="flex italic text-[2vh]">
@@ -338,7 +342,8 @@ export default function Movie() {
                     <div className="font-bold text-[3vh] text-left ml-5 p-2">Cast</div>
                     <div className="flex w-full h-full overflow-x-scroll p-5 pt-0">
                         {item.credits?.cast?.map((cast, id) => (
-                            <div key={id} className="mr-5 whitespace-pre-wrap bg-black rounded-2xl overflow-y-clip">
+                            <div key={id} className="mr-5 whitespace-pre-wrap bg-black rounded-2xl overflow-y-clip relative">
+                                <Link to={`/person/${cast.id}/`} className="w-full h-full left-0 top-0 absolute"/>
                                 <img src={cast.profile_path ? `https://image.tmdb.org/t/p/w500/${cast.profile_path}` : personWithNoImage} alt={cast.name} className="w-full rounded-t-2xl"/>
                                 <div className="w-[25vh] text-[2vh] cast_names h-full">
                                     <div className="font-bold">{cast.name}</div>
@@ -352,7 +357,8 @@ export default function Movie() {
                     <div className="font-bold text-[3vh] text-left ml-5 p-2">Crew</div>
                     <div className="flex w-full h-full overflow-x-scroll p-5 pt-0">
                         {item.credits?.crew?.map((crew, id) => (
-                            <div key={id} className="mr-5 whitespace-pre-wrap bg-black rounded-2xl overflow-y-clip">
+                            <div key={id} className="mr-5 whitespace-pre-wrap bg-black rounded-2xl overflow-y-clip relative">
+                                <Link to={`/person/${crew.id}/`} className="w-full h-full left-0 top-0 absolute"/>
                                 <img src={crew.profile_path ? `https://image.tmdb.org/t/p/w500/${crew.profile_path}` : personWithNoImage} alt={crew.name} className="w-full rounded-t-2xl"/>
                                 <div className="w-[25vh] text-[2vh] cast_names h-full">
                                     <div className="font-bold">{crew.name}</div>

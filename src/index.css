@@ -294,3 +294,8 @@ td:nth-child(4) {
   filter: brightness(30%);
   object-fit: cover;
 }
+
+.scroll_indicator {
+  background-image: linear-gradient(to top, gray 10%, transparent 80%);
+  transition: all 450ms
+}
