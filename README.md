@@ -33,6 +33,7 @@ For more info, checkout the [Documentation](https://github.com/PuckyEU/MyFavMovi
 - [ ] Website Footer
 #### v0.9.0:
 - [ ] Movie & Actor Lists
+- [ ] TV Page
 #### v1.0.0:
 - [ ] Movie Recommendations
 
