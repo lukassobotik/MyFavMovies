@@ -59,6 +59,13 @@ export default function PersonPage() {
             document.getElementById("twitter_icon").style.width = "2vw";
             document.getElementById("twitter_icon").style.marginTop = "0";
         }
+
+        const biography = document.getElementById("person_biography");
+        if (biography.scrollHeight > biography.clientHeight) {
+            document.getElementById("biography_scroll_indicator").style.opacity = "1";
+        } else {
+            document.getElementById("biography_scroll_indicator").style.opacity = "0";
+        }
     }
 
     window.addEventListener('resize', handleScreenResize);
@@ -104,7 +111,7 @@ export default function PersonPage() {
                             <div id="movie_ribbon_genres" className="flex">Place of Birth: {item.place_of_birth}</div>
                         </div>
                         <div className="relative">
-                            {item.biography ? <div className="overflow-auto" onScroll={setBiographyScroll}><div className="mr-5 font-bold">Biography:</div>
+                            {item.biography ? <div id="person_biography" className="overflow-auto" onScroll={setBiographyScroll}><div className="mr-5 font-bold">Biography:</div>
                                 <div className="mb-5 mr-5 text-[#878787] italic h-[25vh]">{item.biography}</div></div> : null}
                             <div id="biography_scroll_indicator" className="absolute w-full italic flex_center text-[2vh] bottom-0 scroll_indicator">Scroll for more</div>
                         </div>
