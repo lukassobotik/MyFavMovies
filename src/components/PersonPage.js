@@ -8,7 +8,6 @@ import axios from "axios";
 import imdbIcon from "../Icons/imdb_favicon.png";
 import instagramIcon from "../Icons/instagram_favicon.png";
 import twitterIcon from "../Icons/twitter_favicon.png";
-import noImage from "../Icons/no-image.png";
 import personWithNoImage from "../Icons/no-person.svg";
 
 export default function PersonPage() {
@@ -61,7 +60,6 @@ export default function PersonPage() {
             document.getElementById("twitter_icon").style.width = "2vw";
             document.getElementById("twitter_icon").style.marginTop = "0";
         }
-        console.log(ratio);
 
         if (ratio < 0.68) {
             document.getElementById("person_credits").style.padding = "0";
@@ -161,8 +159,7 @@ export default function PersonPage() {
                 <div className="overflow-hidden inline-block w-full">
                     <div className="font-bold text-[3vh] w-full text-left">Cast Credits: </div>
                     {sortByDate(item.combined_credits.cast).map((media, id) => (
-                        <div key={id} className="w-full h-fit relative flex border-b-2 border-black person_credits">
-                            <img src={media.poster_path ? `https://image.tmdb.org/t/p/w500/${media.poster_path}` : noImage} alt={""} className="h-[7vh] aspect-auto credit_poster"/>
+                        <div key={id} className="w-full h-fit relative flex border-black person_credits">
                             <div className="flex person_credits_text w-full whitespace-normal">
                                 <div className="w-[60%] inline-block ml-5 text-left flex items-center h-fit person_credit_title">
                                     <Link to={isMovie(media) ? `/movie/${media.id}/` : `/tv/${media.id}/`}><div className="text-[2vh]">{isMovie(media) ? media.title : media.name}{media.character ? " - as" : ""} {media.character}</div></Link>
@@ -171,6 +168,19 @@ export default function PersonPage() {
                             </div>
                         </div>
                         ))}
+                </div>
+                <div className="overflow-hidden inline-block w-full">
+                    <div className="font-bold text-[3vh] w-full text-left">Crew Credits: </div>
+                    {sortByDate(item.combined_credits.crew).map((media, id) => (
+                        <div key={id} className="w-full h-fit relative flex border-black person_credits">
+                            <div className="flex person_credits_text w-full whitespace-normal">
+                                <div className="w-[60%] inline-block ml-5 text-left flex items-center h-fit person_credit_title">
+                                    <Link to={isMovie(media) ? `/movie/${media.id}/` : `/tv/${media.id}/`}><div className="text-[2vh]">{isMovie(media) ? media.title : media.name}{media.job ? " - " : ""} {media.job}</div></Link>
+                                </div>
+                                <div className="italic text-[2vh] w-[40%] text-right right-0 relative person_credit_release_date">{isMovie(media) ? parseDateToString(media.release_date) : parseDateToString(media.first_air_date)}</div>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
     </Layout>)
