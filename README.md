@@ -27,7 +27,7 @@ For more info, checkout the [Documentation](https://github.com/PuckyEU/MyFavMovi
 
 ## Plans for the future
 #### v0.7.0:
-- [ ] Actor Page
+- [x] Actor Page
 #### v0.8.0:
 - [ ] Movie Searching
 - [ ] Website Footer
