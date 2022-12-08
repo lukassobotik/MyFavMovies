@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/MyFavMovies/static/css/main.2f1e067a.css",
-    "main.js": "/MyFavMovies/static/js/main.86375af9.js",
+    "main.css": "/MyFavMovies/static/css/main.53d57629.css",
+    "main.js": "/MyFavMovies/static/js/main.083dbd3c.js",
     "static/js/787.f5b8cc12.chunk.js": "/MyFavMovies/static/js/787.f5b8cc12.chunk.js",
     "static/media/empty_backdrop.png": "/MyFavMovies/static/media/empty_backdrop.af674b95ad37dc4a6c60.png",
     "static/media/MyFavMovies-transparent.png": "/MyFavMovies/static/media/MyFavMovies-transparent.e9d0486fdf6df531738c.png",
@@ -9,13 +9,14 @@
     "static/media/imdb_favicon.png": "/MyFavMovies/static/media/imdb_favicon.a5cb1e98132279a464bf.png",
     "static/media/no-person.svg": "/MyFavMovies/static/media/no-person.dc876450bf77789d94b8c63607cb6b93.svg",
     "static/media/instagram_favicon.png": "/MyFavMovies/static/media/instagram_favicon.75e0546a6b5abe4c0506.png",
+    "static/media/themoviedb.svg": "/MyFavMovies/static/media/themoviedb.d325da15d65cd39b359ba104f046e1fd.svg",
     "index.html": "/MyFavMovies/index.html",
-    "main.2f1e067a.css.map": "/MyFavMovies/static/css/main.2f1e067a.css.map",
-    "main.86375af9.js.map": "/MyFavMovies/static/js/main.86375af9.js.map",
+    "main.53d57629.css.map": "/MyFavMovies/static/css/main.53d57629.css.map",
+    "main.083dbd3c.js.map": "/MyFavMovies/static/js/main.083dbd3c.js.map",
     "787.f5b8cc12.chunk.js.map": "/MyFavMovies/static/js/787.f5b8cc12.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.2f1e067a.css",
-    "static/js/main.86375af9.js"
+    "static/css/main.53d57629.css",
+    "static/js/main.083dbd3c.js"
   ]
 }
