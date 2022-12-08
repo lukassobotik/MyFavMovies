@@ -121,11 +121,19 @@ export default function PersonPage() {
         return array;
     }
 
+    function getAge(birthday, deathDay) {
+        if (deathDay !== null) {
+            return new Date(deathDay).getFullYear() - new Date(birthday).getFullYear();
+        } else {
+            return new Date().getFullYear() - new Date(birthday).getFullYear()
+        }
+    }
+
     return (
         !isLoading && <Layout>
             <div className="w-full h-full mt-10 justify-center border-b-2 border-white pb-5" onLoad={handleScreenResize}>
                 <div id="person_ribbon_general_overview" className="flex w-fit h-fit justify-center movie_ribbon">
-                    <div id="person_ribbon_pfp" className="ml-5 mt-auto relative flex_center mb-auto rounded-3xl cursor-pointer">
+                    <div id="person_ribbon_pfp" className="ml-5 mt-auto relative flex_center mb-auto rounded-3xl">
                         <img src={item.profile_path ? `https://image.tmdb.org/t/p/w500/${item.profile_path}` : personWithNoImage} alt={"Person Profile"} className="rounded-3xl relative w-[35vh] max-w-[none] border-2"/>
                     </div>
                     <div id="person_ribbon_info" className="inline-block ml-5 mt-auto mb-auto text-[3vh] text-left">
@@ -143,8 +151,8 @@ export default function PersonPage() {
                         <div className="font-bold text-[4vh]">{item.name}</div>
                         <div className="italic text-[2vh]">
                             <div id="movie_ribbon_genres" className="flex">Known for: {item.known_for_department}</div>
-                            <div id="movie_ribbon_genres" className="flex">Birthday: {item.birthday}</div>
-                            {item.deathday ? <div id="movie_ribbon_genres" className="flex">Day of Death: {item.deathday}</div> : null}
+                            <div id="movie_ribbon_genres" className="flex">Birthday: {parseDateToString(item.birthday)} ({getAge(item.birthday, item.deathday)} years old)</div>
+                            {item.deathday ? <div id="movie_ribbon_genres" className="flex">Day of Death: {parseDateToString(item.deathday)}</div> : null}
                             <div id="movie_ribbon_genres" className="flex">Place of Birth: {item.place_of_birth}</div>
                         </div>
                         <div className="relative">
