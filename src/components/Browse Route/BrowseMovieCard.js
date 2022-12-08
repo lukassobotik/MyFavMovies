@@ -14,12 +14,18 @@ import {auth} from "../../firebase";
 import {Popover, Rating, Tooltip} from "@mui/material";
 import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import addToWatchlist, {getMovieDataFromDB, getWatchProviderLink, saveRating} from "../MovieActions";
+import addToWatchlist, {
+    getAmountOfItemsOnScreen,
+    getMovieDataFromDB,
+    getWatchProviderLink,
+    saveRating
+} from "../MovieActions";
 import emptyBackdrop from "../../Icons/empty_backdrop.png";
 
 export default function BrowseMovieCard({item, index, rowId, type}) {
     const history = useHistory();
-    const [backdrop, setBackdrop] = useState(item.backdrop_path);
+    const request = `https://api.themoviedb.org/3/movie/${item?.id}?api_key=${requests.key}&language=${document.getElementById("root")?.getAttribute('langvalue')}&append_to_response=videos,images,watch/providers`;
+    const [backdrop, setBackdrop] = useState(item?.backdrop_path);
     const [hasNoImage, setHasNoImage] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [playTrailer, setPlayTrailer] = useState(false);
@@ -32,39 +38,38 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
     const popoverId = isRatingPopoverOpen ? 'browse-rating-popover' : undefined;
 
     useEffect(() => {
-        axios.get(`https://api.themoviedb.org/3/movie/${item?.id}?api_key=${requests.key}&language=${document.getElementById("root")?.getAttribute('langvalue')}&append_to_response=videos,images,watch/providers`
-        ).then((response) => {
-            let backdrops = response.data?.images?.backdrops;
-            for (let i = 0; i < backdrops.length; i++) {
-                if (backdrops[i].iso_639_1 === document.getElementById("root")?.getAttribute('langvalue')){
-                    setBackdrop(backdrops[i]?.file_path);
-                    break;
+        if (item !== null) {
+            axios.get(request).then((response) => {
+                let backdrops = response.data?.images?.backdrops;
+                for (let i = 0; i < backdrops.length; i++) {
+                    if (backdrops[i].iso_639_1 === document.getElementById("root")?.getAttribute('langvalue')){
+                        setBackdrop(backdrops[i]?.file_path);
+                        break;
+                    }
                 }
-            }
 
-            response.data?.videos?.results?.map((trailer_item) => {
-                let vid_key = trailer_item?.key;
-                let type = trailer_item?.type;
-                if (response.data?.videos?.results?.length === 0 || trailer_item?.site !== "YouTube") {
-                    return;
-                }
-                if (type === "Trailer") {
-                    item.trailer_path = vid_key;
-                } else {
-                    item.trailer_path = vid_key;
-                }
+                response.data?.videos?.results?.map((trailer_item) => {
+                    if (response.data?.videos?.results?.length === 0 || trailer_item?.site !== "YouTube") {
+                        return;
+                    }
+                    if (trailer_item?.type === "Trailer") {
+                        item.trailer_path = trailer_item?.key;
+                    } else {
+                        item.trailer_path = trailer_item?.key;
+                    }
+                })
+
+                setPlayLink(getWatchProviderLink(response.data));
+
+            }).then(() => setIsLoading(false)).catch((err) => {
+                console.log(err);
             })
-
-            setPlayLink(getWatchProviderLink(response.data));
-
-        }).then(() => setIsLoading(false)).catch((err) => {
-            console.log(err);
-        })
-        auth.onAuthStateChanged(async (user) => {
-            if (user) {
-                getMovieDataFromDB(item).then((r) => { setIsOnWatchlist(r[0]); setRating(r[1]); setIsRated(r[2]); })
-            }
-        });
+            auth.onAuthStateChanged(async (user) => {
+                if (user) {
+                    getMovieDataFromDB(item).then((r) => { setIsOnWatchlist(r[0]); setRating(r[1]); setIsRated(r[2]); })
+                }
+            });
+        }
     }, [item]);
 
     const showDetails = () => {
@@ -97,8 +102,30 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
         element.style.zIndex = "9";
     };
 
+    function setLoadingSize() {
+        const itemsOnScreen = getAmountOfItemsOnScreen(window.innerWidth);
+        if (itemsOnScreen.at(2) === false) {
+            const item = document.getElementById("slider" + rowId);
+            if (item === null) return;
+            item.style.marginLeft = "0";
+            item.style.marginRight = "0";
+            const title = document.getElementById("rowTitle" + rowId);
+            if (title === null) return;
+            title.style.marginLeft = "0";
+        } else {
+            const item = document.getElementById("slider" + rowId);
+            if (item === null) return;
+            item.style.marginLeft = "50px";
+            item.style.marginRight = "50px";
+            const title = document.getElementById("rowTitle" + rowId);
+            if (title === null) return;
+            title.style.marginLeft = "50px"
+        }
+        return itemsOnScreen.at(1);
+    }
+
     return (
-        <div id={"itemId" + index + "-" + rowId} className='movie_card_item w-[300px] inline-block cursor-pointer relative p-2 group' data-index={index}>
+        <div id={"itemId" + index + "-" + rowId} className={`movie_card_item w-[${setLoadingSize()}] inline-block cursor-pointer relative p-2 group`} data-index={index}>
         <div id={"itemInRowId" + index + "-" + rowId} className="row_item" style={{left: 0}} onMouseOver={showDetails} onMouseLeave={hideDetails}>
             <div id={"player" + index + "-" + rowId} className="player" onClick={generalClick}>
                 {!isLoading ?
@@ -106,7 +133,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
                         <img id={"img" + index + "-" + rowId} className='w-full h-auto block overflow-visible rounded bg-black' src={!hasNoImage ? `https://image.tmdb.org/t/p/w500/${backdrop}` : emptyBackdrop} alt={item.title} onError={() => setHasNoImage(true)}/>
                         <div className={`absolute ${!hasNoImage ? "opacity-0" : "opacity-100"} flex_center whitespace-pre-wrap font-bold text-[2vh] top-0 w-full h-full rounded`}>{item.title}</div>
                     </div>
-                    : <SkeletonTheme baseColor="#a9b7c1" highlightColor="#5e6c77">
+                    : <SkeletonTheme baseColor="#a9b7c1" highlightColor="#5e6c77" className="movie_card_item">
                     <p id={"browse_movie_card_skeleton" + index + "-" + rowId}><Skeleton className="w-full aspect-video" duration={2} /></p>
                     </SkeletonTheme>}
                 <div className="w-full h-full left-0 top-0"/>

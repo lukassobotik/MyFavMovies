@@ -1,5 +1,6 @@
 import {auth, db} from "../firebase";
 import {collection, deleteDoc, doc, getDocs, setDoc} from "firebase/firestore";
+import {screenSizeGroups} from "../Constants";
 
 export default async function addToWatchlist({item, isOnWatchlist}) {
     const user = auth.currentUser.uid.toString().trim();
@@ -73,5 +74,21 @@ export function getWatchProviderLink(data) {
         return data["watch/providers"]?.results[loc].link;
     } else if (data["watch/providers"]?.results["US"] !== undefined) {
         return data["watch/providers"]?.results["US"].link;
+    }
+}
+
+export function getAmountOfItemsOnScreen(width) {
+    if (width >= screenSizeGroups.sixItems) {
+        return [6, "16.666%", true];
+    } else if (width >= screenSizeGroups.fiveItems && window.innerWidth <= screenSizeGroups.sixItems) {
+        return [5, "20%", true];
+    } else if (width >= screenSizeGroups.fourItems && window.innerWidth <= screenSizeGroups.fiveItems) {
+        return [4, "25%", true];
+    } else if (width >= screenSizeGroups.threeItems && window.innerWidth <= screenSizeGroups.fourItems) {
+        return [3, "33.333%", true];
+    } else if (width >= screenSizeGroups.twoItems && window.innerWidth <= screenSizeGroups.threeItems) {
+        return [2, "50%", true];
+    } else if (width < screenSizeGroups.twoItems) {
+        return [2, "50%", false];
     }
 }
