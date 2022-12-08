@@ -162,9 +162,9 @@ export default function PersonPage() {
                         <div key={id} className="w-full h-fit relative flex border-black person_credits">
                             <div className="flex person_credits_text w-full whitespace-normal">
                                 <div className="w-[60%] inline-block ml-5 text-left flex items-center h-fit person_credit_title">
-                                    <Link to={isMovie(media) ? `/movie/${media.id}/` : `/tv/${media.id}/`}><div className="text-[2vh]">{isMovie(media) ? media.title : media.name}{media.character ? " - as" : ""} {media.character}</div></Link>
+                                    <Link to={isMovie(media) ? `/movie/${media.id}/` : `/tv/${media.id}/`} className="inline-block whitespace-pre-wrap"><div className="text-[2vh] font-bold">{isMovie(media) ? media.title : media.name}</div><div className="text-[2vh]">{media.character ? " as " : ""}{media.character}</div></Link>
                                 </div>
-                                <div className="italic text-[2vh] w-[40%] text-right right-0 relative person_credit_release_date">{isMovie(media) ? parseDateToString(media.release_date) : parseDateToString(media.first_air_date)}</div>
+                                <div className="italic text-[2vh] w-[40%] mr-5 text-right right-0 relative person_credit_release_date">{isMovie(media) ? parseDateToString(media.release_date) : parseDateToString(media.first_air_date)}</div>
                             </div>
                         </div>
                         ))}
@@ -175,9 +175,9 @@ export default function PersonPage() {
                         <div key={id} className="w-full h-fit relative flex border-black person_credits">
                             <div className="flex person_credits_text w-full whitespace-normal">
                                 <div className="w-[60%] inline-block ml-5 text-left flex items-center h-fit person_credit_title">
-                                    <Link to={isMovie(media) ? `/movie/${media.id}/` : `/tv/${media.id}/`}><div className="text-[2vh]">{isMovie(media) ? media.title : media.name}{media.job ? " - " : ""} {media.job}</div></Link>
+                                    <Link to={isMovie(media) ? `/movie/${media.id}/` : `/tv/${media.id}/`} className="inline-block whitespace-pre-wrap"><div className="text-[2vh] font-bold">{isMovie(media) ? media.title : media.name}</div><div className="text-[2vh]">{media.job ? " credited as " : ""}{media.job}</div></Link>
                                 </div>
-                                <div className="italic text-[2vh] w-[40%] text-right right-0 relative person_credit_release_date">{isMovie(media) ? parseDateToString(media.release_date) : parseDateToString(media.first_air_date)}</div>
+                                <div className="italic text-[2vh] w-[40%] mr-5 text-right right-0 relative person_credit_release_date">{isMovie(media) ? parseDateToString(media.release_date) : parseDateToString(media.first_air_date)}</div>
                             </div>
                         </div>
                     ))}
