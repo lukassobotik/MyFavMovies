@@ -48,7 +48,7 @@ export default function Layout({children}) {
                     <div className="font-bold">Links:</div>
                     <div className="w-full flex_center mt-1">
                         <a href="https://github.com/PuckyEU/MyFavMovies"><img src="https://github.com/favicon.ico" alt="Github" className="footer_icon"/></a>
-                        <a href="https://www.buymeacoffee.com/puckyeu" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-white.png" alt="Buy Me A Coffee" className="w-full h-[4vh] ml-1"/></a>
+                        <a href="https://www.buymeacoffee.com/puckyeu"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-white.png" alt="Buy Me A Coffee" className="w-full h-[4vh] ml-1"/></a>
                     </div>
                 </div>
                 <div className="w-full inline-block">
