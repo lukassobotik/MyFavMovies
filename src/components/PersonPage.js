@@ -53,12 +53,12 @@ export default function PersonPage() {
             document.getElementById("person_ribbon_pfp").style.marginTop = "auto";
             document.getElementById("person_ribbon_pfp").style.marginLeft = "1.25rem";
             document.getElementById("person_ribbon_pfp").style.width = "";
-            document.getElementById("imdb_icon").style.width = "2vw";
-            document.getElementById("imdb_icon").style.marginTop = "0";
-            document.getElementById("instagram_icon").style.width = "2vw";
-            document.getElementById("instagram_icon").style.marginTop = "0";
-            document.getElementById("twitter_icon").style.width = "2vw";
-            document.getElementById("twitter_icon").style.marginTop = "0";
+            if (document.getElementById("imdb_icon")) document.getElementById("imdb_icon").style.width = "2vw";
+            if (document.getElementById("imdb_icon")) document.getElementById("imdb_icon").style.marginTop = "0";
+            if (document.getElementById("instagram_icon")) document.getElementById("instagram_icon").style.width = "2vw";
+            if (document.getElementById("instagram_icon")) document.getElementById("instagram_icon").style.marginTop = "0";
+            if (document.getElementById("twitter_icon")) document.getElementById("twitter_icon").style.width = "2vw";
+            if (document.getElementById("twitter_icon")) document.getElementById("twitter_icon").style.marginTop = "0";
         }
 
         if (ratio < 0.68) {
@@ -74,10 +74,15 @@ export default function PersonPage() {
         }
 
         const biography = document.getElementById("person_biography");
-        if (biography.scrollHeight > biography.clientHeight) {
+        if (biography?.scrollHeight > biography?.clientHeight) {
             document.getElementById("biography_scroll_indicator").style.opacity = "1";
         } else {
             document.getElementById("biography_scroll_indicator").style.opacity = "0";
+        }
+        if (item.biography === "") {
+            document.getElementById("biography_scroll_indicator").style.opacity = "0";
+        } else {
+            document.getElementById("biography_scroll_indicator").style.opacity = "1";
         }
     }
 
