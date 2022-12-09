@@ -69,7 +69,6 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
                     getMovieDataFromDB(item).then((r) => { setIsOnWatchlist(r[0]); setRating(r[1]); setIsRated(r[2]); })
                 }
             });
-            console.log("useEffect()");
         }
     }, [item]);
 

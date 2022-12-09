@@ -144,7 +144,7 @@ export default function Row({title, fetchURL, rowId}) {
     }
 
     return (
-        <div className="" onLoad={() => handleScreenResize({type: "resize"})}>
+        <div className="" onLoad={(e) => handleScreenResize({type: "resize", event: e})}>
             <h2 id={"rowTitle" + rowId} className='ml-[50px] text-white font-bold md:text-xl p-4 text-left'> {title} </h2>
             <div id={"row:" + rowId} className="carousel_row relative flex whitespace-nowrap items-center group">
                 <div id={'slider' + rowId}
