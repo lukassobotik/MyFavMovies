@@ -12,6 +12,8 @@ export default function Navbar() {
     const history = useHistory();
     const user = auth.currentUser;
     const [isMobileSized, setIsMobileSized] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [isSearchInputOpen, setIsSearchInputOpen] = useState(false);
     const [accountPopoverAnchorEl, setAccountPopoverAnchorEl] = React.useState(null);
     const isAccountPopoverOpen = Boolean(accountPopoverAnchorEl);
     const popoverId = isAccountPopoverOpen ? 'account-popover' : undefined;
@@ -24,6 +26,16 @@ export default function Navbar() {
             console.log(error);
         }
     }
+
+    function handleKeyDown(ev) {
+        if (ev.key === "Escape" && isSearchInputOpen && document.activeElement === document.getElementById("navbar_query_input")) {
+            openSearchInput(false);
+            return;
+        }
+        openSearchInput(true);
+    }
+
+    document.addEventListener("keydown", ((ev) => handleKeyDown(ev)), false);
 
     window.addEventListener('resize', (() => handleMobileSize()));
 
@@ -66,6 +78,37 @@ export default function Navbar() {
         setAccountPopoverAnchorEl(null);
     };
 
+    function setSearchHandler(evt) {
+        setSearchQuery(evt.target.value);
+    }
+
+    function handleSearchClick() {
+        if (!isSearchInputOpen) {
+            openSearchInput(true);
+        } else {
+            openSearchInput(false);
+        }
+        if (searchQuery !== ''){
+            history.push(`/search?query=${searchQuery}`);
+        }
+    }
+    function handleSearchSubmit() {
+        if (searchQuery !== ''){
+            history.push(`/search?query=${searchQuery}`);
+        }
+    }
+
+    function openSearchInput(open) {
+        if (open) {
+            document.getElementById("navbar_query_input").style.visibility = "visible";
+            document.getElementById("navbar_query_input").focus();
+            setIsSearchInputOpen(true);
+        } else {
+            document.getElementById("navbar_query_input").style.visibility = "hidden";
+            setIsSearchInputOpen(false);
+        }
+    }
+
     return (<nav onLoad={handleMobileSize}>
         <div className="navbar">
             <div className="navbar_item">
@@ -73,8 +116,11 @@ export default function Navbar() {
             </div>
             <div className="navbar_item w-fit flex">
                 {user?.email ? <div className="account flex_center relative h-[50px]">
-                        <div id="navbar_search" className="navbar_item w-fit h-fit">
-                            <Link to="/" className="navbar-btn"><MdSearch size={25}/></Link>
+                        <div id="navbar_search_parent" className="relative navbar_item">
+                            <MdSearch size={25} className="navbar-btn cursor-pointer" onClick={() => handleSearchClick()}/>
+                            <form id="navbar_search" onSubmit={() => handleSearchSubmit()} className="navbar_item absolute right-[30px] top-0 mt-[-6px] w-[600%] h-[150%] flex">
+                                <input id="navbar_query_input" className="text_field w-full h-full invisible" placeholder="Search" onChange={setSearchHandler} value={searchQuery}/>
+                            </form>
                         </div>
                         <div id="navbar_settings" className="navbar_item w-fit h-fit">
                             <Link to="/settings/"><AccountProtectedRoute><MdSettings size={25}/></AccountProtectedRoute></Link>
@@ -89,8 +135,11 @@ export default function Navbar() {
                         <button id={"logout_btn"} className="logout-btn button w-[120%] h-[80%]" onClick={logout}>Log Out</button>
                     </div> :
                     <div className="account flex_center relative w-fit h-[50px]">
-                        <div id="navbar_search" className="navbar_item w-fit h-fit">
-                            <Link to="/" className="navbar-btn"><MdSearch size={25}/></Link>
+                        <div id="navbar_search_parent" className="relative navbar_item">
+                            <MdSearch size={25} className="navbar-btn cursor-pointer" onClick={() => handleSearchClick()}/>
+                            <form id="navbar_search" onSubmit={() => {history.push(`/search?query=${searchQuery}`)}} className="navbar_item absolute right-[30px] top-0 mt-[-6px] w-[600%] h-[150%] flex">
+                                <input id="navbar_query_input" className="text_field w-full h-full invisible" type="search" placeholder="Search" onChange={setSearchHandler} value={searchQuery}/>
+                            </form>
                         </div>
                         <div id="navbar_settings" className="navbar_item w-fit h-fit mr-[-10px]">
                             <Link to="/settings/"><AccountProtectedRoute><MdSettings size={25}/></AccountProtectedRoute></Link>

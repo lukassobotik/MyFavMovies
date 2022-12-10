@@ -10,10 +10,11 @@ import Movie from "./components/Movie Route/Movie";
 import MovieReleases from "./components/Movie Route/MovieReleases";
 import Collection from "./components/Collection";
 import PersonPage from "./components/PersonPage";
+import Search from "./components/Search";
 
 function App() {
     document.onmousedown = () => {
-        return false;
+        return true;
     };
 
     return (
@@ -37,6 +38,7 @@ function App() {
                 <Route path="/settings/" exact>
                     <AccountProtectedRoute><Settings/></AccountProtectedRoute>
                 </Route>
+                <Route path="/search" component={Search}/>
                 <Route path="/movie/:movieId/" component={Movie} exact/>
                 <Route path="/movie/:movieId/releases" component={MovieReleases}/>
                 <Route path="/collection/:collectionId/" component={Collection} exact/>

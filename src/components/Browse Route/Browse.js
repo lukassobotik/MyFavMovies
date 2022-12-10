@@ -9,10 +9,6 @@ import {useState} from "react";
 export default function Browse() {
     const [isLoading, setIsLoading] = useState(true);
 
-    document.onmousedown = () => {
-        return false;
-    };
-
     useEffect(() => {
         auth.onAuthStateChanged(user => {
             if (user) {
