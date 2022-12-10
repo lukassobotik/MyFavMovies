@@ -69,7 +69,7 @@ export const saveRating = async (newValue, rating, item) => {
 }
 
 export function getWatchProviderLink(data) {
-    const loc = document.getElementById("root")?.getAttribute('locvalue').toString();
+    const loc = document.getElementById("root").getAttribute('locvalue')?.toString();
     if (data["watch/providers"]?.results[loc] !== undefined) {
         return data["watch/providers"]?.results[loc].link;
     } else if (data["watch/providers"]?.results["US"] !== undefined) {

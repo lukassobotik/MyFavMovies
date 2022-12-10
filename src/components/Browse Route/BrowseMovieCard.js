@@ -41,8 +41,10 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
         if (item !== null) {
             axios.get(request).then((response) => {
                 let backdrops = response.data?.images?.backdrops;
+                let userLanguage = document.getElementById("root").getAttribute('langvalue');
+                if (userLanguage === null || userLanguage === undefined) userLanguage = "en";
                 for (let i = 0; i < backdrops.length; i++) {
-                    if (backdrops[i].iso_639_1 === document.getElementById("root")?.getAttribute('langvalue')){
+                    if (backdrops[i].iso_639_1 === userLanguage){
                         setBackdrop(backdrops[i]?.file_path);
                         break;
                     }
@@ -130,11 +132,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
             <div id={"player" + index + "-" + rowId} className="player" onClick={generalClick}>
                 {!isLoading ?
                     <div className="relative">
-                        <img id={"img" + index + "-" + rowId} className='w-full h-auto block overflow-visible rounded bg-black' src={!hasNoImage ? `https://image.tmdb.org/t/p/w500/${backdrop ? backdrop : item.backdrop_path}` : emptyBackdrop} alt={item.title} onError={(e) => {
-                            setHasNoImage(true);
-                            console.log(item.backdrop_path);
-                            console.log(e);
-                        }}/>
+                        <img id={"img" + index + "-" + rowId} className='w-full h-auto block overflow-visible rounded bg-black' src={!hasNoImage ? `https://image.tmdb.org/t/p/w500/${backdrop ? backdrop : item.backdrop_path}` : emptyBackdrop} alt={item.title} onError={() => setHasNoImage(true)}/>
                         <div className={`absolute ${!hasNoImage ? "opacity-0" : "opacity-100"} flex_center whitespace-pre-wrap font-bold text-[2vh] top-0 w-full h-full rounded`}>{item.title}</div>
                     </div>
                     : <SkeletonTheme baseColor="#a9b7c1" highlightColor="#5e6c77" className="movie_card_item">

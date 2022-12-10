@@ -48,8 +48,8 @@ export default function Navbar() {
             }
             if (document.getElementById("navbar_settings")) document.getElementById("navbar_settings").style.display = "block";
             if (document.getElementById("navbar_search")) document.getElementById("navbar_search").style.display = "block";
-            document.getElementById("navbar_profile").style.width = "100px";
-            document.getElementById("navbar_profile").style.marginRight = "";
+            if (document.getElementById("navbar_profile")) document.getElementById("navbar_profile").style.width = "100px";
+            if (document.getElementById("navbar_profile")) document.getElementById("navbar_profile").style.marginRight = "";
             setIsMobileSized(false);
         }
     }
