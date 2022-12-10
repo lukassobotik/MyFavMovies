@@ -47,7 +47,6 @@ export default function Navbar() {
                 el.style.display = "none";
             }
             document.getElementById("navbar_settings").style.display = "none";
-            document.getElementById("navbar_search").style.display = "none";
             document.getElementById("navbar_profile").style.width = "40px";
             document.getElementById("navbar_profile").style.marginRight = "-15px";
             setIsMobileSized(true);
@@ -59,7 +58,6 @@ export default function Navbar() {
                 el.style.display = "block";
             }
             if (document.getElementById("navbar_settings")) document.getElementById("navbar_settings").style.display = "block";
-            if (document.getElementById("navbar_search")) document.getElementById("navbar_search").style.display = "block";
             if (document.getElementById("navbar_profile")) document.getElementById("navbar_profile").style.width = "100px";
             if (document.getElementById("navbar_profile")) document.getElementById("navbar_profile").style.marginRight = "";
             setIsMobileSized(false);
@@ -152,7 +150,6 @@ export default function Navbar() {
                 }}>
                     <div className="w-full h-full p-3 text-black cursor-pointer" onClick={() => history.push("/account/")}>Account</div>
                     <div className="w-full h-full p-3 text-black cursor-pointer" onClick={() => history.push("/settings/")}>Settings</div>
-                    <div className="w-full h-full p-3 text-black cursor-pointer" onClick={() => history.push("/search/")}>Search</div>
                 </Popover>
             </div>
         </div>
