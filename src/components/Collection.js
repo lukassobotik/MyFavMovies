@@ -5,7 +5,7 @@ import React, {useEffect, useState} from "react";
 import {auth} from "../firebase";
 import LoadSettingsData from "../LoadData";
 import axios from "axios";
-import MovieListCard from "./MovieListCard";
+import ListCard from "./ListCard";
 
 export default function Collection() {
     let { collectionId } = useParams();
@@ -74,7 +74,7 @@ export default function Collection() {
                 </div>
             </div>
             <div className={`whitespace-nowrap ${itemPadding}`}>
-                {item.parts.map((item, id) => (<MovieListCard key={id} item={item} deleteButton={false} showRating={false}/>))}
+                {item.parts.map((item, id) => (<ListCard key={id} item={item} deleteButton={false} showRating={false} isTV={false} isPerson={false}/>))}
             </div>
         </Layout>
     )

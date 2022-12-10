@@ -5,7 +5,7 @@ import {Box, createTheme, Tab, Tabs, ThemeProvider, Typography} from "@mui/mater
 import {collection, getDocs} from "firebase/firestore";
 import {auth, db} from "../../firebase";
 import {useHistory} from "react-router-dom";
-import MovieListCard from "../MovieListCard";
+import ListCard from "../ListCard";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -133,12 +133,12 @@ export default function Account() {
                         </Box>
                         <TabPanel value={value} index={0}>
                             <div className="whitespace-nowrap">
-                                {watchlist.map((item, id) => (<MovieListCard key={id} item={item} deleteButton={true} showRating={false}/>))}
+                                {watchlist.map((item, id) => (<ListCard key={id} item={item} deleteButton={true} showRating={false} isTV={false} isPerson={false}/>))}
                             </div>
                         </TabPanel>
                         <TabPanel value={value} index={1}>
                             <div className="whitespace-nowrap">
-                                {ratedItems.map((item, id) => (<MovieListCard key={id} item={item} deleteButton={false} showRating={true}/>))}
+                                {ratedItems.map((item, id) => (<ListCard key={id} item={item} deleteButton={false} showRating={true} isTV={false} isPerson={false}/>))}
                             </div>
                         </TabPanel>
                         <TabPanel value={value} index={2}>

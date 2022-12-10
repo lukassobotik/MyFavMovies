@@ -89,12 +89,12 @@ export default function Navbar() {
             openSearchInput(false);
         }
         if (searchQuery !== ''){
-            history.push(`/search?query=${searchQuery}`);
+            history.push(`/search/${searchQuery}/`);
         }
     }
     function handleSearchSubmit() {
         if (searchQuery !== ''){
-            history.push(`/search?query=${searchQuery}`);
+            history.push(`/search/${searchQuery}/`);
         }
     }
 

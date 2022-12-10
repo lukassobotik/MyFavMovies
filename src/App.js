@@ -38,7 +38,7 @@ function App() {
                 <Route path="/settings/" exact>
                     <AccountProtectedRoute><Settings/></AccountProtectedRoute>
                 </Route>
-                <Route path="/search" component={Search}/>
+                <Route path="/search/:searchParams/" component={Search}/>
                 <Route path="/movie/:movieId/" component={Movie} exact/>
                 <Route path="/movie/:movieId/releases" component={MovieReleases}/>
                 <Route path="/collection/:collectionId/" component={Collection} exact/>
