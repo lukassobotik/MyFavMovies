@@ -28,7 +28,7 @@ export default function Navbar() {
     window.addEventListener('resize', (() => handleMobileSize()));
 
     function handleMobileSize() {
-        if (window.innerWidth < screenSizeGroups.twoItems) {
+        if (window.innerWidth < screenSizeGroups.twoItems && user) {
             const el = document.getElementById("logout_btn");
             if (el !== null) {
                 el.style.visibility = "hidden";
@@ -36,6 +36,8 @@ export default function Navbar() {
             }
             document.getElementById("navbar_settings").style.display = "none";
             document.getElementById("navbar_search").style.display = "none";
+            document.getElementById("navbar_profile").style.width = "40px";
+            document.getElementById("navbar_profile").style.marginRight = "-15px";
             setIsMobileSized(true);
         } else {
             handleAccountMenuClose();
@@ -44,8 +46,10 @@ export default function Navbar() {
                 el.style.visibility = "visible";
                 el.style.display = "block";
             }
-            document.getElementById("navbar_settings").style.display = "block";
-            document.getElementById("navbar_search").style.display = "block";
+            if (document.getElementById("navbar_settings")) document.getElementById("navbar_settings").style.display = "block";
+            if (document.getElementById("navbar_search")) document.getElementById("navbar_search").style.display = "block";
+            document.getElementById("navbar_profile").style.width = "100px";
+            document.getElementById("navbar_profile").style.marginRight = "";
             setIsMobileSized(false);
         }
     }
@@ -67,25 +71,31 @@ export default function Navbar() {
             <div className="navbar_item">
                 <Link to="/browse/"><img id="logo" src={Logo} alt="Home" width={25} height={25}/></Link>
             </div>
-            <div id="navbar_search" className="navbar_item">
-                <Link to="/" className="navbar-btn"><MdSearch size={25}/></Link>
-            </div>
-            <div id="navbar_settings" className="navbar_item">
-                <Link to="/settings/"><AccountProtectedRoute><MdSettings size={25}/></AccountProtectedRoute></Link>
-            </div>
-            <div className="navbar_item">
-                {user?.email ? <div className="account flex">
-                    <div className="w-[40px] h-fit text-justify flex items-center justify-center rounded-full overflow-hidden" onClick={handleAccountClick}>
-                        {user.photoURL ? <img src={user.photoURL} alt="Profile"/> :
-                            <div>
-                                <MdAccountCircle size={40}/>
-                            </div>
-                        }
-                    </div>
-                        <button id={"logout_btn"} className="logout-btn button" onClick={logout}>Log Out</button>
-                </div> :
-                    <div className="account flex">
-                        <Link to="/login/" className="logout-btn button"><button>Sign In</button></Link>
+            <div className="navbar_item w-fit flex">
+                {user?.email ? <div className="account flex_center relative h-[50px]">
+                        <div id="navbar_search" className="navbar_item w-fit h-fit">
+                            <Link to="/" className="navbar-btn"><MdSearch size={25}/></Link>
+                        </div>
+                        <div id="navbar_settings" className="navbar_item w-fit h-fit">
+                            <Link to="/settings/"><AccountProtectedRoute><MdSettings size={25}/></AccountProtectedRoute></Link>
+                        </div>
+                        <div id="navbar_profile" className="w-[100px] h-fit rounded-full overflow-hidden" onClick={handleAccountClick}>
+                            {user.photoURL ? <img src={user.photoURL} alt="Profile"/> :
+                                <div className="w-[100px]">
+                                    <MdAccountCircle size={40}/>
+                                </div>
+                            }
+                        </div>
+                        <button id={"logout_btn"} className="logout-btn button w-[120%] h-[80%]" onClick={logout}>Log Out</button>
+                    </div> :
+                    <div className="account flex_center relative w-fit h-[50px]">
+                        <div id="navbar_search" className="navbar_item w-fit h-fit">
+                            <Link to="/" className="navbar-btn"><MdSearch size={25}/></Link>
+                        </div>
+                        <div id="navbar_settings" className="navbar_item w-fit h-fit mr-[-10px]">
+                            <Link to="/settings/"><AccountProtectedRoute><MdSettings size={25}/></AccountProtectedRoute></Link>
+                        </div>
+                        <Link to="/login/" className="logout-btn button w-[100%] h-[80%] relative"><button className="w-full h-full p-10 mt-[-38px] whitespace-nowrap">Sign In</button></Link>
                     </div>}
                 <Popover id={popoverId} open={isAccountPopoverOpen} anchorEl={accountPopoverAnchorEl} onClose={handleAccountMenuClose} anchorOrigin={{
                     vertical: 'bottom',

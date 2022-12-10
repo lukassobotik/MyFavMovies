@@ -143,7 +143,7 @@ code {
 
 .navbar_item {
   flex: available;
-  padding: 10px;
+  padding-right: 10px;
   align-self: center;
   size: auto;
   cursor: pointer;
@@ -152,8 +152,7 @@ code {
   margin-left: 5%;
 }
 .navbar_item:nth-last-child(1) {
-  position: absolute;
-  right: 0;
+  margin-left: auto;
   margin-right: 5%;
 }
 
