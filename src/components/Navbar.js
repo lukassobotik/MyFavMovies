@@ -28,11 +28,14 @@ export default function Navbar() {
     }
 
     function handleKeyDown(ev) {
+        const pathname = window?.location?.hash;
         if (ev.key === "Escape" && isSearchInputOpen && document.activeElement === document.getElementById("navbar_query_input")) {
             openSearchInput(false);
             return;
         }
-        openSearchInput(true);
+        if (pathname !== "#/login/" && pathname !== "#/signup/") {
+            openSearchInput(true);
+        }
     }
 
     document.addEventListener("keydown", ((ev) => handleKeyDown(ev)), false);

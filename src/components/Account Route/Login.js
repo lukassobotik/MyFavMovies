@@ -46,7 +46,7 @@ export default function Login() {
             <input className="text_field w-full" type="password" placeholder="Password" onChange={setPasswordHandler} value={password}/>
             <p></p>
             <button className="login-btn button" onClick={login}>Log In</button>
-            <div className="mt-5"><Link to="/signup">Sign Up</Link></div>
+            <div className="mt-5"><Link to="/signup/">Sign Up</Link></div>
         </div>
     </Layout>;
 }
