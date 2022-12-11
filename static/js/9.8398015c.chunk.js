@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkmyfavmovies=self.webpackChunkmyfavmovies||[]).push([[9],{6009:function(s,e,c){c(2791);e.Z=c.p+"static/media/no-person.dc876450bf77789d94b8c63607cb6b93.svg"}}]);
+//# sourceMappingURL=9.8398015c.chunk.js.map

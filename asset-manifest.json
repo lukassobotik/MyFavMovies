@@ -1,8 +1,17 @@
 {
   "files": {
-    "main.css": "/MyFavMovies/static/css/main.04b76558.css",
-    "main.js": "/MyFavMovies/static/js/main.40f32004.js",
-    "static/js/787.f5b8cc12.chunk.js": "/MyFavMovies/static/js/787.f5b8cc12.chunk.js",
+    "main.css": "/MyFavMovies/static/css/main.cd978034.css",
+    "main.js": "/MyFavMovies/static/js/main.5624aec3.js",
+    "static/js/676.e1025641.chunk.js": "/MyFavMovies/static/js/676.e1025641.chunk.js",
+    "static/js/426.89db69ca.chunk.js": "/MyFavMovies/static/js/426.89db69ca.chunk.js",
+    "static/js/317.91eaf813.chunk.js": "/MyFavMovies/static/js/317.91eaf813.chunk.js",
+    "static/css/374.5eaf3d03.chunk.css": "/MyFavMovies/static/css/374.5eaf3d03.chunk.css",
+    "static/js/374.07be5dae.chunk.js": "/MyFavMovies/static/js/374.07be5dae.chunk.js",
+    "static/css/966.5eaf3d03.chunk.css": "/MyFavMovies/static/css/966.5eaf3d03.chunk.css",
+    "static/js/966.1967bbd6.chunk.js": "/MyFavMovies/static/js/966.1967bbd6.chunk.js",
+    "static/js/471.abfe27d0.chunk.js": "/MyFavMovies/static/js/471.abfe27d0.chunk.js",
+    "static/js/951.ff66b3ee.chunk.js": "/MyFavMovies/static/js/951.ff66b3ee.chunk.js",
+    "static/js/9.8398015c.chunk.js": "/MyFavMovies/static/js/9.8398015c.chunk.js",
     "static/media/empty_backdrop.png": "/MyFavMovies/static/media/empty_backdrop.af674b95ad37dc4a6c60.png",
     "static/media/MyFavMovies-transparent.png": "/MyFavMovies/static/media/MyFavMovies-transparent.e9d0486fdf6df531738c.png",
     "static/media/twitter_favicon.png": "/MyFavMovies/static/media/twitter_favicon.cbfb1f67d582fd543f6d.png",
@@ -11,12 +20,21 @@
     "static/media/instagram_favicon.png": "/MyFavMovies/static/media/instagram_favicon.75e0546a6b5abe4c0506.png",
     "static/media/themoviedb.svg": "/MyFavMovies/static/media/themoviedb.d325da15d65cd39b359ba104f046e1fd.svg",
     "index.html": "/MyFavMovies/index.html",
-    "main.04b76558.css.map": "/MyFavMovies/static/css/main.04b76558.css.map",
-    "main.40f32004.js.map": "/MyFavMovies/static/js/main.40f32004.js.map",
-    "787.f5b8cc12.chunk.js.map": "/MyFavMovies/static/js/787.f5b8cc12.chunk.js.map"
+    "main.cd978034.css.map": "/MyFavMovies/static/css/main.cd978034.css.map",
+    "main.5624aec3.js.map": "/MyFavMovies/static/js/main.5624aec3.js.map",
+    "676.e1025641.chunk.js.map": "/MyFavMovies/static/js/676.e1025641.chunk.js.map",
+    "426.89db69ca.chunk.js.map": "/MyFavMovies/static/js/426.89db69ca.chunk.js.map",
+    "317.91eaf813.chunk.js.map": "/MyFavMovies/static/js/317.91eaf813.chunk.js.map",
+    "374.5eaf3d03.chunk.css.map": "/MyFavMovies/static/css/374.5eaf3d03.chunk.css.map",
+    "374.07be5dae.chunk.js.map": "/MyFavMovies/static/js/374.07be5dae.chunk.js.map",
+    "966.5eaf3d03.chunk.css.map": "/MyFavMovies/static/css/966.5eaf3d03.chunk.css.map",
+    "966.1967bbd6.chunk.js.map": "/MyFavMovies/static/js/966.1967bbd6.chunk.js.map",
+    "471.abfe27d0.chunk.js.map": "/MyFavMovies/static/js/471.abfe27d0.chunk.js.map",
+    "951.ff66b3ee.chunk.js.map": "/MyFavMovies/static/js/951.ff66b3ee.chunk.js.map",
+    "9.8398015c.chunk.js.map": "/MyFavMovies/static/js/9.8398015c.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.04b76558.css",
-    "static/js/main.40f32004.js"
+    "static/css/main.cd978034.css",
+    "static/js/main.5624aec3.js"
   ]
 }
