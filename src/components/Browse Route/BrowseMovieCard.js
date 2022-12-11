@@ -40,6 +40,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
 
     useEffect(() => {
         if (item !== null) {
+            if (item.backdrop_path === null) setHasNoImage(true);
             axios.get(request).then((response) => {
                 let backdrops = response.data?.images?.backdrops;
                 let userLanguage = document.getElementById("root").getAttribute('langvalue');
