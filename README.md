@@ -32,8 +32,8 @@ For more info, checkout the [Documentation](https://github.com/PuckyEU/MyFavMovi
 - [x] Website Footer
 - [x] Movie Searching
 #### v0.9.0:
-- [ ] Movie & Actor Lists
 - [ ] TV Page
+- [ ] Movie & Actor Lists
 #### v1.0.0:
 - [ ] Movie Recommendations
 
