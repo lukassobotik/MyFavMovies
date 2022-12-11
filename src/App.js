@@ -1,16 +1,18 @@
 import {Redirect, Route, Switch} from 'react-router-dom';
 import './App.css';
-import Login from "./components/Account Route/Login";
+import { lazy, Suspense } from "react";
 import Browse from "./components/Browse Route/Browse";
-import SignUp from "./components/Account Route/SignUp";
 import AccountProtectedRoute from "./components/Account Route/AccountProtectedRoute";
 import Account from "./components/Account Route/Account";
 import Settings from "./components/Settings";
-import Movie from "./components/Movie Route/Movie";
-import MovieReleases from "./components/Movie Route/MovieReleases";
-import Collection from "./components/Collection";
-import PersonPage from "./components/PersonPage";
-import Search from "./components/Search";
+
+const SignUp = lazy(() => import("./components/Account Route/SignUp"));
+const Login = lazy(() => import("./components/Account Route/Login"));
+const Search = lazy(() => import("./components/Search"));
+const Movie = lazy(() => import("./components/Movie Route/Movie"));
+const MovieReleases = lazy(() => import("./components/Movie Route/MovieReleases"));
+const Collection = lazy(() => import("./components/Collection"));
+const PersonPage = lazy(() => import("./components/PersonPage"));
 
 function App() {
     document.onmousedown = () => {
@@ -24,10 +26,10 @@ function App() {
                     <Redirect to="/browse/"/>
                 </Route>
                 <Route path="/login/" exact>
-                    <Login/>
+                    <Suspense fallback={<div>Loading...</div>}><Login/></Suspense>
                 </Route>
                 <Route path="/signup/" exact>
-                    <SignUp/>
+                    <Suspense fallback={<div>Loading...</div>}><SignUp/></Suspense>
                 </Route>
                 <Route path="/browse/" exact>
                     <Browse/>
@@ -38,11 +40,21 @@ function App() {
                 <Route path="/settings/" exact>
                     <AccountProtectedRoute><Settings/></AccountProtectedRoute>
                 </Route>
-                <Route path="/search/:searchParams/" component={Search}/>
-                <Route path="/movie/:movieId/" component={Movie} exact/>
-                <Route path="/movie/:movieId/releases" component={MovieReleases}/>
-                <Route path="/collection/:collectionId/" component={Collection} exact/>
-                <Route path="/person/:personId/" component={PersonPage} exact/>
+                <Route path="/search/:searchParams/">
+                    <Suspense fallback={<div>Loading...</div>}><Search/></Suspense>
+                </Route>
+                <Route path="/movie/:movieId/" exact>
+                    <Suspense fallback={<div>Loading...</div>}><Movie/></Suspense>
+                </Route>
+                <Route path="/movie/:movieId/releases">
+                    <Suspense fallback={<div>Loading...</div>}><MovieReleases/></Suspense>
+                </Route>
+                <Route path="/collection/:collectionId/" exact>
+                    <Suspense fallback={<div>Loading...</div>}><Collection/></Suspense>
+                </Route>
+                <Route path="/person/:personId/" exact>
+                    <Suspense fallback={<div>Loading...</div>}><PersonPage/></Suspense>
+                </Route>
             </Switch>
         </div>
     );
