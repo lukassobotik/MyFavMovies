@@ -4,6 +4,7 @@ import BrowseMovieCard from "./BrowseMovieCard";
 import {HiChevronLeft, HiChevronRight} from "react-icons/hi"
 import {useHistory} from "react-router-dom";
 import {getAmountOfItemsOnScreen} from "../MovieActions";
+import './Browse.css';
 
 export default function Row({title, fetchURL, rowId}) {
     const [movies, setMovies] = useState([]);

@@ -5,6 +5,7 @@ import {useEffect} from "react";
 import {auth} from "../../firebase";
 import LoadSettingsData from "../../LoadData";
 import {useState} from "react";
+import './Browse.css';
 
 export default function Browse() {
     const [isLoading, setIsLoading] = useState(true);

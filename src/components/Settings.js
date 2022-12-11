@@ -8,6 +8,7 @@ import {db} from "../firebase";
 import requests from "../Constants";
 import axios from "axios";
 import LoadSettingsData from "../LoadData";
+import './Settings.css';
 
 export default function Settings() {
     const [pfpUrl, setPfpUrl] = useState('');

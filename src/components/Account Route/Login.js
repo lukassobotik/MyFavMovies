@@ -4,6 +4,7 @@ import {Link, useHistory} from "react-router-dom";
 import {Alert} from "@mui/material";
 import {signInWithEmailAndPassword} from "firebase/auth";
 import {auth} from "../../firebase";
+import './Account.css';
 
 export default function Login() {
     const [email, setEmail] = useState('');

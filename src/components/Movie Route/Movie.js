@@ -17,6 +17,7 @@ import {
 import addToWatchlist, {getMovieDataFromDB, getWatchProviderLink, saveRating} from "../MovieActions";
 import {Popover, Rating, Tooltip} from "@mui/material";
 import {HiHeart, HiOutlineHeart} from "react-icons/hi";
+import "./Movie.css";
 
 export default function Movie() {
     let { movieId } = useParams();

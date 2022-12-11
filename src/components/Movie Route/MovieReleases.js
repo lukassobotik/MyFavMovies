@@ -5,6 +5,7 @@ import {auth} from "../../firebase";
 import LoadSettingsData from "../../LoadData";
 import axios from "axios";
 import requests from "../../Constants";
+import "./Movie.css";
 
 export default function MovieReleases() {
     let { movieId } = useParams();

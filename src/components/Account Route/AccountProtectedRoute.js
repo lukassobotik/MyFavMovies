@@ -1,6 +1,7 @@
 import {Redirect} from "react-router-dom";
 import {auth} from "../../firebase";
 import {useEffect, useState} from "react";
+import './Account.css';
 
 const AccountProtectedRoute = ({children}) => {
     const user = auth.currentUser;

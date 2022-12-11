@@ -1,5 +1,4 @@
 import {Redirect, Route, Switch} from 'react-router-dom';
-import './App.css';
 import { lazy, Suspense } from "react";
 import Browse from "./components/Browse Route/Browse";
 import AccountProtectedRoute from "./components/Account Route/AccountProtectedRoute";

@@ -21,6 +21,7 @@ import addToWatchlist, {
     saveRating
 } from "../MovieActions";
 import emptyBackdrop from "../../Icons/empty_backdrop.png";
+import './Browse.css';
 
 export default function BrowseMovieCard({item, index, rowId, type}) {
     const history = useHistory();

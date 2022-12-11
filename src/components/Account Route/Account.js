@@ -6,6 +6,7 @@ import {collection, getDocs} from "firebase/firestore";
 import {auth, db} from "../../firebase";
 import {useHistory} from "react-router-dom";
 import ListCard from "../ListCard";
+import './Account.css';
 
 interface TabPanelProps {
     children?: React.ReactNode;
