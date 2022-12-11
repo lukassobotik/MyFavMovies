@@ -28,6 +28,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
     const request = `https://api.themoviedb.org/3/movie/${item?.id}?api_key=${requests.key}&language=${document.getElementById("root")?.getAttribute('langvalue')}&append_to_response=videos,images,watch/providers`;
     const [backdrop, setBackdrop] = useState(item?.backdrop_path);
     const [hasNoImage, setHasNoImage] = useState(false);
+    const [imageWidth, setImageWidth] = useState("w500");
     const [isLoading, setIsLoading] = useState(true);
     const [playTrailer, setPlayTrailer] = useState(false);
     const [isOnWatchlist, setIsOnWatchlist] = useState(false);
@@ -40,6 +41,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
 
     useEffect(() => {
         if (item !== null) {
+            handleScreenResize();
             if (item.backdrop_path === null) setHasNoImage(true);
             axios.get(request).then((response) => {
                 let backdrops = response.data?.images?.backdrops;
@@ -128,13 +130,29 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
         return itemsOnScreen.at(1);
     }
 
+    function handleScreenResize() {
+        if (window.innerWidth < 1000 && window.innerWidth > 500) {
+            setImageWidth('w300')
+        } else if (window.innerWidth < 500) {
+            setImageWidth('w185');
+        } else {
+            setImageWidth('w500');
+        }
+    }
+
+    window.addEventListener('resize', handleScreenResize);
+
+    useHistory().listen(() => {
+        window.removeEventListener('resize', handleScreenResize);
+    });
+
     return (
         <div id={"itemId" + index + "-" + rowId} className={`movie_card_item w-[${setLoadingSize()}] inline-block cursor-pointer relative p-2 group`} data-index={index}>
         <div id={"itemInRowId" + index + "-" + rowId} className="row_item" style={{left: 0}} onMouseOver={showDetails} onMouseLeave={hideDetails}>
             <div id={"player" + index + "-" + rowId} className="player" onClick={generalClick}>
                 {!isLoading ?
                     <div className="relative">
-                        <img id={"img" + index + "-" + rowId} className='w-full h-auto block overflow-visible rounded bg-black' src={!hasNoImage ? `https://image.tmdb.org/t/p/w500/${backdrop ? backdrop : item.backdrop_path}` : emptyBackdrop} alt={item.title} onError={() => setHasNoImage(true)}/>
+                        <img id={"img" + index + "-" + rowId} className='w-full h-auto block overflow-visible rounded bg-black' src={!hasNoImage ? `https://image.tmdb.org/t/p/${imageWidth}/${backdrop ? backdrop : item.backdrop_path}` : emptyBackdrop} alt={item.title} onError={() => setHasNoImage(true)}/>
                         <div className={`absolute ${!hasNoImage ? "opacity-0" : "opacity-100"} flex_center whitespace-pre-wrap font-bold text-[2vh] top-0 w-full h-full rounded`}>{item.title}</div>
                     </div>
                     : <SkeletonTheme baseColor="#a9b7c1" highlightColor="#5e6c77" className="movie_card_item">
