@@ -1,0 +1,53 @@
+.navbar {
+    transition: 500ms;
+    z-index: 102;
+    position: fixed;
+    display: flex;
+    height: var(--navbar-height);
+    width: 100vw;
+    background-image: linear-gradient(to top, rgba(0,0,0,0), rgba(0,0,0,1));
+}
+.navbar--hidden {
+    transform: translateY(calc(var(--navbar-height) * -1));
+}
+
+.navbar-title {
+    font-family: "Roboto", ui-rounded;
+    padding: 4px;
+    text-align: left;
+}
+
+.navbar-items {
+    position: relative;
+    flex: auto;
+}
+
+.navbar-btn {
+    color: #FFFFFF;
+    font-family: "Roboto", ui-rounded;
+    text-decoration: none;
+}
+
+.navbar_item {
+    flex: available;
+    padding-right: 10px;
+    align-self: center;
+    size: auto;
+    cursor: pointer;
+}
+
+.navbar_item:first-child {
+    margin-left: 5%;
+}
+
+.navbar_item:nth-last-child(1) {
+    margin-left: auto;
+    margin-right: 5%;
+}
+
+.footer_transition {
+    background-image: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,1));
+}
+.footer_icon {
+    filter: brightness(0) invert();
+}

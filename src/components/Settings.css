@@ -1,0 +1,11 @@
+.settings-btn {
+    width: 100%;
+    background-image: var(--main_gradient);
+    margin: 0 auto;
+    padding: 15px 30px;
+}
+.settings-panel{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+}

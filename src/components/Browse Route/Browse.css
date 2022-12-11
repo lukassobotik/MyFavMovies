@@ -1,0 +1,77 @@
+.row_item img {
+    display: block;
+    overflow: hidden;
+}
+
+.browse_container {
+    overflow-x: hidden;
+    display: inline;
+    height: 100%;
+    background-color: #131313;
+}
+.browse_container img{
+    overflow-x: visible;
+}
+
+.movie_card_button {
+    font-family: "Times New Roman", sans-serif;
+    cursor: pointer;
+}
+.movie_card_button_no_cursor {
+    font-family: "Times New Roman", sans-serif;
+    cursor: default;
+}
+
+.row_item {
+    position: relative;
+    padding: 2px;
+    flex: 1 1 0;
+    transition: all 450ms;
+    left: 1px;
+    cursor: default;
+}
+
+.browse_container .row_item:focus,
+.browse_container .row_item:hover{
+    transform: scale(1.5);
+}
+
+[id^="itemInRowId1-"] {
+    transform-origin: left;
+}
+
+.arrow {
+    z-index: 101;
+    overflow: hidden;
+}
+
+.slider {
+    overflow: visible;
+    transition: all 450ms;
+}
+
+.carousel_row {
+    overflow-x: visible;
+    overflow-y: visible;
+}
+
+.player {
+    cursor: pointer;
+}
+
+.youtube-container {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    pointer-events: none;
+}
+
+.youtube-container iframe {
+    width: 900%;
+    height: 100%;
+    margin-left: -400%;
+}
