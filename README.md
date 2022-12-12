@@ -12,6 +12,7 @@ Once you clone this repository, run `npm install` to download all the required p
 1. In the root of this repository, create a new file named `.env`
 2. In the file, add these keywords:
 ```env
+REACT_APP_VERSION=$npm_package_version
 REACT_APP_API_KEY=''
 REACT_APP_AUTH_DOMAIN=''
 REACT_APP_PROJECT_ID=''
@@ -21,7 +22,7 @@ REACT_APP_APP_ID=''
 REACT_APP_MEASUREMENT_ID=''
 REACT_APP_TMDB_API_KEY=''
 ```
-In between the apostrophes, add your Firestore Database and TMDb API Keys
+In between the apostrophes, add your Firestore Database and TMDb API Keys. Leave the `REACT_APP_VERSION` as it is.
 
 For more info, checkout the [Documentation](https://github.com/PuckyEU/MyFavMovies/wiki)
 
