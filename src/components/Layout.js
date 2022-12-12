@@ -61,6 +61,7 @@ export default function Layout({children}) {
                     <div className="italic">This product uses the TMDB API but is not endorsed or certified by TMDB.</div>
                 </div>
             </div>
+            <div className="absolute left-0 bottom-0 ml-1 text-[#8a8a8a]">{process.env.REACT_APP_VERSION ? "v" + process.env.REACT_APP_VERSION : ""}</div>
         </footer>
     </>
 }
