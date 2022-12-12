@@ -14,7 +14,7 @@ import {auth} from "../../firebase";
 import {Popover, Rating, Tooltip} from "@mui/material";
 import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import addToWatchlist, {
+import {
     getAmountOfItemsOnScreen,
     getMovieDataFromDB,
     getWatchProviderLink,
@@ -180,7 +180,15 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
                             <a href={playLink}><IoCaretForwardCircleOutline size={30} className="movie_card_button"/></a>
                         </Tooltip>
                         : <IoCaretForwardCircleOutline color={"#878787"} size={30} className="movie_card_button_no_cursor"/>}
-                    {isOnWatchlist ? <IoCheckmarkCircleOutline size={30} onClick={() => { addToWatchlist({item, isOnWatchlist}).then((r) => { setIsOnWatchlist(r[0]); }); }} className="movie_card_button"/> : <IoAddCircleOutline size={30} onClick={() => { addToWatchlist({item, isOnWatchlist}).then(() => { setIsOnWatchlist(true); }); }} className="movie_card_button"/>}
+                    {isOnWatchlist ? <IoCheckmarkCircleOutline size={30} onClick={() => {
+                        import("../MovieActions").then(module => {
+                            module.default({item, isOnWatchlist}).then((r) => { setIsOnWatchlist(r[0]); });
+                        })
+                    }} className="movie_card_button"/> : <IoAddCircleOutline size={30} onClick={() => {
+                        import("../MovieActions").then(module => {
+                            module.default({item, isOnWatchlist}).then(() => { setIsOnWatchlist(true); });
+                        })
+                    }} className="movie_card_button"/>}
                     {isRated ? <div onClick={ratingClick} className="movie_card_button w-[30px] flex_center text-center relative p-0"><div className="block absolute w-fit h-fit text-center text-white font-bold center">{rating}</div><IoEllipseOutline size={30} className="overflow-visible absolute"/></div>
                         : <IoHeartCircleOutline size={30} onClick={ratingClick} className="movie_card_button"/>}
                     <Popover id={popoverId} open={isRatingPopoverOpen} anchorEl={ratingPopoverAnchorEl} onClose={() => {
