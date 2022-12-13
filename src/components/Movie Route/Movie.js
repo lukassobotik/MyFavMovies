@@ -14,7 +14,13 @@ import {
     IoEllipseOutline,
     IoHeartCircleOutline
 } from "react-icons/io5";
-import addToWatchlist, {getMovieDataFromDB, getWatchProviderLink, saveRating} from "../MovieActions";
+import addToWatchlist, {
+    getMovieDataFromDB,
+    getWatchProviderLink,
+    saveRating,
+    getReleaseDateItem,
+    formatNumber, getMainTrailer
+} from "../MovieActions";
 import {Popover, Rating, Tooltip} from "@mui/material";
 import {HiHeart, HiOutlineHeart} from "react-icons/hi";
 import "./Movie.css";
@@ -50,7 +56,7 @@ export default function Movie() {
                         console.log(response.data);
                         setItem(response.data);
                         appendGenres();
-                        setMainTrailer();
+                        setMainTrailer(response.data);
                         getMovieDataFromDB(response.data).then((r) => {
                             setIsOnWatchlist(r[0]);
                             if (r[1] === null) {
@@ -63,7 +69,7 @@ export default function Movie() {
                         setPlayLink(getWatchProviderLink(response.data));
                     }).then(() => {
                         setIsLoading(false);
-                    }).catch((err) => console.log(err))
+                    }).catch((err) => console.error(err))
                 }).catch((err) => console.log(err))
             }
         });
@@ -118,55 +124,6 @@ export default function Movie() {
         }
     }
 
-    function getReleaseDateItem(location) {
-        let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        let dates = [];
-
-        const date_item = item.release_dates.results.find(date => date.iso_3166_1.toString() === location);
-        date_item?.release_dates?.map((date) => {
-            let parsedDate = new Date(date?.release_date?.substring(0, (date?.release_date?.length - 5))).toLocaleDateString(location, options);
-
-            switch (date.type) {
-                case 1:
-                    dates.push(parsedDate + " (Premiere)");
-                    break;
-                case 2:
-                    dates.push(parsedDate + " (Theatrical (limited))");
-                    break;
-                case 3:
-                    dates.push(parsedDate + " (Theatrical)");
-                    break;
-                case 4:
-                    dates.push(parsedDate + " (Digital)");
-                    break;
-                case 5:
-                    dates.push(parsedDate + " (Physical)");
-                    break;
-                case 6:
-                    dates.push(parsedDate + " (TV)");
-                    break;
-                default:
-                    console.error("Wrong Type of Release Date");
-            }
-        })
-        if (location === document.getElementById("root")?.getAttribute('locvalue')) setReleaseDates(dates);
-        return dates;
-    }
-
-    function formatNumber(num) {
-        const formatter = new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            maximumFractionDigits: 0
-        });
-
-        if (num === 0) {
-            return "Unknown";
-        }
-
-        return formatter.format(num);
-    }
-
     function appendGenres() {
         genres = '';
         item?.genres?.map((item, id) => {
@@ -177,19 +134,14 @@ export default function Movie() {
         if (el !== null) el.innerText = genres;
     }
 
-    function setMainTrailer() {
-        item.videos?.results?.map((trailer_item) => {
-            let vid_key = trailer_item?.key;
-            let type = trailer_item?.type;
-            if (item?.videos?.results?.length === 0 || trailer_item?.site !== "YouTube") {
-                return;
-            }
-            if (type === "Trailer") {
-                setTrailerPath(vid_key);
-            } else {
-                setTrailerPath(vid_key);
-            }
-        })
+    function setReleases(location) {
+        let dates = getReleaseDateItem(location, item);
+        if (location === document.getElementById("root")?.getAttribute('locvalue')) setReleaseDates(dates);
+        return dates;
+    }
+
+    function setMainTrailer(data) {
+        setTrailerPath(getMainTrailer(data));
     }
 
     const handleRatingClose = () => {
@@ -222,7 +174,7 @@ export default function Movie() {
         !isLoading && <Layout>
             <div className="h-fit" onLoad={appendGenres}>
                 <div className="w-full h-full mt-10 justify-center" onLoad={handleScreenResize}>
-                    <div id="movie_ribbon_items" className="flex w-fit h-fit justify-center movie_ribbon" onLoad={() => getReleaseDateItem(document.getElementById("root")?.getAttribute('locvalue'))}>
+                    <div id="movie_ribbon_items" className="flex w-fit h-fit justify-center movie_ribbon" onLoad={() => setReleases(document.getElementById("root")?.getAttribute('locvalue'))}>
                         <div id="movie_ribbon_poster" className="ml-5 mt-auto relative flex_center mb-auto rounded-3xl cursor-pointer" onLoad={changePlayTrailer}>
                             <img src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} alt={"Poster"} className="rounded-3xl relative w-[35vh] max-w-[none] border-2"/>
                             <div id="movie_route_trailer" className="absolute h-[101%] aspect-video left-0 top-0" onClick={() => changePlayTrailer(true)}>
@@ -334,7 +286,7 @@ export default function Movie() {
                         <div key={id}>{date}</div>
                     )) : <div className="text-[2vh]">There are no release dates added
                         <Link to={`/movie/${movieId}/releases/`}><div className="font-bold text-[3vh]">Release Dates (US)</div></Link>
-                        <div className="text-[2vh]">{getReleaseDateItem("US").map((date, id) => (
+                        <div className="text-[2vh]">{setReleases("US").map((date, id) => (
                             <div key={id}>{date}</div>
                         ))}</div>
                     </div>}</div>

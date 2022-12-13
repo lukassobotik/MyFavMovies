@@ -92,3 +92,69 @@ export function getAmountOfItemsOnScreen(width) {
         return [2, "50%", false];
     }
 }
+
+export function getReleaseDateItem(location, item) {
+    let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    let dates = [];
+
+    const date_item = item.release_dates.results.find(date => date.iso_3166_1.toString() === location);
+    date_item?.release_dates?.map((date) => {
+        let parsedDate = new Date(date?.release_date?.substring(0, (date?.release_date?.length - 5))).toLocaleDateString(location, options);
+
+        switch (date.type) {
+            case 1:
+                dates.push(parsedDate + " (Premiere)");
+                break;
+            case 2:
+                dates.push(parsedDate + " (Theatrical (limited))");
+                break;
+            case 3:
+                dates.push(parsedDate + " (Theatrical)");
+                break;
+            case 4:
+                dates.push(parsedDate + " (Digital)");
+                break;
+            case 5:
+                dates.push(parsedDate + " (Physical)");
+                break;
+            case 6:
+                dates.push(parsedDate + " (TV)");
+                break;
+            default:
+                console.error("Wrong Type of Release Date");
+        }
+    })
+    return dates;
+}
+
+export function formatNumber(num) {
+    const formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0
+    });
+
+    if (num === 0) {
+        return "Unknown";
+    }
+
+    return formatter.format(num);
+}
+
+export function getMainTrailer(item) {
+    let trailer;
+    item.videos?.results?.map((trailer_item) => {
+        let vid_key = trailer_item?.key;
+        let type = trailer_item?.type;
+        if (item?.videos?.results?.length === 0 || trailer_item?.site !== "YouTube") {
+            return;
+        }
+        if (type === "Trailer") {
+            trailer = vid_key;
+        } else {
+            trailer = vid_key;
+        }
+    })
+    console.log(trailer, item, "items");
+    return trailer;
+}
