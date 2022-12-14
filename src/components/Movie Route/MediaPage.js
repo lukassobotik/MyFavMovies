@@ -25,9 +25,12 @@ import {Popover, Rating, Tooltip} from "@mui/material";
 import {HiHeart, HiOutlineHeart} from "react-icons/hi";
 import "./Movie.css";
 
-export default function Movie() {
+export default function MediaPage() {
     let { movieId } = useParams();
+    let { televisionId } = useParams();
+    const isMovie = !!movieId;
     const movieRequest = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${requests.key}&language=${document.getElementById("root")?.getAttribute('langvalue')}&append_to_response=videos,images,alternative_titles,watch/providers,release_dates,credits`;
+    const tvRequest = `https://api.themoviedb.org/3/tv/${televisionId}?api_key=${requests.key}&language=${document.getElementById("root")?.getAttribute('langvalue')}`;
     const [item, setItem] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [releaseDates, setReleaseDates] = useState([]);
@@ -52,7 +55,7 @@ export default function Movie() {
         auth.onAuthStateChanged(async (user) => {
             if (user) {
                 await LoadSettingsData().then(() => {
-                    axios.get(movieRequest).then((response) => {
+                    axios.get(isMovie ? movieRequest : tvRequest).then((response) => {
                         console.log(response.data);
                         setItem(response.data);
                         appendGenres();
@@ -135,6 +138,8 @@ export default function Movie() {
     }
 
     function setReleases(location) {
+        if (!isMovie) return;
+
         let dates = getReleaseDateItem(location, item);
         if (location === document.getElementById("root")?.getAttribute('locvalue')) setReleaseDates(dates);
         return dates;
@@ -286,7 +291,7 @@ export default function Movie() {
                         <div key={id}>{date}</div>
                     )) : <div className="text-[2vh]">There are no release dates added
                         <Link to={`/movie/${movieId}/releases/`}><div className="font-bold text-[3vh]">Release Dates (US)</div></Link>
-                        <div className="text-[2vh]">{setReleases("US").map((date, id) => (
+                        <div className="text-[2vh]">{setReleases("US")?.map((date, id) => (
                             <div key={id}>{date}</div>
                         ))}</div>
                     </div>}</div>
