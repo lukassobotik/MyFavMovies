@@ -36,3 +36,12 @@ td:nth-child(4) {
     display: grid;
     gap: 50px;
 }
+
+.movie_genre_tag {
+    flex-basis: 33.333%;
+}
+
+.movie_genre_tag:nth-child(3n) {
+    background-color: red;
+    flex-flow: wrap;
+}

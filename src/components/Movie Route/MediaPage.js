@@ -6,6 +6,8 @@ import {Link, useHistory, useParams} from "react-router-dom";
 import LoadSettingsData from "../../LoadData";
 import {auth} from "../../firebase";
 import personWithNoImage from "../../Icons/no-person.svg";
+import justwatchIcon from "../../Icons/justwatch_icon.png";
+
 import {
     IoAddCircleOutline,
     IoCaretForwardCircleOutline,
@@ -58,7 +60,6 @@ export default function MediaPage() {
                     axios.get(isMovie ? movieRequest : tvRequest).then((response) => {
                         console.log(response.data);
                         setItem(response.data);
-                        appendGenres();
                         setMainTrailer(response.data);
                         getMovieDataFromDB(response.data).then((r) => {
                             setIsOnWatchlist(r[0]);
@@ -127,16 +128,6 @@ export default function MediaPage() {
         }
     }
 
-    function appendGenres() {
-        genres = '';
-        item?.genres?.map((item, id) => {
-            if (id === 0) genres = genres + item.name;
-            else genres = genres + ", " + item.name;
-        })
-        let el = document.getElementById("movie_ribbon_genres");
-        if (el !== null) el.innerText = genres;
-    }
-
     function setReleases(location) {
         if (!isMovie) return;
 
@@ -154,6 +145,27 @@ export default function MediaPage() {
     };
     const ratingClick = (event) => {
         setRatingPopoverAnchorEl(event.currentTarget);
+    }
+    const handleRatingChange = (event, newValue) => {
+        saveRating(newValue, rating, item).then((r) => {
+            handleRatingClose();
+            if (r[1] === null) {
+                setRating(0);
+                setIsRated(false);
+                return;
+            }
+            setRating(r[1]);
+            setIsRated(r[0]);
+        });
+    }
+
+    const watchlistClick = () => {
+        if (isOnWatchlist) addToWatchlist({item, isOnWatchlist}).then((r) => {
+            setIsOnWatchlist(r[0]);
+        });
+        else addToWatchlist({item, isOnWatchlist}).then(() => {
+            setIsOnWatchlist(true);
+        });
     }
 
     function changePlayTrailer(value) {
@@ -177,168 +189,99 @@ export default function MediaPage() {
 
     return (
         !isLoading && <Layout>
-            <div className="h-fit" onLoad={appendGenres}>
-                <div className="w-full h-full mt-10 justify-center" onLoad={handleScreenResize}>
-                    <div id="movie_ribbon_items" className="flex w-fit h-fit justify-center movie_ribbon" onLoad={() => setReleases(document.getElementById("root")?.getAttribute('locvalue'))}>
-                        <div id="movie_ribbon_poster" className="ml-5 mt-auto relative flex_center mb-auto rounded-3xl cursor-pointer" onLoad={changePlayTrailer}>
-                            <img src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} alt={"Poster"} className="rounded-3xl relative w-[35vh] max-w-[none] border-2"/>
-                            <div id="movie_route_trailer" className="absolute h-[101%] aspect-video left-0 top-0" onClick={() => changePlayTrailer(true)}>
-                                {playTrailer ? <div className="top-0 left-0 w-full h-full absolute overflow-hidden rounded-xl">
-                                    <iframe src={`https://www.youtube.com/embed/${trailerPath}?autoplay=1&autohide=1?rel=0&amp&modestbranding=1`}
-                                            title={item.title + " Trailer"}
-                                            allowFullScreen loading="lazy"
-                                            className="w-full h-full"></iframe>
-                                </div> : undefined}
+            <div className="h-fit mt-[-50px]" onLoad={handleScreenResize}>
+                <div id="movie_backdrop_ribbon" className="flex w-[100vw] h-[100vh] justify-center movie_ribbon img_bg relative" onLoad={() => setReleases(document.getElementById("root")?.getAttribute('locvalue'))}>
+                    <img src={`https://image.tmdb.org/t/p/original/${item.backdrop_path}`} alt="" className="w-[100vw]"/>
+                    <div className="absolute w-full h-fit">
+                        <div className="relative w-full h-full ml-[5vw] mt-[15vh] w-[45vw]">
+                            <div className="flex_center w-full m-auto pr-[4vw] pl-[4vw]">
+                                {item.genres?.map((item, id) => {
+                                    if (id < 3) return <div key={id} className="bg-[#43495C] border-[#93A0C9] border-[1.5px] rounded-full w-full m-2 pt-2 pb-2 whitespace-nowrap">{item.name}</div>;
+                                })}
                             </div>
-                            <IoClose className={`absolute h-[7%] w-[10%] aspect-square bg-black rounded-full ${playTrailer ? "opacity-50 hover:opacity-100" : "opacity-0"} left-0 top-0 m-5`} onClick={() => changePlayTrailer(false)}/>
-                        </div>
-                        <div id="movie_ribbon_info" className="inline-block ml-5 mt-auto mb-auto text-[3vh] text-left overflow-scroll">
-                            {item.imdb_id ?
-                                <a href={"https://www.imdb.com/title/" + item.imdb_id + "/"}><img id="imdb_icon" src="https://ia.media-imdb.com/images/M/MV5BODc4MTA3NjkzNl5BMl5BcG5nXkFtZTgwMDg0MzQ2OTE@._V1_.png" alt="IMDb" className="w-[2vw]"/></a>
-                            : null}
-                            <a href={`${item.homepage}`}><div className="font-bold text-[4vh]">{item.title}</div></a>
-                            <div className="flex italic text-[2vh]">
-                                <div>{item.runtime}m</div>
-                                <div className="ml-2 mr-2 font-bold">·</div>
-                                <div id="movie_ribbon_genres" className="flex"></div>
+                            <a href={`${item.homepage}`} className="font-bold text-[5vh]">{item.title}</a>
+                            {item.tagline ? <div className="mr-5 text-center w-full text-[#878787] text-[2vh] italic">{item.tagline}</div> : null}
+                            <div>{item.runtime}m</div>
+                            <div className="flex_center m-auto w-full mt-[5vh] font-bold">
+                                {playLink ? <Tooltip title={<img src={justwatchIcon} alt="JustWatch" className="w-[10vw]"/>} placement="top">
+                                        <a href={playLink} className="bg-[#21232D] border-[#777EA3] border-[1.5px] rounded-full w-full m-2 pt-2 pb-2 cursor-pointer">Play</a></Tooltip>
+                                    : <div className="bg-[#21232D] border-[#777EA3] text-[#838383] border-[1.5px] rounded-full w-full m-2 pt-2 pb-2">Play</div>}
+                                <div className="bg-[#21232D] border-[#777EA3] border-[1.5px] rounded-full w-full m-2 pt-2 pb-2 cursor-pointer" onClick={() => watchlistClick()}>{isOnWatchlist ? "Added to My List" : "Add to My List"}</div>
+                                <div className="bg-[#21232D] border-[#777EA3] border-[1.5px] rounded-full w-full m-2 pt-2 pb-2 cursor-pointer" onClick={ratingClick}>{isRated ? "Rated " + rating : "Rate"}</div>
+                                <Popover id={ratingPopoverId} open={isRatingPopoverOpen} anchorEl={ratingPopoverAnchorEl} onClose={handleRatingClose} anchorOrigin={{vertical: 'center', horizontal: 'center'}} transformOrigin={{vertical: 'center', horizontal: 'center'}}>
+                                    <Rating name="rating" value={rating} defaultValue={0} max={10} icon={<HiHeart/>} emptyIcon={<HiOutlineHeart/>} onChange={(event, newValue) => handleRatingChange(event, newValue)}/>
+                                </Popover>
                             </div>
-                            {item.overview ? <div><div className="mr-5 font-bold">Overview:</div>
-                                <div className="mb-5 mr-5 text-[#878787] italic">{item.overview}</div></div> : null}
-                            {item.tagline ? <div><div className="mr-5 font-bold">Tagline:</div>
-                                <div className="mr-5 text-[#878787] italic">{item.tagline}</div></div> : null}
+                            {item.overview ? <div className="mb-5 mr-5 text-white italic mt-[5vh]">{item.overview}</div> : null}
+                            <div>Budget: {formatNumber(item.budget)}</div>
+                            <div>Revenue: {formatNumber(item.revenue)}</div>
+                            <div>Status: {item.status}</div>
+                            <Tooltip title={ <div className="w-[100%] text-[2vh] inline-block"><div className="font-bold w-[100%] text-[2vh]">Production Countries:</div>
+                                    {item.production_countries?.map((country, id) => ( <div key={id}  className="w-[100%] text-[2vh]">{country.name} ({country.iso_3166_1})</div> ))}
+                                    <div className="font-bold w-[100%] text-[2vh]">Production Companies:</div>
+                                    {item.production_companies?.map((company, id) => ( <div key={id} className="w-[100%] text-[2vh]">{company.name}</div> ))} </div>} placement="bottom">
+                                <div className="mt-3 text-[#878787] text-[2vh] italic">Hover to see production info</div>
+                            </Tooltip>
                         </div>
                     </div>
-                </div>
-                <div id="movie_action_buttons" className="w-full h-full flex_center overflow-x-scroll p-5">
-                    {playLink ? <Tooltip title={
-                            <React.Fragment>
-                                <p className="text-center">Provided by:</p>
-                                <div className="flex_center">
-                                    <img src="https://www.themoviedb.org/assets/2/v4/logos/justwatch-c2e58adf5809b6871db650fb74b43db2b8f3637fe3709262572553fa056d8d0a.svg" alt="JustWatch" className="w-[10vw]"/>
-                                </div>
-                            </React.Fragment>} placement="top">
-                            <a href={playLink}><IoCaretForwardCircleOutline className="movie_card_button h-[7.5vh] w-[7.5vh]"/></a>
-                        </Tooltip>
-                        : <IoCaretForwardCircleOutline color={"#878787"} className="movie_card_button_no_cursor h-[7.5vh] w-[7.5vh]"/>}
-                    {isOnWatchlist ? <IoCheckmarkCircleOutline onClick={() => { addToWatchlist({item, isOnWatchlist}).then((r) => { setIsOnWatchlist(r[0]); }); }} className="movie_card_button h-[7.5vh] w-[7.5vh]"/> : <IoAddCircleOutline onClick={() => { addToWatchlist({item, isOnWatchlist}).then(() => { setIsOnWatchlist(true); }); }} className="movie_card_button h-[7.5vh] w-[7.5vh]"/>}
-                    {isRated ? <div onClick={ratingClick} className="movie_card_button w-fit h-[7.5vh] flex_center text-[5vh] text-center relative p-0"><div className="block absolute w-fit h-fit text-center text-white font-bold center">{rating}</div><IoEllipseOutline className="overflow-visible h-[7.5vh] w-[7.5vh]"/></div>
-                        : <IoHeartCircleOutline onClick={ratingClick} className="movie_card_button h-[7.5vh] w-[7.5vh]"/>}
-                    <Popover id={ratingPopoverId} open={isRatingPopoverOpen} anchorEl={ratingPopoverAnchorEl} onClose={handleRatingClose} anchorOrigin={{
-                        vertical: 'center',
-                        horizontal: 'center',
-                    }} transformOrigin={{
-                        vertical: 'center',
-                        horizontal: 'center'
-                    }}>
-                        <Rating name="rating" value={rating} defaultValue={0} max={10} icon={<HiHeart/>} emptyIcon={<HiOutlineHeart/>} onChange={(event, newValue) => {
-                            saveRating(newValue, rating, item).then((r) => {
-                                handleRatingClose();
-                                if (r[1] === null) {
-                                    setRating(0);
-                                    setIsRated(false);
-                                    return;
-                                }
-                                setRating(r[1]);
-                                setIsRated(r[0]);
-                            });
-                        }}
-                        />
-                    </Popover>
-                </div>
-                <div id="general_info_ribbon" className="w-full h-full border-b-2 border-[#FFFFFF] inline-block overflow-scroll p-5 pt-0">
-                    <div id="movie_general_info_grid" className="grid-container">
-                        <div className="inline-block w-[100%]">
-                            <div className="font-bold w-[100%] text-[2vh]">Production Companies</div>
-                            <div className="w-[100%] text-[2vh] inline-block">{item.production_companies?.map((company, id) => (
-                                <div key={id} className="w-[100%] inline-block">
-                                    <div className="w-[100%] text-[2vh]">{company.name}</div>
-                                </div>
-                            ))}</div>
-                        </div>
-                        <div className="inline-block w-[100%]">
-                            <div className="font-bold w-[100%] text-[2vh]">Production Countries</div>
-                            <div className="w-[100%] text-[2vh] inline-block">{item.production_countries?.map((country, id) => (
-                                <div key={id} className="w-[100%] inline-block">
-                                    <div className="w-[100%] text-[2vh]">{country.name} ({country.iso_3166_1})</div>
-                                </div>
-                            ))}</div>
-                        </div>
-                        <div className="inline-block w-[100%]">
-                            <div className="font-bold w-[100%] text-[2vh]">Budget</div>
-                            <div className="w-[100%] text-[2vh]">{formatNumber(item.budget)}</div>
-                        </div>
-                        <div className="inline-block w-[100%]">
-                            <div className="font-bold w-[100%] text-[2vh]">Revenue</div>
-                            <div className="w-[100%] text-[2vh]">{formatNumber(item.revenue)}</div>
-                        </div>
-                        <div className="inline-block w-[100%]">
-                            <div className="font-bold w-[100%] text-[2vh]">Spoken Languages</div>
-                            <div className="w-[100%] text-[2vh] inline-block">{item.spoken_languages?.map((languages, id) => (
-                                <div key={id} className="w-[100%] inline-block">
-                                    <div className="w-[100%] text-[2vh]">{languages.name}</div>
-                                </div>
-                            ))}</div>
-                        </div>
-                        <div className="inline-block w-[100%]">
-                            <div className="font-bold w-[100%] text-[2vh]">Status</div>
-                            <div className="w-[100%] text-[2vh]">{item.status}</div>
-                        </div>
+                    <div className="absolute w-[50vw] h-[85vh] mt-[15vh] mb-[15vh] mr-[5vw] ml-auto right-0 overflow-y-scroll">
+
                     </div>
                 </div>
-                <div id="release_dates_ribbon" className="w-full mt-[-5px] h-full border-b-2 border-[#FFFFFF] overflow-x-scroll p-5">
-                    <Link to={`/movie/${movieId}/releases/`}><div className="font-bold text-[3vh]">Release Dates ({document.getElementById("root")?.getAttribute('locvalue')})</div></Link>
-                    <div className="text-[2vh]">{releaseDates[0] ? releaseDates.map((date, id) => (
-                        <div key={id}>{date}</div>
-                    )) : <div className="text-[2vh]">There are no release dates added
-                        <Link to={`/movie/${movieId}/releases/`}><div className="font-bold text-[3vh]">Release Dates (US)</div></Link>
-                        <div className="text-[2vh]">{setReleases("US")?.map((date, id) => (
-                            <div key={id}>{date}</div>
-                        ))}</div>
-                    </div>}</div>
-                </div>
-                <div id="cast_ribbon" className="w-full h-full inline-block whitespace-nowrap">
-                    <div className="font-bold text-[3vh] text-left ml-5 p-2">Cast</div>
-                    <div className="flex w-full h-full overflow-x-scroll p-5 pt-0">
-                        {item.credits?.cast?.map((cast, id) => (
-                            <div key={id} className="mr-5 whitespace-pre-wrap bg-black rounded-2xl overflow-y-clip relative">
-                                <Link to={`/person/${cast.id}/`} className="w-full h-full left-0 top-0 absolute"/>
-                                <img src={cast.profile_path ? `https://image.tmdb.org/t/p/w500/${cast.profile_path}` : personWithNoImage} alt={cast.name} className="w-full rounded-t-2xl"/>
-                                <div className="w-[25vh] text-[2vh] cast_names h-full">
-                                    <div className="font-bold">{cast.name}</div>
-                                    <div>{cast.character}</div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                <div id="crew_ribbon" className="w-full h-full border-b-2 border-[#FFFFFF] inline-block whitespace-nowrap">
-                    <div className="font-bold text-[3vh] text-left ml-5 p-2">Crew</div>
-                    <div className="flex w-full h-full overflow-x-scroll p-5 pt-0">
-                        {item.credits?.crew?.map((crew, id) => (
-                            <div key={id} className="mr-5 whitespace-pre-wrap bg-black rounded-2xl overflow-y-clip relative">
-                                <Link to={`/person/${crew.id}/`} className="w-full h-full left-0 top-0 absolute"/>
-                                <img src={crew.profile_path ? `https://image.tmdb.org/t/p/w500/${crew.profile_path}` : personWithNoImage} alt={crew.name} className="w-full rounded-t-2xl"/>
-                                <div className="w-[25vh] text-[2vh] cast_names h-full">
-                                    <div className="font-bold">{crew.name}</div>
-                                    <div>{crew.job}</div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                {item.belongs_to_collection ?
-                    <div id="franchise_ribbon" className="w-full h-[50vh] flex_center border-b-2 border-[#FFFFFF] whitespace-nowrap relative">
-                        <div className="img_bg w-full h-full">
-                            <img src={`https://image.tmdb.org/t/p/original/${item.belongs_to_collection.backdrop_path}`} alt={""} className="w-full h-full"/>
-                        </div>
-                        <div className="p-5 absolute whitespace-pre-wrap w-full h-full flex_center">
-                            {showCollectionPoster ?
-                                <img src={`https://image.tmdb.org/t/p/original/${item.belongs_to_collection.poster_path}`} alt={""} className="h-full aspect-auto border-2 border-[#FFFFFF] rounded-3xl"/>
-                            : null}
-                            <Link to={`/collection/${item.belongs_to_collection.id}/`}><div id="movie_collection_link" className={`font-bold text-[4vw] ml-5`}>Belongs to the {item.belongs_to_collection.name}</div></Link>
-                        </div>
-                    </div>
-                    : null}
+                {/*<div id="release_dates_ribbon" className="w-full mt-[-5px] h-full border-b-2 border-[#FFFFFF] overflow-x-scroll p-5">*/}
+                {/*    <Link to={`/movie/${movieId}/releases/`}><div className="font-bold text-[3vh]">Release Dates ({document.getElementById("root")?.getAttribute('locvalue')})</div></Link>*/}
+                {/*    <div className="text-[2vh]">{releaseDates[0] ? releaseDates.map((date, id) => (*/}
+                {/*        <div key={id}>{date}</div>*/}
+                {/*    )) : <div className="text-[2vh]">There are no release dates added*/}
+                {/*        <Link to={`/movie/${movieId}/releases/`}><div className="font-bold text-[3vh]">Release Dates (US)</div></Link>*/}
+                {/*        <div className="text-[2vh]">{setReleases("US")?.map((date, id) => (*/}
+                {/*            <div key={id}>{date}</div>*/}
+                {/*        ))}</div>*/}
+                {/*    </div>}</div>*/}
+                {/*</div>*/}
+                {/*<div id="cast_ribbon" className="w-full h-full inline-block whitespace-nowrap">*/}
+                {/*    <div className="font-bold text-[3vh] text-left ml-5 p-2">Cast</div>*/}
+                {/*    <div className="flex w-full h-full overflow-x-scroll p-5 pt-0">*/}
+                {/*        {item.credits?.cast?.map((cast, id) => (*/}
+                {/*            <div key={id} className="mr-5 whitespace-pre-wrap bg-black rounded-2xl overflow-y-clip relative">*/}
+                {/*                <Link to={`/person/${cast.id}/`} className="w-full h-full left-0 top-0 absolute"/>*/}
+                {/*                <img src={cast.profile_path ? `https://image.tmdb.org/t/p/w500/${cast.profile_path}` : personWithNoImage} alt={cast.name} className="w-full rounded-t-2xl"/>*/}
+                {/*                <div className="w-[25vh] text-[2vh] cast_names h-full">*/}
+                {/*                    <div className="font-bold">{cast.name}</div>*/}
+                {/*                    <div>{cast.character}</div>*/}
+                {/*                </div>*/}
+                {/*            </div>*/}
+                {/*        ))}*/}
+                {/*    </div>*/}
+                {/*</div>*/}
+                {/*<div id="crew_ribbon" className="w-full h-full border-b-2 border-[#FFFFFF] inline-block whitespace-nowrap">*/}
+                {/*    <div className="font-bold text-[3vh] text-left ml-5 p-2">Crew</div>*/}
+                {/*    <div className="flex w-full h-full overflow-x-scroll p-5 pt-0">*/}
+                {/*        {item.credits?.crew?.map((crew, id) => (*/}
+                {/*            <div key={id} className="mr-5 whitespace-pre-wrap bg-black rounded-2xl overflow-y-clip relative">*/}
+                {/*                <Link to={`/person/${crew.id}/`} className="w-full h-full left-0 top-0 absolute"/>*/}
+                {/*                <img src={crew.profile_path ? `https://image.tmdb.org/t/p/w500/${crew.profile_path}` : personWithNoImage} alt={crew.name} className="w-full rounded-t-2xl"/>*/}
+                {/*                <div className="w-[25vh] text-[2vh] cast_names h-full">*/}
+                {/*                    <div className="font-bold">{crew.name}</div>*/}
+                {/*                    <div>{crew.job}</div>*/}
+                {/*                </div>*/}
+                {/*            </div>*/}
+                {/*        ))}*/}
+                {/*    </div>*/}
+                {/*</div>*/}
+                {/*{item.belongs_to_collection ?*/}
+                {/*    <div id="franchise_ribbon" className="w-full h-[50vh] flex_center border-b-2 border-[#FFFFFF] whitespace-nowrap relative">*/}
+                {/*        <div className="img_bg w-full h-full">*/}
+                {/*            <img src={`https://image.tmdb.org/t/p/original/${item.belongs_to_collection.backdrop_path}`} alt={""} className="w-full h-full"/>*/}
+                {/*        </div>*/}
+                {/*        <div className="p-5 absolute whitespace-pre-wrap w-full h-full flex_center">*/}
+                {/*            {showCollectionPoster ?*/}
+                {/*                <img src={`https://image.tmdb.org/t/p/original/${item.belongs_to_collection.poster_path}`} alt={""} className="h-full aspect-auto border-2 border-[#FFFFFF] rounded-3xl"/>*/}
+                {/*            : null}*/}
+                {/*            <Link to={`/collection/${item.belongs_to_collection.id}/`}><div id="movie_collection_link" className={`font-bold text-[4vw] ml-5`}>Belongs to the {item.belongs_to_collection.name}</div></Link>*/}
+                {/*        </div>*/}
+                {/*    </div>*/}
+                {/*    : null}*/}
             </div>
         </Layout>
     )
