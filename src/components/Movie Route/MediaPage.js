@@ -193,7 +193,7 @@ export default function MediaPage() {
             <div className="h-fit mt-[-50px]" onLoad={handleScreenResize}>
                 <div id="movie_backdrop_ribbon" className="flex w-[100vw] h-[100vh] justify-center movie_ribbon relative" onLoad={() => setReleases(document.getElementById("root")?.getAttribute('locvalue'))}>
                     <img src={`https://image.tmdb.org/t/p/original/${item.backdrop_path}`} alt="" className="w-[100vw] img_bg"/>
-                    <div className="absolute w-full h-fit">
+                    <div className="absolute w-full h-[100vh]">
                         <div className="relative w-full h-full ml-[5vw] mt-[15vh] w-[45vw]">
                             <div className="flex_center w-full m-auto pr-[4vw] pl-[4vw]">
                                 {item.genres?.map((item, id) => {
@@ -201,6 +201,7 @@ export default function MediaPage() {
                                 })}
                             </div>
                             <a href={`${item.homepage}`} className="font-bold text-[5vh]">{item.title}</a>
+                            {item.belongs_to_collection ? <Link to={`/collection/${item.belongs_to_collection.id}/`}><div className="font-bold italic">Part of the {item.belongs_to_collection.name}</div></Link> : null}
                             {item.tagline ? <div className="mr-5 text-center w-full text-[#878787] text-[2vh] italic">{item.tagline}</div> : null}
                             <div>{item.runtime}m</div>
                             <div className="flex_center m-auto w-full mt-[5vh] font-bold">
@@ -223,6 +224,15 @@ export default function MediaPage() {
                                     {item.production_companies?.map((company, id) => ( <div key={id} className="w-[100%] text-[2vh]">{company.name}</div> ))} </div>} placement="bottom">
                                 <div className="mt-3 text-[#878787] text-[2vh] italic">Hover to see production info</div>
                             </Tooltip>
+                            <Link to={`/movie/${movieId}/releases/`}><div className="font-bold mt-3">Release Dates ({document.getElementById("root")?.getAttribute('locvalue')})</div></Link>
+                            <div>{releaseDates[0] ? releaseDates.map((date, id) => (
+                                <div key={id}>{date}</div>
+                            )) : <div>No Dates Added
+                                <Link to={`/movie/${movieId}/releases/`}><div className="font-bold">Release Dates (US)</div></Link>
+                                {setReleases("US")?.map((date, id) => (
+                                    <div key={id}>{date}</div>
+                                ))}
+                            </div>}</div>
                         </div>
                     </div>
                     <div className="absolute w-[40vw] h-[85vh] mt-[15vh] mb-[15vh] mr-[5vw] ml-auto right-0 overflow-y-scroll rounded-2xl">
