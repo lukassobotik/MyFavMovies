@@ -35,6 +35,7 @@ export default function MediaPage() {
     const tvRequest = `https://api.themoviedb.org/3/tv/${televisionId}?api_key=${requests.key}&language=${document.getElementById("root")?.getAttribute('langvalue')}`;
     const [item, setItem] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [castTab, setCastTab] = useState(true);
     const [releaseDates, setReleaseDates] = useState([]);
     const [playTrailer, setPlayTrailer] = useState(false);
     const [trailerPath, setTrailerPath] = useState('');
@@ -190,8 +191,8 @@ export default function MediaPage() {
     return (
         !isLoading && <Layout>
             <div className="h-fit mt-[-50px]" onLoad={handleScreenResize}>
-                <div id="movie_backdrop_ribbon" className="flex w-[100vw] h-[100vh] justify-center movie_ribbon img_bg relative" onLoad={() => setReleases(document.getElementById("root")?.getAttribute('locvalue'))}>
-                    <img src={`https://image.tmdb.org/t/p/original/${item.backdrop_path}`} alt="" className="w-[100vw]"/>
+                <div id="movie_backdrop_ribbon" className="flex w-[100vw] h-[100vh] justify-center movie_ribbon relative" onLoad={() => setReleases(document.getElementById("root")?.getAttribute('locvalue'))}>
+                    <img src={`https://image.tmdb.org/t/p/original/${item.backdrop_path}`} alt="" className="w-[100vw] img_bg"/>
                     <div className="absolute w-full h-fit">
                         <div className="relative w-full h-full ml-[5vw] mt-[15vh] w-[45vw]">
                             <div className="flex_center w-full m-auto pr-[4vw] pl-[4vw]">
@@ -224,8 +225,28 @@ export default function MediaPage() {
                             </Tooltip>
                         </div>
                     </div>
-                    <div className="absolute w-[50vw] h-[85vh] mt-[15vh] mb-[15vh] mr-[5vw] ml-auto right-0 overflow-y-scroll">
-
+                    <div className="absolute w-[40vw] h-[85vh] mt-[15vh] mb-[15vh] mr-[5vw] ml-auto right-0 overflow-y-scroll rounded-2xl">
+                        <div className="flex_center absolute right-0 h-[4vh] w-full">
+                            <div className={`font-bold mr-5 text-[3vh] cursor-pointer ${castTab ? "" : "text-[#878787]"}`} onClick={() => setCastTab(true)}>Cast</div>
+                            <div className={`font-bold text-[3vh] cursor-pointer ${!castTab ? "" : "text-[#878787]"}`} onClick={() => setCastTab(false)}>Crew</div>
+                        </div>
+                        {castTab ? item.credits?.cast?.map((cast, id) => (
+                            <Link to={`/person/${cast.id}/`} key={id} className="mr-5 mt-[4vh] w-full whitespace-pre-wrap rounded-2xl flex overflow-y-clip relative mb-2">
+                                <div className="cast_names h-full m-auto">
+                                    <div className="font-bold">{cast.name}</div>
+                                    <div>{cast.character}</div>
+                                </div>
+                                <img src={cast.profile_path ? `https://image.tmdb.org/t/p/w500/${cast.profile_path}` : personWithNoImage} alt={cast.name} className="w-[25%] rounded-2xl"/>
+                            </Link>
+                        )) : item.credits?.crew?.map((crew, id) => (
+                            <Link to={`/person/${crew.id}/`} key={id} className="mr-5 mt-[4vh] w-full whitespace-pre-wrap rounded-2xl flex overflow-y-clip relative mb-2">
+                                <div className="cast_names h-full m-auto">
+                                    <div className="font-bold">{crew.name}</div>
+                                    <div>{crew.job}</div>
+                                </div>
+                                <img src={crew.profile_path ? `https://image.tmdb.org/t/p/w500/${crew.profile_path}` : personWithNoImage} alt={crew.name} className="w-[25%] rounded-2xl"/>
+                            </Link>
+                        ))}
                     </div>
                 </div>
                 {/*<div id="release_dates_ribbon" className="w-full mt-[-5px] h-full border-b-2 border-[#FFFFFF] overflow-x-scroll p-5">*/}

@@ -26,7 +26,7 @@ td:nth-child(4) {
     transition: all 400ms;
 }
 
-.img_bg img{
+.img_bg{
     filter: brightness(30%);
     object-fit: cover;
 }

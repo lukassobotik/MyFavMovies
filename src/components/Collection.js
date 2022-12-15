@@ -62,8 +62,8 @@ export default function Collection() {
     return (
         !isLoading && <Layout>
             <div id="collection_ribbon" className={`w-full mt-5 h-[${ribbonHeight}] flex_center border-b-2 border-t-2 border-[#FFFFFF] whitespace-nowrap relative`} onLoad={handleScreenResize}>
-                {bgImageVisible ? <div className="img_bg w-full h-full">
-                    <img src={`https://image.tmdb.org/t/p/original/${item.backdrop_path}`} alt={""} className="w-full h-full"/>
+                {bgImageVisible ? <div className="w-full h-full">
+                    <img src={`https://image.tmdb.org/t/p/original/${item.backdrop_path}`} alt={""} className="w-full h-full img_bg"/>
                 </div> : null}
                 <div className={`p-5 whitespace-pre-wrap w-full h-full ${titleDisplay}`}>
                     <img src={`https://image.tmdb.org/t/p/original/${item.poster_path}`} alt={""} className={`${posterSize} aspect-auto border-2 border-[#FFFFFF] rounded-3xl`}/>
