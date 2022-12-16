@@ -1,6 +1,6 @@
 import Layout from "../Layout";
 import React, {useEffect, useState} from "react";
-import requests, {gridScreenSizeGroups, ratioGroups} from "../../Constants";
+import requests from "../../Constants";
 import axios from "axios";
 import {Link, useHistory, useParams} from "react-router-dom";
 import LoadSettingsData from "../../LoadData";
@@ -34,7 +34,6 @@ export default function MediaPage() {
     const [isOnWatchlist, setIsOnWatchlist] = useState(false);
     const [rating, setRating] = useState(0);
     const [isRated, setIsRated] = useState(false);
-    const [hasAlreadyBeenLoaded, setHasBeenAlreadyLoaded] = useState(false);
     const [playLink, setPlayLink] = useState('');
     const [ratingPopoverAnchorEl, setRatingPopoverAnchorEl] = React.useState(null);
     const isRatingPopoverOpen = Boolean(ratingPopoverAnchorEl);
@@ -122,17 +121,9 @@ export default function MediaPage() {
         });
     }
 
-    function changePlayTrailer(value) {
-        if (value === true) {
-            document.getElementById("movie_route_trailer").style.width = "";
-            setPlayTrailer(true);
-        } else if (value === false) {
-            document.getElementById("movie_route_trailer").style.width = "100%";
-            setPlayTrailer(false);
-        } else if (value.type === "load" && !hasAlreadyBeenLoaded) {
-            document.getElementById("movie_route_trailer").style.width = "100%";
-            setHasBeenAlreadyLoaded(true);
-        }
+    function showTrailer() {
+        if (playTrailer) setPlayTrailer(false);
+        else setPlayTrailer(true);
     }
 
     window.addEventListener('resize', handleScreenResize);
@@ -143,7 +134,15 @@ export default function MediaPage() {
 
     return (
         !isLoading && <Layout>
-            <div className="h-full mt-[-50px]" onLoad={handleScreenResize}>
+            <div id="media_trailer" className={`bg-black ${!playTrailer ? "hidden" : ""} w-screen h-screen mt-[-50px]`}>
+                {playTrailer ? <div className="top-0 left-0 w-full h-full absolute overflow-hidden rounded-xl">
+                    <iframe src={`https://www.youtube.com/embed/${trailerPath}?autoplay=1&autohide=1?rel=0&amp&modestbranding=1`}
+                            title={item.title + " Trailer"}
+                            allowFullScreen loading="lazy"
+                            className="w-full h-full"></iframe>
+                </div> : undefined}
+            </div>
+            <div className={`h-full ${!playTrailer ? "mt-[-50px]" : ""}`} onLoad={handleScreenResize}>
                 <div id="movie_backdrop_ribbon" className="inline-block w-[100vw] media_parent h-fit min-h-[100vh] justify-center movie_ribbon relative" onLoad={() => setReleases(document.getElementById("root")?.getAttribute('locvalue'))}>
                     <img src={`https://image.tmdb.org/t/p/original/${item.backdrop_path}`} alt="" className="w-[100vw] h-full rounded-b-3xl img_bg"/>
                     <div id="media_overview" className="relative w-full h-full ml-[5vw] pt-[15vh] w-[45vw]">
@@ -166,7 +165,8 @@ export default function MediaPage() {
                                 <Rating name="rating" value={rating} defaultValue={0} max={10} icon={<HiHeart/>} emptyIcon={<HiOutlineHeart/>} onChange={(event, newValue) => handleRatingChange(event, newValue)}/>
                             </Popover>
                         </div>
-                        {item.overview ? <div className="mb-5 mr-5 text-white italic mt-[5vh] overflow-y-auto">{item.overview}</div> : null}
+                        <div className="rounded-full font-bold m-2 pt-2 pb-2 mt-5 cursor-pointer w-fit ml-auto mr-auto" onClick={() => showTrailer()}>Play the Trailer</div>
+                        {item.overview ? <div className="mb-5 mr-5 text-white italic mt-[2vh] overflow-y-auto">{item.overview}</div> : null}
                         <div>Budget: {formatNumber(item.budget)}</div>
                         <div>Revenue: {formatNumber(item.revenue)}</div>
                         <div>Status: {item.status}</div>
