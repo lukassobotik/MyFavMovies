@@ -24,7 +24,7 @@ export default function MediaPage() {
     let { televisionId } = useParams();
     const isMovie = !!movieId;
     const movieRequest = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${requests.key}&language=${document.getElementById("root")?.getAttribute('langvalue')}&append_to_response=videos,images,alternative_titles,watch/providers,release_dates,credits`;
-    const tvRequest = `https://api.themoviedb.org/3/tv/${televisionId}?api_key=${requests.key}&language=${document.getElementById("root")?.getAttribute('langvalue')}`;
+    const tvRequest = `https://api.themoviedb.org/3/tv/${televisionId}?api_key=${requests.key}&language=${document.getElementById("root")?.getAttribute('langvalue')}&append_to_response=credits,episode_groups,videos`;
     const [item, setItem] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [castTab, setCastTab] = useState(true);
@@ -142,6 +142,18 @@ export default function MediaPage() {
         else setPlayTrailer(true);
     }
 
+    function formatDate(date) {
+        if (date === "") return "Not added";
+        let loc = document.getElementById("root")?.getAttribute('locvalue');
+        let options = {year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(date).toLocaleDateString(loc ? loc : "US", options);
+    }
+
+    function formatEpisodeAndSeasonStrings(num, type) {
+        if (num !== 1) return num + type + "s";
+        else return num + type;
+    }
+
     window.addEventListener('resize', handleScreenResize);
 
     useHistory().listen(() => {
@@ -167,10 +179,10 @@ export default function MediaPage() {
                                 if (id < 3) return <div key={id} className="bg-[#43495C] border-[#93A0C9] border-[1.5px] rounded-full w-full m-2 pt-2 pb-2 whitespace-nowrap">{item.name}</div>;
                             })}
                         </div>
-                        <a href={`${item.homepage}`} className="font-bold text-[5vh]">{item.title}</a>
+                        <a href={`${item.homepage}`} className="font-bold text-[5vh]">{isMovie ? item.title : item.name}</a>
                         {item.belongs_to_collection ? <Link to={`/collection/${item.belongs_to_collection.id}/`}><div className="font-bold italic">Part of the {item.belongs_to_collection.name}</div></Link> : null}
                         {item.tagline ? <div className="mr-5 text-center w-full text-[#878787] text-[2vh] italic">{item.tagline}</div> : null}
-                        <div>{item.runtime}m</div>
+                        {item.runtime ? <div>{item.runtime}m</div> : null}
                         <div className="flex_center m-auto w-full mt-[5vh] font-bold whitespace-nowrap">
                             {playLink ? <Tooltip title={<img src={justwatchIcon} alt="JustWatch" className="w-[10vw]"/>} placement="top">
                                     <a href={playLink} className="bg-[#21232D] border-[#777EA3] border-[1.5px] rounded-full w-full m-2 pt-2 pb-2 cursor-pointer">Play</a></Tooltip>
@@ -183,24 +195,30 @@ export default function MediaPage() {
                         </div>
                         <div className="rounded-full font-bold m-2 pt-2 pb-2 mt-5 cursor-pointer w-fit ml-auto mr-auto" onClick={() => showTrailer()}>Play the Trailer</div>
                         {item.overview ? <div className="mb-5 mr-5 text-white italic mt-[2vh] overflow-y-auto">{item.overview}</div> : null}
-                        <div>Budget: {formatNumber(item.budget)}</div>
-                        <div>Revenue: {formatNumber(item.revenue)}</div>
+                        {item.budget ? <div>Budget: {formatNumber(item.budget)}</div> : null}
+                        {item.revenue ? <div>Revenue: {formatNumber(item.revenue)}</div> : null}
+                        {item.number_of_episodes ? <div>{formatEpisodeAndSeasonStrings(item.number_of_episodes, " Episode")}</div> : null}
+                        {item.number_of_seasons ? <div>{formatEpisodeAndSeasonStrings(item.number_of_seasons, " Season")}</div> : null}
                         <div>Status: {item.status}</div>
+                        {item.type ? <div>Type: {item.type}</div> : null}
                         <Tooltip title={ <div className="w-[100%] text-[2vh] inline-block"><div className="font-bold w-[100%] text-[2vh]">Production Countries:</div>
                             {item.production_countries?.map((country, id) => ( <div key={id}  className="w-[100%] text-[2vh]">{country.name} ({country.iso_3166_1})</div> ))}
                             <div className="font-bold w-[100%] text-[2vh]">Production Companies:</div>
                             {item.production_companies?.map((company, id) => ( <div key={id} className="w-[100%] text-[2vh]">{company.name}</div> ))} </div>} placement="bottom">
                             <div className="mt-3 text-[#878787] text-[2vh] italic">Hover to see production info</div>
                         </Tooltip>
-                        <Link to={`/movie/${movieId}/releases/`}><div className="font-bold mt-3">Release Dates ({document.getElementById("root")?.getAttribute('locvalue')})</div></Link>
-                        <div className="mb-5">{releaseDates[0] ? releaseDates.map((date, id) => (
+                        {isMovie ? <Link to={`/movie/${movieId}/releases/`}><div className="font-bold mt-3">Release Dates {document.getElementById("root")?.getAttribute('locvalue') ? "(" + document.getElementById("root")?.getAttribute('locvalue') + ")" : ""}</div></Link> : <div className="font-bold mt-3">Release Dates</div>}
+                        {isMovie ? <div className="mb-5">{releaseDates[0] ? releaseDates.map((date, id) => (
                             <div key={id}>{date}</div>
                         )) : <div>No Dates Added
                             <Link to={`/movie/${movieId}/releases/`}><div className="font-bold">Release Dates (US)</div></Link>
                             {setReleases("US")?.map((date, id) => (
                                 <div key={id}>{date}</div>
                             ))}
-                        </div>}</div>
+                        </div>}</div> : <div>
+                            <div>First Air Date: {formatDate(item.first_air_date)}</div>
+                            <div>Last Air Date: {formatDate(item.last_air_date)}</div>
+                        </div>}
                     </div>
                     <div id="media_cast" className="relative w-[40vw] h-[85vh] mt-[15vh] mr-[5vw] ml-auto right-0 overflow-y-scroll rounded-2xl">
                         <div className="flex_center absolute right-0 h-[4vh] w-full">
