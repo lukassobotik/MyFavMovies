@@ -29,8 +29,15 @@ export default function PersonPage() {
                         setItem(response.data);
                     }).then(() => {
                         setIsLoading(false);
-                    }).catch((err) => console.log(err))
-                }).catch((err) => console.log(err))
+                    }).catch((err) => console.error(err))
+                }).catch((err) => console.error(err))
+            } else {
+                axios.get(personRequest).then((response) => {
+                    console.log(response.data);
+                    setItem(response.data);
+                }).then(() => {
+                    setIsLoading(false);
+                }).catch((err) => console.error(err))
             }
         });
     }, [personRequest]);

@@ -28,8 +28,15 @@ export default function Collection() {
                         setItem(response.data);
                     }).then(() => {
                         setIsLoading(false);
-                    }).catch((err) => console.log(err))
-                }).catch((err) => console.log(err))
+                    }).catch((err) => console.error(err))
+                }).catch((err) => console.error(err))
+            } else {
+                axios.get(collectionRequest).then((response) => {
+                    console.log(response.data);
+                    setItem(response.data);
+                }).then(() => {
+                    setIsLoading(false);
+                }).catch((err) => console.error(err))
             }
         });
     }, [collectionRequest]);
