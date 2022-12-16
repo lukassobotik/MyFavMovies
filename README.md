@@ -33,7 +33,7 @@ For more info, checkout the [Documentation](https://github.com/PuckyEU/MyFavMovi
 - [x] Website Footer
 - [x] Movie Searching
 #### v0.9.0:
-- [ ] TV Page
+- [x] TV Page
 #### v1.0.0 (Should be finished until the end of the year):
 - [ ] Movie Recommendations
 #### v1.1.0:
