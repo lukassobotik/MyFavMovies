@@ -13,7 +13,7 @@ export default function Browse() {
     useEffect(() => {
         auth.onAuthStateChanged(user => {
             if (user) {
-                loadData().then(() => {}).catch((err) => console.log(err));
+                loadData().then(() => {}).catch((err) => console.error(err));
             } else {
                 setIsLoading(false);
             }

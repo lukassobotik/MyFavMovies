@@ -26,7 +26,7 @@ td:nth-child(4) {
     transition: all 400ms;
 }
 
-.img_bg img{
+.img_bg{
     filter: brightness(30%);
     object-fit: cover;
 }
@@ -35,4 +35,25 @@ td:nth-child(4) {
     grid-template-columns: repeat(6, 1fr);
     display: grid;
     gap: 50px;
+}
+
+.media_parent {
+    display: grid;
+    grid-template-columns: 1fr;
+
+}
+
+.media_parent img {
+    grid-row-start: 1;
+    grid-column-start: 1;
+}
+
+[id="media_overview"] {
+    grid-row-start: 1;
+    grid-column-start: 1;
+}
+
+[id="media_cast"] {
+    grid-column-start: 1;
+    grid-row-start: 2;
 }

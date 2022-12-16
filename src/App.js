@@ -8,7 +8,7 @@ import Settings from "./components/Settings";
 const SignUp = lazy(() => import("./components/Account Route/SignUp"));
 const Login = lazy(() => import("./components/Account Route/Login"));
 const Search = lazy(() => import("./components/Search"));
-const Movie = lazy(() => import("./components/Movie Route/Movie"));
+const MediaPage = lazy(() => import("./components/Movie Route/MediaPage"));
 const MovieReleases = lazy(() => import("./components/Movie Route/MovieReleases"));
 const Collection = lazy(() => import("./components/Collection"));
 const PersonPage = lazy(() => import("./components/PersonPage"));
@@ -43,10 +43,13 @@ function App() {
                     <Suspense fallback={<div>Loading...</div>}><Search/></Suspense>
                 </Route>
                 <Route path="/movie/:movieId/" exact>
-                    <Suspense fallback={<div>Loading...</div>}><Movie/></Suspense>
+                    <Suspense fallback={<div>Loading...</div>}><MediaPage/></Suspense>
                 </Route>
                 <Route path="/movie/:movieId/releases">
                     <Suspense fallback={<div>Loading...</div>}><MovieReleases/></Suspense>
+                </Route>
+                <Route path="/tv/:televisionId/" exact>
+                    <Suspense fallback={<div>Loading...</div>}><MediaPage/></Suspense>
                 </Route>
                 <Route path="/collection/:collectionId/" exact>
                     <Suspense fallback={<div>Loading...</div>}><Collection/></Suspense>

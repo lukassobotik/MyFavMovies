@@ -155,6 +155,5 @@ export function getMainTrailer(item) {
             trailer = vid_key;
         }
     })
-    console.log(trailer, item, "items");
     return trailer;
 }
