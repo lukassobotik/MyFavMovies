@@ -37,11 +37,23 @@ td:nth-child(4) {
     gap: 50px;
 }
 
-.movie_genre_tag {
-    flex-basis: 33.333%;
+.media_parent {
+    display: grid;
+    grid-template-columns: 1fr;
+
 }
 
-.movie_genre_tag:nth-child(3n) {
-    background-color: red;
-    flex-flow: wrap;
+.media_parent img {
+    grid-row-start: 1;
+    grid-column-start: 1;
+}
+
+[id="media_overview"] {
+    grid-row-start: 1;
+    grid-column-start: 1;
+}
+
+[id="media_cast"] {
+    grid-column-start: 1;
+    grid-row-start: 2;
 }
