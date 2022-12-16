@@ -58,12 +58,12 @@ export default function MediaPage() {
                                 setIsRated(false);
                                 return;
                             }
-                            setRating(r[1]); setIsRated(r[2]); })
+                            setRating(r[1]); setIsRated(r[2]); }).catch((err) => console.error(err));
                         setPlayLink(getWatchProviderLink(response.data));
                     }).then(() => {
                         setIsLoading(false);
                     }).catch((err) => console.error(err))
-                }).catch((err) => console.log(err))
+                }).catch((err) => console.error(err))
             }
         });
     }, [movieRequest]);
