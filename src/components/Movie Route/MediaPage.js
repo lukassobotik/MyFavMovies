@@ -28,6 +28,7 @@ export default function MediaPage() {
     const [item, setItem] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [castTab, setCastTab] = useState(true);
+    const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
     const [releaseDates, setReleaseDates] = useState([]);
     const [playTrailer, setPlayTrailer] = useState(false);
     const [trailerPath, setTrailerPath] = useState('');
@@ -46,6 +47,7 @@ export default function MediaPage() {
     useEffect(() => {
         auth.onAuthStateChanged(async (user) => {
             if (user) {
+                setIsUserLoggedIn(true);
                 await LoadSettingsData().then(() => {
                     axios.get(isMovie ? movieRequest : tvRequest).then((response) => {
                         console.log(response.data);
@@ -64,6 +66,16 @@ export default function MediaPage() {
                         setIsLoading(false);
                     }).catch((err) => console.error(err))
                 }).catch((err) => console.error(err))
+            } else {
+                setIsUserLoggedIn(false);
+                axios.get(isMovie ? movieRequest : tvRequest).then((response) => {
+                    console.log(response.data);
+                    setItem(response.data);
+                    setMainTrailer(response.data);
+                    setPlayLink(getWatchProviderLink(response.data));
+                }).then(() => {
+                    setIsLoading(false);
+                });
             }
         });
     }, [movieRequest]);
@@ -97,6 +109,8 @@ export default function MediaPage() {
         setRatingPopoverAnchorEl(null);
     };
     const ratingClick = (event) => {
+        if (!isUserLoggedIn) return;
+
         setRatingPopoverAnchorEl(event.currentTarget);
     }
     const handleRatingChange = (event, newValue) => {
@@ -113,6 +127,8 @@ export default function MediaPage() {
     }
 
     const watchlistClick = () => {
+        if (!isUserLoggedIn) return;
+
         if (isOnWatchlist) addToWatchlist({item, isOnWatchlist}).then((r) => {
             setIsOnWatchlist(r[0]);
         });
