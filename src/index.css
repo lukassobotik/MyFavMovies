@@ -80,3 +80,9 @@ code {
   grid-column-start: 1;
   grid-row-start: 2;
 }
+
+.search-button {
+  background-image: var(--main_gradient);
+  margin: 0 auto;
+  padding: 15px 15px;
+}
