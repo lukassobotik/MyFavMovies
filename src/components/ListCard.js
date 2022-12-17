@@ -1,11 +1,12 @@
 import {Link, useHistory} from "react-router-dom";
 import React, {useState} from "react";
 import {IoCloseCircleOutline} from "react-icons/io5";
+import {BiEdit} from "react-icons/bi";
 import {deleteDoc, doc} from "firebase/firestore";
 import {auth, db} from "../firebase";
 import {formatDate} from "./MovieActions";
 
-export default function ListCard({item, deleteButton, showRating, isTV, isPerson}) {
+export default function ListCard({item, deleteButton, showRating, isTV, isPerson, isCustom, editButton}) {
     const [showItem, setShowItem] = useState(true);
     const [cornerRounding, setCornerRounding] = useState('3xl');
 
@@ -42,30 +43,33 @@ export default function ListCard({item, deleteButton, showRating, isTV, isPerson
     return (
         showItem && <div className={`w-full movie_in_collection h-[40vh] mb-5 rounded-${cornerRounding} flex border-2 border-[#FFFFFF] bg-[#2b2b2b] overflow-hidden`} onLoad={handleScreenResize}>
             <div className="relative w-full h-full flex">
-                <img className={`h-[calc(40vh - 4px)] movie_image_in_collection rounded-l-${cornerRounding} border-r-2 border-[#FFFFFF]`} src={`https://image.tmdb.org/t/p/w500/${!isPerson ? item.poster_path : item.profile_path}`} alt={isTV ? item.name : item?.title}/>
+                {!isCustom ? <img className={`h-[calc(40vh - 4px)] movie_image_in_collection rounded-l-${cornerRounding} border-r-2 border-[#FFFFFF]`} src={`https://image.tmdb.org/t/p/w500/${!isPerson ? item.poster_path : item.profile_path}`} alt={isTV ? item.name : item?.title}/> : null}
                 <div className="relative flex w-full">
                     <div className="w-full h-full">
-                        {!isPerson ? <img src={`https://image.tmdb.org/t/p/original/${item.backdrop_path}`} alt={""} className={`w-full h-full img_bg rounded-r-${cornerRounding}`}/> : ""}
+                        {!isPerson ? <img src={!isCustom ? `https://image.tmdb.org/t/p/original/${item.backdrop_path}` : item.backdrop} alt={""} className={`w-full h-full img_bg rounded-r-${cornerRounding}`}/> : ""}
                     </div>
                     <div className={`absolute movie_text_in_collection overflow-y-auto overflow-x-hidden text-[3vh] h-full`}>
                         <div className="font-extrabold m-3 w-full text-left break-words">
                             <div className="w-fit relative flex_center h-fit">
-                                <div className="italic">{formatDate(item.release_date, "")}</div>
+                                <div className="italic">{formatDate(isPerson || isCustom ? "" : item.release_date, "")}</div>
                             </div>
                             <div className={`${showRating ? "inline-block whitespace-pre-wrap" : "flex whitespace-pre-wrap"}`}>
-                                {!isTV ?
-                                    !isPerson ? <Link to={`/movie/${item.id}/`}><div className="relative">{item?.title}</div></Link>
-                                    : <Link to={`/person/${item.id}/`}><div className="relative">{item?.name}</div></Link>
-                                 : <Link to={`/tv/${item.id}/`}><div className="relative">{item?.name}</div></Link>}
+                                {isTV ? <Link to={`/tv/${item.id}/`}><div className="relative">{item?.name}</div></Link> : null}
+                                {isPerson ? <Link to={`/person/${item.id}/`}><div className="relative">{item?.name}</div></Link> : null}
+                                {!isTV ? <Link to={`/movie/${item.id}/`}><div className="relative">{item?.title}</div></Link> : null}
+                                {isCustom ? <div className="relative">{item?.name}</div> : null}
                                 {deleteButton ? <div className="w-fit h-full relative mt-auto mb-auto ml-3">
                                     <IoCloseCircleOutline className="w-fit h-fit cursor-pointer" onClick={() => {removeItem(item).then(() => {})}}/>
+                                </div> : null}
+                                {editButton ? <div className="w-fit h-full relative mt-auto mb-auto ml-3">
+                                    <Link to={`/edit-list/${item.name}/`}><BiEdit className="w-fit h-fit cursor-pointer"/></Link>
                                 </div> : null}
                                 {showRating ? <div className="w-fit relative flex_center h-fit">
                                     <div className="italic text-[#878787]">Your rating: {item?.rating}</div>
                                 </div> : null}
                             </div>
                         </div>
-                        {!isPerson ? <div className="inline-block w-fit h-fit whitespace-pre-wrap mr-3 ml-3 mt-[-0.75rem] text-left">{item?.overview}</div>
+                        {!isPerson ? <div className="inline-block w-fit h-fit whitespace-pre-wrap mr-3 ml-3 mt-[-0.75rem] text-left">{!isCustom ? item?.overview : item.description}</div>
                             : <div className="font-bold italic ml-3 inline-block w-fit h-fit whitespace-pre-wrap mr-3 ml-3 mt-[-0.75rem] text-left">Known For: {item?.known_for?.map((item, id) => (
                                 <div key={id} className="font-normal">{item.media_type === "movie" ? item.title : item.name}</div>
                             ))}</div>}

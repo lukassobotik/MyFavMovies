@@ -29,9 +29,9 @@ export default function Search() {
     }, [searchRequest]);
 
     function getResultType(result, id) {
-        if (result.media_type === "movie") return <ListCard key={id} item={result} deleteButton={false} showRating={false} isTV={false} isPerson={false}/>;
-        if (result.media_type === "tv") return <ListCard key={id} item={result} deleteButton={false} showRating={false} isTV={true} isPerson={false}/>;
-        if (result.media_type === "person") return <ListCard key={id} item={result} deleteButton={false} showRating={false} isTV={false} isPerson={true}/>;
+        if (result.media_type === "movie") return <ListCard key={id} item={result} deleteButton={false} showRating={false} isTV={false} isPerson={false} isCustom={false} editButton={false}/>;
+        if (result.media_type === "tv") return <ListCard key={id} item={result} deleteButton={false} showRating={false} isTV={true} isPerson={false} isCustom={false} editButton={false}/>;
+        if (result.media_type === "person") return <ListCard key={id} item={result} deleteButton={false} showRating={false} isTV={false} isPerson={true} isCustom={false} editButton={false}/>;
     }
 
     return (

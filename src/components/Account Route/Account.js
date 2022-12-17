@@ -4,7 +4,7 @@ import React, {useEffect, useState} from "react"
 import {Box, createTheme, Tab, Tabs, ThemeProvider, Typography} from "@mui/material";
 import {collection, getDocs} from "firebase/firestore";
 import {auth, db} from "../../firebase";
-import {useHistory} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import ListCard from "../ListCard";
 import './Account.css';
 
@@ -47,6 +47,7 @@ export default function Account() {
     const [isLoading, setIsLoading] = useState(true);
     const [watchlist, setWatchlist] = useState([]);
     const [ratedItems, setRatedItems] = useState([]);
+    const [userLists, setUserLists] = useState([]);
 
     document.onmousedown = () => {
         return true;
@@ -70,6 +71,12 @@ export default function Account() {
                     index++;
                 });
                 setRatedItems(ratedItems);
+                let lists = [];
+                const listsSnapshot = await getDocs(collection(db, "users", auth.currentUser.uid.toString(), "lists"));
+                listsSnapshot.forEach((doc) => {
+                    lists.push(doc.data())
+                });
+                setUserLists(lists)
                 setIsLoading(false);
             }
         });
@@ -134,27 +141,20 @@ export default function Account() {
                         </Box>
                         <TabPanel value={value} index={0}>
                             <div className="whitespace-nowrap">
-                                {watchlist.map((item, id) => (<ListCard key={id} item={item} deleteButton={true} showRating={false} isTV={false} isPerson={false}/>))}
+                                {watchlist.map((item, id) => (<ListCard key={id} item={item} deleteButton={true} showRating={false} isTV={false} isPerson={false} isCustom={false} editButton={false}/>))}
                             </div>
                         </TabPanel>
                         <TabPanel value={value} index={1}>
                             <div className="whitespace-nowrap">
-                                {ratedItems.map((item, id) => (<ListCard key={id} item={item} deleteButton={false} showRating={true} isTV={false} isPerson={false}/>))}
+                                {ratedItems.map((item, id) => (<ListCard key={id} item={item} deleteButton={false} showRating={true} isTV={false} isPerson={false} isCustom={false} editButton={false}/>))}
                             </div>
                         </TabPanel>
                         <TabPanel value={value} index={2}>
-                            <div className="whitespace-nowrap flex justify-center h-full w-full">
-                                <div className="w-full h-[150px] sm:h-[150px] md:h-[250px] lg:h-[350px] mb-5 rounded-3xl flex border-2 border-[#FFFFFF] bg-[#2b2b2b]">
-                                    <div className="relative overflow-y-auto overflow-x-hidden text-xs sm:text-xs md:text-xl lg:text-2xl h-full">
-                                        <div className="m-3 mb-0 w-full text-left break-words">
-                                            <div className="flex font-extrabold">
-                                            </div>
-                                            <div className="inline-block w-fit relative">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <Link to={"/new-list/"} className="w-fit mb-5 ml-auto mr-auto pl-5 pr-5 h-[10vh] bg-[#21232D] border-[#777EA3] border-[1.5px] flex_center font-bold text-[3vh] rounded-3xl">Create a New List</Link>
+
+                            {userLists.map((item, id) => (
+                                <ListCard key={id} item={item} deleteButton={false} showRating={false} isTV={false} isPerson={false} isCustom={true} editButton={true}/>
+                            ))}
                         </TabPanel>
                     </Box>
                 </div>

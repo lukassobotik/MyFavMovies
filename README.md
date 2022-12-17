@@ -35,11 +35,7 @@ For more info, checkout the [Documentation](https://github.com/PuckyEU/MyFavMovi
 #### v0.9.0:
 - [x] TV Page
 #### v1.0.0 (Should be finished until the end of the year):
-- [ ] Movie Recommendations
-#### v1.1.0:
 - [ ] Movie & Actor Lists
-
-## How will the website decide what movies are relevant to you?
-The website will take all tags on the current movie (for example "based on novel or book" or "based on comic") and the genres of the movie, after that it will put it in a list how many times you've liked that specific genre a tag and what rating you gave it. From that the website will find similar movies with similar tags and genres.
+- [ ] Movie Recommendations
 
 #### [Documentation](https://github.com/PuckyEU/MyFavMovies/wiki) ~ [Donate](https://www.buymeacoffee.com/puckyeu)

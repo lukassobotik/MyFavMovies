@@ -12,6 +12,7 @@ const MediaPage = lazy(() => import("./components/Movie Route/MediaPage"));
 const MovieReleases = lazy(() => import("./components/Movie Route/MovieReleases"));
 const Collection = lazy(() => import("./components/CollectionPage"));
 const PersonPage = lazy(() => import("./components/PersonPage"));
+const ListPage = lazy(() => import("./components/ListPage"));
 
 function App() {
     document.onmousedown = () => {
@@ -56,6 +57,12 @@ function App() {
                 </Route>
                 <Route path="/person/:personId/" exact>
                     <Suspense fallback={<div>Loading...</div>}><PersonPage/></Suspense>
+                </Route>
+                <Route path="/new-list/" exact>
+                    <AccountProtectedRoute><Suspense fallback={<div>Loading...</div>}><ListPage isNew={true}/></Suspense></AccountProtectedRoute>
+                </Route>
+                <Route path="/edit-list/:nameQ/" exact>
+                    <AccountProtectedRoute><Suspense fallback={<div>Loading...</div>}><ListPage isNew={false}/></Suspense></AccountProtectedRoute>
                 </Route>
             </Switch>
         </div>
