@@ -45,7 +45,7 @@ export async function getMovieDataFromDB(item) {
 
 export const saveRating = async (newValue, rating, item) => {
     const user = auth.currentUser.uid.toString().trim();
-    if (rating !== null) {
+    if (newValue !== null) {
         try {
             await setDoc(doc(db, "users", user, "ratings", item.id.toString()), {
                 item: item,
@@ -58,7 +58,6 @@ export const saveRating = async (newValue, rating, item) => {
             console.error("Error adding document: ", e);
         }
     } else {
-        console.log("enter");
         try {
             await deleteDoc(doc(db, "users", user, "ratings", item.id.toString()));
             return [false, newValue];
