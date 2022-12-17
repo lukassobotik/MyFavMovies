@@ -66,7 +66,7 @@ export default function CollectionPage() {
                     {item.parts.map((item, id) => (<ListCard key={id} item={item} deleteButton={false} showRating={false} isTV={false} isPerson={false}/>))}
                 </div>
                 <div id="collection_text" className="text-left z-50 p-5 whitespace-pre-wrap w-[50vw] mt-[15vh] relative">
-                    <img src={`https://image.tmdb.org/t/p/original/${item.poster_path}`} alt={""} className={`w-[50%] ml-auto mr-auto aspect-auto border-2 border-[#FFFFFF] rounded-3xl`}/>
+                    <img src={`https://image.tmdb.org/t/p/original/${item.poster_path}`} alt={""} className={`h-[50%] ml-auto mr-auto aspect-auto border-2 border-[#FFFFFF] rounded-3xl`}/>
                     <div className={`font-bold text-[4vh] ml-5`}>{item.name}</div>
                     <div className={`ml-5`}>{item.overview}</div>
                 </div>
