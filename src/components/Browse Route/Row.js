@@ -29,6 +29,7 @@ export default function Row({title, fetchURL, rowId}) {
     }
 
     function handleScreenResize(ev) {
+        if (ev.event?.target?.tagName === "IFRAME") return;
         if (ev.type !== "resize") return;
 
         movieItemWidth = document.getElementById("itemId1-" + rowId).clientWidth;
