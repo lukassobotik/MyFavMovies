@@ -10,7 +10,7 @@ const Login = lazy(() => import("./components/Account Route/Login"));
 const Search = lazy(() => import("./components/Search"));
 const MediaPage = lazy(() => import("./components/Movie Route/MediaPage"));
 const MovieReleases = lazy(() => import("./components/Movie Route/MovieReleases"));
-const Collection = lazy(() => import("./components/Collection"));
+const Collection = lazy(() => import("./components/CollectionPage"));
 const PersonPage = lazy(() => import("./components/PersonPage"));
 
 function App() {

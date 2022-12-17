@@ -31,24 +31,3 @@ td:nth-child(4) {
     display: grid;
     gap: 50px;
 }
-
-.media_parent {
-    display: grid;
-    grid-template-columns: 1fr;
-
-}
-
-.media_parent img {
-    grid-row-start: 1;
-    grid-column-start: 1;
-}
-
-[id="media_overview"] {
-    grid-row-start: 1;
-    grid-column-start: 1;
-}
-
-[id="media_cast"] {
-    grid-column-start: 1;
-    grid-row-start: 2;
-}
