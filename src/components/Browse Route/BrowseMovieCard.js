@@ -1,4 +1,4 @@
-import {useHistory} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import requests from "../../Constants";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
@@ -14,17 +14,11 @@ import {auth} from "../../firebase";
 import {Popover, Rating, Tooltip} from "@mui/material";
 import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import {
-    getAmountOfItemsOnScreen,
-    getMovieDataFromDB,
-    getWatchProviderLink,
-    saveRating
-} from "../MovieActions";
+import {getAmountOfItemsOnScreen, getMovieDataFromDB, getWatchProviderLink, saveRating} from "../MovieActions";
 import emptyBackdrop from "../../Icons/empty_backdrop.png";
 import './Browse.css';
 
 export default function BrowseMovieCard({item, index, rowId, type}) {
-    const history = useHistory();
     const request = `https://api.themoviedb.org/3/movie/${item?.id}?api_key=${requests.key}&language=${document.getElementById("root")?.getAttribute('langvalue')}&append_to_response=videos,images,watch/providers`;
     const [backdrop, setBackdrop] = useState(item?.backdrop_path);
     const [hasNoImage, setHasNoImage] = useState(false);
@@ -89,10 +83,6 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
         setPlayTrailer(false);
     }
 
-    const generalClick = () => {
-        history.push("/" + type + "/" + item?.id + "/");
-    }
-
     const ratingClick = (event) => {
         setRatingPopoverAnchorEl(event.currentTarget);
         const element = document.getElementById("itemInRowId" + index + "-" + rowId);
@@ -149,7 +139,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
     return (
         <div id={"itemId" + index + "-" + rowId} className={`movie_card_item w-[${setLoadingSize()}] inline-block cursor-pointer relative p-2 group`} data-index={index}>
         <div id={"itemInRowId" + index + "-" + rowId} className="row_item" style={{left: 0}} onMouseOver={showDetails} onMouseLeave={hideDetails}>
-            <div id={"player" + index + "-" + rowId} className="player" onClick={generalClick}>
+            <Link to={`/${type}/${item?.id}`} id={"player" + index + "-" + rowId} className="player">
                 {!isLoading ?
                     <div className="relative">
                         <img id={"img" + index + "-" + rowId} className='w-full h-auto block overflow-visible rounded bg-black' src={!hasNoImage ? `https://image.tmdb.org/t/p/${imageWidth}/${backdrop ? backdrop : item.backdrop_path}` : emptyBackdrop} alt={item.title} onError={() => setHasNoImage(true)}/>
@@ -164,7 +154,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
                             title={item.title + " Trailer"}
                             allowFullScreen loading="lazy"></iframe>
                 </div> : null}
-            </div>
+            </Link>
             <div id={"card" + index + "-" + rowId} className="movie_card_info fixed w-full left-0 bg-black invisible rounded-b whitespace-nowrap overflow-hidden">
                 <div className="text-white text-xs md:text-sm font-extrabold w-full h-full overflow-hidden flex items-center justify-center text-center">
                     {item?.title}
