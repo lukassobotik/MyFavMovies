@@ -26,11 +26,6 @@ td:nth-child(4) {
     transition: all 400ms;
 }
 
-.img_bg{
-    filter: brightness(30%);
-    object-fit: cover;
-}
-
 .grid-container {
     grid-template-columns: repeat(6, 1fr);
     display: grid;

@@ -48,3 +48,8 @@ code {
   background-image: linear-gradient(to top, gray 10%, transparent 80%);
   transition: all 450ms
 }
+
+.img_bg {
+  filter: brightness(30%);
+  object-fit: cover;
+}

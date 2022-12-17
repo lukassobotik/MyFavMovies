@@ -13,7 +13,7 @@ import addToWatchlist, {
     getWatchProviderLink,
     saveRating,
     getReleaseDateItem,
-    formatNumber, getMainTrailer
+    formatNumber, getMainTrailer, formatDate
 } from "../MovieActions";
 import {Popover, Rating, Tooltip} from "@mui/material";
 import {HiHeart, HiOutlineHeart} from "react-icons/hi";
@@ -142,12 +142,7 @@ export default function MediaPage() {
         else setPlayTrailer(true);
     }
 
-    function formatDate(date) {
-        if (date === "") return "Not added";
-        let loc = document.getElementById("root")?.getAttribute('locvalue');
-        let options = {year: 'numeric', month: 'long', day: 'numeric' };
-        return new Date(date).toLocaleDateString(loc ? loc : "US", options);
-    }
+
 
     function formatEpisodeAndSeasonStrings(num, type) {
         if (num !== 1) return num + type + "s";
@@ -216,8 +211,8 @@ export default function MediaPage() {
                                 <div key={id}>{date}</div>
                             ))}
                         </div>}</div> : <div>
-                            <div>First Air Date: {formatDate(item.first_air_date)}</div>
-                            <div>Last Air Date: {formatDate(item.last_air_date)}</div>
+                            <div>First Air Date: {formatDate(item.first_air_date, "Not Added")}</div>
+                            <div>Last Air Date: {formatDate(item.last_air_date, "Not Added")}</div>
                         </div>}
                     </div>
                     <div id="media_cast" className="relative w-[40vw] h-[85vh] mt-[15vh] mr-[5vw] ml-auto right-0 overflow-y-scroll rounded-2xl">

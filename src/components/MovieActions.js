@@ -156,3 +156,10 @@ export function getMainTrailer(item) {
     })
     return trailer;
 }
+
+export function formatDate(date, returnString) {
+    if (date === "") return returnString;
+    let loc = document.getElementById("root")?.getAttribute('locvalue');
+    let options = {year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(date).toLocaleDateString(loc ? loc : "US", options);
+}

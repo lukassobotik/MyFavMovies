@@ -3,6 +3,7 @@ import React, {useState} from "react";
 import {IoCloseCircleOutline} from "react-icons/io5";
 import {deleteDoc, doc} from "firebase/firestore";
 import {auth, db} from "../firebase";
+import {formatDate} from "./MovieActions";
 
 export default function ListCard({item, deleteButton, showRating, isTV, isPerson}) {
     const [showItem, setShowItem] = useState(true);
@@ -43,11 +44,14 @@ export default function ListCard({item, deleteButton, showRating, isTV, isPerson
             <div className="relative w-full h-full flex">
                 <img className={`h-[calc(40vh - 4px)] movie_image_in_collection rounded-l-${cornerRounding} border-r-2 border-[#FFFFFF]`} src={`https://image.tmdb.org/t/p/w500/${!isPerson ? item.poster_path : item.profile_path}`} alt={isTV ? item.name : item?.title}/>
                 <div className="relative flex w-full">
-                    <div className="w-full h-full img_bg brightness-[30%]">
-                        {!isPerson ? <img src={`https://image.tmdb.org/t/p/original/${item.backdrop_path}`} alt={""} className={`w-full h-full rounded-r-${cornerRounding}`}/> : ""}
+                    <div className="w-full h-full">
+                        {!isPerson ? <img src={`https://image.tmdb.org/t/p/original/${item.backdrop_path}`} alt={""} className={`w-full h-full img_bg rounded-r-${cornerRounding}`}/> : ""}
                     </div>
                     <div className={`absolute movie_text_in_collection overflow-y-auto overflow-x-hidden text-[3vh] h-full`}>
                         <div className="font-extrabold m-3 w-full text-left break-words">
+                            <div className="w-fit relative flex_center h-fit">
+                                <div className="italic">{formatDate(item.release_date, "")}</div>
+                            </div>
                             <div className={`${showRating ? "inline-block whitespace-pre-wrap" : "flex whitespace-pre-wrap"}`}>
                                 {!isTV ?
                                     !isPerson ? <Link to={`/movie/${item.id}/`}><div className="relative">{item?.title}</div></Link>
