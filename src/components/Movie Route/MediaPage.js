@@ -4,20 +4,23 @@ import requests from "../../Constants";
 import axios from "axios";
 import {Link, useHistory, useParams} from "react-router-dom";
 import LoadSettingsData from "../../LoadData";
-import {auth} from "../../firebase";
+import {auth, db} from "../../firebase";
 import personWithNoImage from "../../Icons/no-person.svg";
 import justwatchIcon from "../../Icons/justwatch_icon.png";
 
 import addToWatchlist, {
+    formatDate,
+    formatNumber,
+    getMainTrailer,
     getMovieDataFromDB,
-    getWatchProviderLink,
-    saveRating,
     getReleaseDateItem,
-    formatNumber, getMainTrailer, formatDate
+    getWatchProviderLink,
+    saveRating
 } from "../MovieActions";
 import {Popover, Rating, Tooltip} from "@mui/material";
 import {HiHeart, HiOutlineHeart} from "react-icons/hi";
 import "./Movie.css";
+import {doc, setDoc} from "firebase/firestore";
 
 export default function MediaPage() {
     let { movieId } = useParams();
@@ -32,6 +35,7 @@ export default function MediaPage() {
     const [releaseDates, setReleaseDates] = useState([]);
     const [playTrailer, setPlayTrailer] = useState(false);
     const [trailerPath, setTrailerPath] = useState('');
+    const [userLists, setUserLists] = useState([]);
     const [isOnWatchlist, setIsOnWatchlist] = useState(false);
     const [rating, setRating] = useState(0);
     const [isRated, setIsRated] = useState(false);
@@ -39,6 +43,9 @@ export default function MediaPage() {
     const [ratingPopoverAnchorEl, setRatingPopoverAnchorEl] = React.useState(null);
     const isRatingPopoverOpen = Boolean(ratingPopoverAnchorEl);
     const ratingPopoverId = isRatingPopoverOpen ? 'movie-rating-popover' : undefined;
+    const [listPopoverAnchorEl, setListPopoverAnchorEl] = React.useState(null);
+    const isListPopoverOpen = Boolean(listPopoverAnchorEl);
+    const listPopoverId = isListPopoverOpen ? 'movie-list-popover' : undefined;
 
     document.onmousedown = () => {
         return true;
@@ -60,7 +67,10 @@ export default function MediaPage() {
                                 setIsRated(false);
                                 return;
                             }
-                            setRating(r[1]); setIsRated(r[2]); }).catch((err) => console.error(err));
+                            setRating(r[1]);
+                            setIsRated(r[2]);
+                            setUserLists(r[3]);
+                        }).catch((err) => console.error(err));
                         setPlayLink(getWatchProviderLink(response.data));
                     }).then(() => {
                         setIsLoading(false);
@@ -125,6 +135,14 @@ export default function MediaPage() {
             setIsRated(r[0]);
         });
     }
+    const handleListPopoverClose = () => {
+        setListPopoverAnchorEl(null);
+    };
+    const listClick = (event) => {
+        if (!isUserLoggedIn) return;
+
+        setListPopoverAnchorEl(event.currentTarget);
+    }
 
     const watchlistClick = () => {
         if (!isUserLoggedIn) return;
@@ -137,12 +155,38 @@ export default function MediaPage() {
         });
     }
 
+    async function addItemToList(listItem) {
+        let list = listItem.movies;
+        const info = {};
+        info.id = item.id;
+        if (item.title) info.title = item.title;
+        if (item.name) info.name = item.name;
+        if (item.poster_path) info.poster_path = item.poster_path;
+        if (item.profile_path) info.profile_path = item.profile_path;
+        if (item.backdrop_path) info.backdrop_path = item.backdrop_path;
+        if (item.release_date) info.release_date = item.release_date;
+        if (item.overview) info.overview = item.overview;
+        if (item.biography) info.biography = item.biography;
+        list.push(info);
+        console.log(list);
+        const user = auth.currentUser.uid.toString().trim();
+        try {
+            await setDoc(doc(db, "users", user, "lists", listItem.name.toString()), {
+                name: listItem.name,
+                description: listItem.description,
+                backdrop: listItem.backdrop,
+                movies: list
+            });
+            handleListPopoverClose();
+        } catch (e) {
+            console.error("Error adding document: ", e);
+        }
+    }
+
     function showTrailer() {
         if (playTrailer) setPlayTrailer(false);
         else setPlayTrailer(true);
     }
-
-
 
     function formatEpisodeAndSeasonStrings(num, type) {
         if (num !== 1) return num + type + "s";
@@ -182,7 +226,13 @@ export default function MediaPage() {
                             {playLink ? <Tooltip title={<img src={justwatchIcon} alt="JustWatch" className="w-[10vw]"/>} placement="top">
                                     <a href={playLink} className="bg-[#21232D] border-[#777EA3] border-[1.5px] rounded-full w-full m-2 pt-2 pb-2 cursor-pointer">Play</a></Tooltip>
                                 : <div className="bg-[#21232D] border-[#777EA3] text-[#838383] border-[1.5px] rounded-full w-full m-2 pt-2 pb-2">Play</div>}
-                            <div className="bg-[#21232D] border-[#777EA3] border-[1.5px] rounded-full w-full m-2 pt-2 pb-2 cursor-pointer" onClick={() => watchlistClick()}>{isOnWatchlist ? "Added to My List" : "Add to My List"}</div>
+                            <div className="bg-[#21232D] border-[#777EA3] border-[1.5px] rounded-full w-full m-2 pt-2 pb-2 cursor-pointer" onClick={listClick}>{isOnWatchlist ? "Added to My List" : "Add to My List"}</div>
+                            <Popover id={listPopoverId} open={isListPopoverOpen} anchorEl={listPopoverAnchorEl} onClose={handleListPopoverClose} anchorOrigin={{vertical: 'center', horizontal: 'center'}} transformOrigin={{vertical: 'center', horizontal: 'center'}}>
+                                <div className="p-5 pb-3 pt-3 bg-[#21232D] border-[#777EA3] border-b-[1.5px] text-white flex_center cursor-pointer" onClick={() => watchlistClick()}>Watchlist</div>
+                                {userLists?.map((item, id) => (
+                                    <div key={id} className="p-5 pb-3 pt-3 bg-[#21232D] border-[#777EA3] border-b-[1.5px] text-white flex_center cursor-pointer" onClick={() => addItemToList(item)}>{item.name}</div>
+                                ))}
+                            </Popover>
                             <div className="bg-[#21232D] border-[#777EA3] border-[1.5px] rounded-full w-full m-2 pt-2 pb-2 cursor-pointer" onClick={ratingClick}>{isRated ? "Rated " + rating : "Rate"}</div>
                             <Popover id={ratingPopoverId} open={isRatingPopoverOpen} anchorEl={ratingPopoverAnchorEl} onClose={handleRatingClose} anchorOrigin={{vertical: 'center', horizontal: 'center'}} transformOrigin={{vertical: 'center', horizontal: 'center'}}>
                                 <Rating name="rating" value={rating} defaultValue={0} max={10} icon={<HiHeart/>} emptyIcon={<HiOutlineHeart/>} onChange={(event, newValue) => handleRatingChange(event, newValue)}/>

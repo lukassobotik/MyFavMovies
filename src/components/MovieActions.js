@@ -40,7 +40,12 @@ export async function getMovieDataFromDB(item) {
             isRated = true;
         }
     });
-    return [isOnWatchlist, rating, isRated];
+    let list = [];
+    const listSnapshot = await getDocs(collection(db, "users", auth.currentUser.uid.toString(), "lists"));
+    listSnapshot.forEach((doc) => {
+        list.push(doc.data());
+    });
+    return [isOnWatchlist, rating, isRated, list];
 }
 
 export const saveRating = async (newValue, rating, item) => {

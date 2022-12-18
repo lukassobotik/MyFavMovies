@@ -139,7 +139,17 @@ export default function ListPage({isNew, preview}) {
                         continue;
                 }
                 axios.get(request).then((response) => {
-                    results.push(response.data);
+                    const info = {};
+                    info.id = response.data.id;
+                    if (response.data.title) info.title = response.data.title;
+                    if (response.data.name) info.name = response.data.name;
+                    if (response.data.poster_path) info.poster_path = response.data.poster_path;
+                    if (response.data.profile_path) info.profile_path = response.data.profile_path;
+                    if (response.data.backdrop_path) info.backdrop_path = response.data.backdrop_path;
+                    if (response.data.release_date) info.release_date = response.data.release_date;
+                    if (response.data.overview) info.overview = response.data.overview;
+                    if (response.data.biography) info.biography = response.data.biography;
+                    results.push(info);
                 }).catch((err) => console.error(err))
             }
             addedMovies.map((item) => {
@@ -156,6 +166,7 @@ export default function ListPage({isNew, preview}) {
         setAddedMovies(swapped);
     }
 
+    // eslint-disable-next-line
     Array.prototype.swap = function (x,y) {
         let b = this[x];
         this[x] = this[y];
@@ -168,7 +179,8 @@ export default function ListPage({isNew, preview}) {
     return (
         !isLoading && <Layout>
             <div className="min-h-[100vh] h-fit w-[70%] ml-auto mr-auto">
-                <div className="text-[4vh] text-center font-bold mb-5">{isNew ? "Create a New List" : !preview ? "Edit " + name : name}</div>
+                <div className="text-[4vh] text-center font-bold">{isNew ? "Create a New List" : !preview ? "Edit " + name : name}</div>
+                <Link to={!preview ? `/list/${name}/` : `/edit-list/${name}/`} className="text-[2vh] text-[#838383] text-center italic mb-5">{isNew ? "" : !preview ? "Click here to preview " + name : "Click here to edit " + name}</Link>
                 {preview ? <textarea className="text-[3vh] text-[#838383] text-center italic mb-5 bg-[#131313] w-full h-[16vh]" name="list_description" style={{resize: "none"}} cols="40" rows="5" onChange={setDescriptionHandler} disabled value={description} placeholder="My Favorite Movies"></textarea> : null}
                 {error ? <Collapse in={isErrorOpen}><Alert className="mt-2" variant="filled" severity="error" action={<IconButton size="small" onClick={() => setIsErrorOpen(false)}><CloseIcon fontSize="inherit"/></IconButton>}>{error.toString()}</Alert></Collapse> : null}
                 {!preview ? <form>

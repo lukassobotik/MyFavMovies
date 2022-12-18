@@ -35,7 +35,7 @@ For more info, checkout the [Documentation](https://github.com/PuckyEU/MyFavMovi
 #### v0.9.0:
 - [x] TV Page
 #### v1.0.0 (Should be finished until the end of the year):
-- [ ] Movie & Actor Lists
+- [x] Movie & Actor Lists
 - [ ] Movie Recommendations
 
 #### [Documentation](https://github.com/PuckyEU/MyFavMovies/wiki) ~ [Donate](https://www.buymeacoffee.com/puckyeu)
