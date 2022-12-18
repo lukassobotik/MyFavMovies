@@ -10,6 +10,7 @@ import axios from "axios";
 import requests from "../Constants";
 import {getResultType} from "./Search";
 import {delay} from "./Settings";
+import {HiChevronDown, HiChevronUp} from "react-icons/hi";
 
 export default function ListPage({isNew, preview}) {
     let { nameQ } = useParams();
@@ -148,6 +149,20 @@ export default function ListPage({isNew, preview}) {
         }
     }
 
+    function moveElement(id, up) {
+        if (up === true && id === 0) return;
+        if (up === false && id + 1 === addedMovies.length) return;
+        let swapped = addedMovies.swap(id, up === true ? id - 1 : id + 1);
+        setAddedMovies(swapped);
+    }
+
+    Array.prototype.swap = function (x,y) {
+        let b = this[x];
+        this[x] = this[y];
+        this[y] = b;
+        return this;
+    }
+
     if (!isUserLoggedIn) return <Layout><Link to="/login/"><div className="h-[100vh] font-bold text-[4vh]">Please Log in to Edit Lists</div></Link></Layout>
 
     return (
@@ -170,9 +185,13 @@ export default function ListPage({isNew, preview}) {
                         <div className="flex_center relative"><div className="w-[10%] h-[40vh] cursor-pointer flex_center" onClick={() => addItem(item)}><MdOutlineAdd/></div>{getResultType(item, id)}</div>
                     ))}
                     <div className="text-left font-bold mb-2 text-[3vh]">Added Items</div>
-                    {addedMovies.length !== 0 ? addedMovies.map((item, id) => (
-                        <div key={id} className="text-left font-bold mb-4 flex items-center">{item.title ? item.title : item.name}<MdCancel className="ml-2 w-[2vh] h-[2vh] cursor-pointer" onClick={() => removeItem(id)}/></div>
-                    )) : <div className="font-bold text-left mb-4">No Items Added</div>}
+                    {addedMovies?.map((item, id) => (
+                        <div key={id} className="text-left font-bold mb-4 h-[6vh] flex items-center">
+                            <HiChevronUp className="h-[3vh] w-[3vh] cursor-pointer" onClick={() => moveElement(id, true)}/>
+                            <HiChevronDown className="h-[3vh] w-[3vh] cursor-pointer" onClick={() => moveElement(id, false)}/>
+                            {item?.title ? item?.title : item?.name}
+                            <MdCancel className="ml-2 w-[2vh] h-[2vh] cursor-pointer" onClick={() => removeItem(id)}/></div>
+                    ))}{addedMovies.length === 0 ? <div className="font-bold text-left mb-4">No Items Added</div> : null}
                     {success ? <Collapse in={isSuccessOpen}><Alert className="mb-2" variant="filled" severity="success" action={<IconButton size="small" onClick={() => setIsSuccessOpen(false)}><CloseIcon fontSize="inherit"/></IconButton>}>{success.toString()}</Alert></Collapse> : null}
                     <input className="settings-btn button cursor-pointer" type="button" value={`${isNew ? "Create My List" : "Edit My List"}`} onClick={() => submit()}/>
                 </form>
