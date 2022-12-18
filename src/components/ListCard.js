@@ -57,7 +57,7 @@ export default function ListCard({item, deleteButton, showRating, isTV, isPerson
                                 {isTV ? <Link to={`/tv/${item.id}/`}><div className="relative">{item?.name}</div></Link> : null}
                                 {isPerson ? <Link to={`/person/${item.id}/`}><div className="relative">{item?.name}</div></Link> : null}
                                 {!isTV ? <Link to={`/movie/${item.id}/`}><div className="relative">{item?.title}</div></Link> : null}
-                                {isCustom ? <div className="relative">{item?.name}</div> : null}
+                                {isCustom ? <Link to={`/list/${item.name}/`}><div className="relative">{item?.name}</div></Link> : null}
                                 {deleteButton ? <div className="w-fit h-full relative mt-auto mb-auto ml-3">
                                     <IoCloseCircleOutline className="w-fit h-fit cursor-pointer" onClick={() => {removeItem(item).then(() => {})}}/>
                                 </div> : null}
@@ -70,7 +70,7 @@ export default function ListCard({item, deleteButton, showRating, isTV, isPerson
                             </div>
                         </div>
                         {!isPerson ? <div className="inline-block w-fit h-fit whitespace-pre-wrap mr-3 ml-3 mt-[-0.75rem] text-left">{!isCustom ? item?.overview : item.description}</div>
-                            : <div className="font-bold italic ml-3 inline-block w-fit h-fit whitespace-pre-wrap mr-3 ml-3 mt-[-0.75rem] text-left">Known For: {item?.known_for?.map((item, id) => (
+                            : <div className={`${item.known_for ? "font-bold" : ""} italic ml-3 inline-block w-fit h-fit whitespace-pre-wrap mr-3 ml-3 mt-[-0.75rem] text-left`}>{item.known_for ? "Known For: " : item.biography}{item?.known_for?.map((item, id) => (
                                 <div key={id} className="font-normal">{item.media_type === "movie" ? item.title : item.name}</div>
                             ))}</div>}
                     </div>

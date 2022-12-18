@@ -40,7 +40,8 @@ export default function Search() {
 }
 
 export function getResultType(result, id) {
-    if (result.media_type === "movie") return <ListCard key={id} item={result} deleteButton={false} showRating={false} isTV={false} isPerson={false} isCustom={false} editButton={false}/>;
-    if (result.media_type === "tv") return <ListCard key={id} item={result} deleteButton={false} showRating={false} isTV={true} isPerson={false} isCustom={false} editButton={false}/>;
-    if (result.media_type === "person") return <ListCard key={id} item={result} deleteButton={false} showRating={false} isTV={false} isPerson={true} isCustom={false} editButton={false}/>;
+    console.log(result)
+    if (result.media_type === "movie" || result.title !== undefined) return <ListCard key={id} item={result} deleteButton={false} showRating={false} isTV={false} isPerson={false} isCustom={false} editButton={false}/>;
+    if (result.media_type === "tv" || result.first_air_date !== undefined) return <ListCard key={id} item={result} deleteButton={false} showRating={false} isTV={true} isPerson={false} isCustom={false} editButton={false}/>;
+    if (result.media_type === "person" || result.biography !== undefined) return <ListCard key={id} item={result} deleteButton={false} showRating={false} isTV={false} isPerson={true} isCustom={false} editButton={false}/>;
 }

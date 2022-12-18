@@ -9,8 +9,9 @@ import {MdCancel, MdOutlineAdd, MdSearch} from "react-icons/md";
 import axios from "axios";
 import requests from "../Constants";
 import {getResultType} from "./Search";
+import {delay} from "./Settings";
 
-export default function ListPage({isNew}) {
+export default function ListPage({isNew, preview}) {
     let { nameQ } = useParams();
     const [name, setName] = useState(!isNew ? nameQ : '');
     const [description, setDescription] = useState('');
@@ -78,6 +79,8 @@ export default function ListPage({isNew}) {
             });
             setSuccess(isNew ? `Successfully Created or Edited the List under the name: ${name}` : `Successfully Edited the List under the name: ${name}`);
             setIsSuccessOpen(true);
+            await delay(5000);
+            setIsSuccessOpen(false);
         } catch (e) {
             console.error("Error adding document: ", e);
             setError(e);
@@ -112,7 +115,10 @@ export default function ListPage({isNew}) {
         } else {
             const splitStrings = query.substring(1, query.length - 1).split(",");
             let results = [];
-            for (let i = 0; i < splitStrings.length; i++) {
+            let length = splitStrings.length;
+            if (splitStrings.length >= 10) length = 10;
+            console.log(length);
+            for (let i = 0; i < length; i++) {
                 if (splitStrings[i] === "" || isNaN(splitStrings[i].substring(1, splitStrings[i].length))) {
                     continue;
                 }
@@ -147,10 +153,10 @@ export default function ListPage({isNew}) {
     return (
         !isLoading && <Layout>
             <div className="min-h-[100vh] h-fit w-[70%] ml-auto mr-auto">
-                <div className="text-[4vh] text-center font-bold mb-5">{isNew ? "Create a New List" : "Edit " + name}</div>
+                <div className="text-[4vh] text-center font-bold mb-5">{isNew ? "Create a New List" : !preview ? "Edit " + name : name}</div>
+                {preview ? <textarea className="text-[3vh] text-[#838383] text-center italic mb-5 bg-[#131313] w-full h-[16vh]" name="list_description" style={{resize: "none"}} cols="40" rows="5" onChange={setDescriptionHandler} disabled value={description} placeholder="My Favorite Movies"></textarea> : null}
                 {error ? <Collapse in={isErrorOpen}><Alert className="mt-2" variant="filled" severity="error" action={<IconButton size="small" onClick={() => setIsErrorOpen(false)}><CloseIcon fontSize="inherit"/></IconButton>}>{error.toString()}</Alert></Collapse> : null}
-                {success ? <Collapse in={isSuccessOpen}><Alert className="mt-2" variant="filled" severity="success" action={<IconButton size="small" onClick={() => setIsSuccessOpen(false)}><CloseIcon fontSize="inherit"/></IconButton>}>{success.toString()}</Alert></Collapse> : null}
-                <form>
+                {!preview ? <form>
                     <div className="text-left font-bold mb-2 text-[3vh]">Name *</div>
                     <input className="text_field w-full h-[6vh]" type="text" onChange={setNameHandler} value={name} placeholder="My Awesome List"/>
                     <div className="text-left font-bold mb-2 text-[3vh]">Description</div>
@@ -158,17 +164,23 @@ export default function ListPage({isNew}) {
                     <div className="text-left font-bold mb-2 text-[3vh]">Backdrop Link</div>
                     <input className="text_field w-full h-[6vh]" type="text" placeholder="https://example.com/" onChange={setBackdropHandler} value={backdrop}/>
                     <div className="text-left font-bold text-[3vh]">Add Items</div>
-                    <div className="text-left text-[#838383] italic mb-2 mt-[-0.25rem] text-[2vh]">To quickly add items, write the type ("m" for movie, "t" for tv, "p" for person) and their ID in apostrophes. If you want to add multiple, separate them with a comma, e.g. 'm157336,m238,p976'</div>
+                    <div className="text-left text-[#838383] italic mb-2 mt-[-0.25rem] text-[2vh]">To quickly add items, write the type ("m" for movie, "t" for tv, "p" for person) and their ID in apostrophes. If you want to add multiple, separate them with a comma, e.g. 'm157336,m238,p976'. Limit is 10 items at a time</div>
                     <div className="flex"><input className="text_field w-full h-[6vh] mr-1" type="text" placeholder="Interstellar" onChange={setMovieSearchQueryHandler} value={movieSearchQuery}/><div className="w-fit h-[6vh] search-button button cursor-pointer" onClick={() => search(movieSearchQuery)}><MdSearch className="w-full h-full"/></div><div className="w-[0.25rem]"/><div className="w-fit h-[6vh] search-button button cursor-pointer" onClick={() => setSearchResults(null)}><MdCancel className="w-full h-full"/></div></div>
                     {searchResults?.map((item, id) => (
                         <div className="flex_center relative"><div className="w-[10%] h-[40vh] cursor-pointer flex_center" onClick={() => addItem(item)}><MdOutlineAdd/></div>{getResultType(item, id)}</div>
                     ))}
                     <div className="text-left font-bold mb-2 text-[3vh]">Added Items</div>
-                    {addedMovies !== undefined ? addedMovies.map((item, id) => (
+                    {addedMovies.length !== 0 ? addedMovies.map((item, id) => (
                         <div key={id} className="text-left font-bold mb-4 flex items-center">{item.title ? item.title : item.name}<MdCancel className="ml-2 w-[2vh] h-[2vh] cursor-pointer" onClick={() => removeItem(id)}/></div>
                     )) : <div className="font-bold text-left mb-4">No Items Added</div>}
+                    {success ? <Collapse in={isSuccessOpen}><Alert className="mb-2" variant="filled" severity="success" action={<IconButton size="small" onClick={() => setIsSuccessOpen(false)}><CloseIcon fontSize="inherit"/></IconButton>}>{success.toString()}</Alert></Collapse> : null}
                     <input className="settings-btn button cursor-pointer" type="button" value={`${isNew ? "Create My List" : "Edit My List"}`} onClick={() => submit()}/>
                 </form>
+                    : <div>
+                        {addedMovies.length !== 0 ? addedMovies.map((item, id) => (
+                            getResultType(item, id)
+                        )) : <div className="font-bold text-left mb-4">No Items Added</div>}
+                    </div>}
             </div>
         </Layout>
     )

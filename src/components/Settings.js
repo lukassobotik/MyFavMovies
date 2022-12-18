@@ -10,6 +10,10 @@ import axios from "axios";
 import LoadSettingsData from "../LoadData";
 import './Settings.css';
 
+export function delay(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
+}
+
 export default function Settings() {
     const [pfpUrl, setPfpUrl] = useState('');
     const [isPfpUrlFocused, setIsPfpUrlFocused] = useState(false);
@@ -57,10 +61,6 @@ export default function Settings() {
     const setLanguageHandler = (event) => {
         document.getElementById("root").setAttribute("langvalue", event.target.value.toString());
     };
-
-    function delay(time) {
-        return new Promise(resolve => setTimeout(resolve, time));
-    }
 
     async function save() {
         const user = auth.currentUser.uid.toString().trim();

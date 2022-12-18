@@ -34,7 +34,7 @@ function App() {
                 <Route path="/browse/" exact>
                     <Browse/>
                 </Route>
-                <Route path="/account" exact>
+                <Route path="/account/" exact>
                     <AccountProtectedRoute><Account/></AccountProtectedRoute>
                 </Route>
                 <Route path="/settings/" exact>
@@ -59,10 +59,13 @@ function App() {
                     <Suspense fallback={<div>Loading...</div>}><PersonPage/></Suspense>
                 </Route>
                 <Route path="/new-list/" exact>
-                    <AccountProtectedRoute><Suspense fallback={<div>Loading...</div>}><ListPage isNew={true}/></Suspense></AccountProtectedRoute>
+                    <Suspense fallback={<div>Loading...</div>}><ListPage isNew={true} preview={false}/></Suspense>
                 </Route>
                 <Route path="/edit-list/:nameQ/" exact>
-                    <AccountProtectedRoute><Suspense fallback={<div>Loading...</div>}><ListPage isNew={false}/></Suspense></AccountProtectedRoute>
+                    <Suspense fallback={<div>Loading...</div>}><ListPage isNew={false} preview={false}/></Suspense>
+                </Route>
+                <Route path="/list/:nameQ/" exact>
+                    <Suspense fallback={<div>Loading...</div>}><ListPage isNew={false} preview={true}/></Suspense>
                 </Route>
             </Switch>
         </div>
