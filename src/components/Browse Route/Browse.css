@@ -59,6 +59,10 @@
     cursor: pointer;
 }
 
+.movie_card_video_overlay {
+    background-image: linear-gradient(to top, #21232D 10%, transparent 80%);
+}
+
 .youtube-container {
     top: 0;
     left: 0;

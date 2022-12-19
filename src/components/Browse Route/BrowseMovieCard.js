@@ -14,7 +14,13 @@ import {auth} from "../../firebase";
 import {Popover, Rating, Tooltip} from "@mui/material";
 import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import {getAmountOfItemsOnScreen, getMovieDataFromDB, getWatchProviderLink, saveRating} from "../MovieActions";
+import {
+    formatDate,
+    getAmountOfItemsOnScreen,
+    getMovieDataFromDB,
+    getWatchProviderLink,
+    saveRating
+} from "../MovieActions";
 import emptyBackdrop from "../../Icons/empty_backdrop.png";
 import './Browse.css';
 
@@ -150,12 +156,13 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
                     </SkeletonTheme>}
                 <div className="w-full h-full left-0 top-0"/>
                 {playTrailer && !isLoading ? <div className="youtube-container rounded-t">
+                    <div className="w-full h-[15%] movie_card_video_overlay absolute bottom-0"></div>
                     <iframe src={`https://www.youtube.com/embed/${item?.trailer_path}?autoplay=1&controls=0&autohide=1?rel=0&amp&modestbranding=1`}
                             title={item.title + " Trailer"}
                             allowFullScreen loading="lazy"></iframe>
                 </div> : null}
             </Link>
-            <div id={"card" + index + "-" + rowId} className="movie_card_info fixed w-full left-0 bg-black invisible rounded-b whitespace-nowrap overflow-hidden">
+            <div id={"card" + index + "-" + rowId} className="movie_card_info bg-[#21232D] fixed w-full left-0 bg-black invisible rounded-b whitespace-nowrap overflow-hidden">
                 <div className="text-white text-xs md:text-sm font-extrabold w-full h-full overflow-hidden flex items-center justify-center text-center">
                     {item?.title}
                 </div>
@@ -203,7 +210,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
                     </Popover>
                 </div>
                 <div className="flex items-center items-stretch justify-center">
-                    <div className="text-white whitespace-normal w-auto mr-5 text-xs md:text-sm font-bold flex-nowrap inline-block items-center h-full text-left">{item?.release_date}</div>
+                    <div className="text-white whitespace-normal w-auto mr-5 text-xs md:text-sm font-bold flex-nowrap inline-block items-center h-full text-left">{formatDate(item?.release_date)}</div>
                     <div className="text-green-600 whitespace-normal w-auto text-xs md:text-sm font-bold flex-nowrap inline-block items-center h-full text-left">{item?.vote_average}</div>
                 </div>
             </div>
