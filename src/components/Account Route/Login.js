@@ -2,9 +2,10 @@ import Layout from "../Layout";
 import {useState} from "react";
 import {Link, useHistory} from "react-router-dom";
 import {Alert} from "@mui/material";
-import {signInWithEmailAndPassword} from "firebase/auth";
+import {sendEmailVerification, signInWithEmailAndPassword} from "firebase/auth";
 import {auth} from "../../firebase";
 import './Account.css';
+import {logout} from "../Navbar";
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -26,9 +27,17 @@ export default function Login() {
 
     const login = async (e) => {
         e.preventDefault();
+
         try {
-            await (signInWithEmailAndPassword(auth, email, password)).then(() => {
-                history.push('/');
+            await (signInWithEmailAndPassword(auth, email, password)).then(async (r) => {
+                console.log(r);
+                if (r.user.emailVerified) {
+                    history.push('/');
+                } else {
+                    await sendEmailVerification(r.user);
+                    setError("Please Verify Your Email Address By Clicking the Link we sent to your Email. You May Find it in Your Spam / Junk Folder.");
+                    await logout(history, false);
+                }
             }).catch((error) => {
                 setError(error.message);
             });

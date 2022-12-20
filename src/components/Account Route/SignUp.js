@@ -54,7 +54,7 @@ export default function SignUp() {
     const logout = async () => {
         try {
             await signOut(auth);
-            history.push('/login');
+            history.push('/login/');
         } catch (error) {
             console.log(error);
         }
@@ -66,7 +66,7 @@ export default function SignUp() {
             {error ? <Alert className="mb-2" variant="filled" severity="error">{error.toString()}</Alert> : null}
             <input className="text_field w-full" type="text" placeholder="Username" onChange={setUsernameHandler} value={username}/>
             <p></p>
-            <input className="text_field w-full" type="text" placeholder="Email" onChange={setEmailHandler} value={email}/>
+            <input className="text_field w-full" type="email" placeholder="Email" onChange={setEmailHandler} value={email}/>
             <p></p>
             <input className="text_field w-full" type="password" placeholder="Password" onChange={setPasswordHandler} value={password}/>
             <p></p>

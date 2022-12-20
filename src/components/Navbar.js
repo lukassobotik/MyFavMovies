@@ -8,6 +8,16 @@ import Popover from '@mui/material/Popover';
 import {signOut} from "firebase/auth";
 import {auth} from "../firebase";
 
+
+export const logout = async (history, pushToRoot) => {
+    try {
+        await signOut(auth);
+        if (pushToRoot) history.push('/');
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export default function Navbar() {
     const history = useHistory();
     const user = auth.currentUser;
@@ -18,14 +28,7 @@ export default function Navbar() {
     const isAccountPopoverOpen = Boolean(accountPopoverAnchorEl);
     const popoverId = isAccountPopoverOpen ? 'account-popover' : undefined;
 
-    const logout = async () => {
-        try {
-            await signOut(auth);
-            history.push('/');
-        } catch (error) {
-            console.log(error);
-        }
-    }
+
 
     function handleKeyDown(ev) {
         const pathname = window?.location?.hash;
@@ -133,7 +136,7 @@ export default function Navbar() {
                                 </div>
                             }
                         </div>
-                        <button id={"logout_btn"} className="logout-btn button w-[120%] h-[80%]" onClick={logout}>Log Out</button>
+                        <button id={"logout_btn"} className="logout-btn button w-[120%] h-[80%]" onClick={() => logout(history, true)}>Log Out</button>
                     </div> :
                     <div className="account flex_center relative w-fit h-[50px]">
                         <div id="navbar_search_parent" className="relative navbar_item">
