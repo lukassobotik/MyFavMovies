@@ -36,7 +36,7 @@ export default function Navbar() {
             openSearchInput(false);
             return;
         }
-        if (pathname !== "#/login/" && pathname !== "#/signup/" && pathname !== "#/new-list/" && !pathname.startsWith("#/edit-list/")) {
+        if (pathname !== "#/login/" && pathname !== "#/signup/" && pathname !== "#/new-list/" && !pathname.startsWith("#/edit-list/") && pathname !== "#/settings/") {
             openSearchInput(true);
         }
     }

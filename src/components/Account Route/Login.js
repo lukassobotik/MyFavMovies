@@ -30,7 +30,6 @@ export default function Login() {
 
         try {
             await (signInWithEmailAndPassword(auth, email, password)).then(async (r) => {
-                console.log(r);
                 if (r.user.emailVerified) {
                     history.push('/');
                 } else {

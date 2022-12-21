@@ -101,7 +101,7 @@ export default function Row({title, fetchURL, rowId}) {
             return;
         }
         let element = document.getElementById("slider" + rowId);
-        movieItemWidth = document.getElementById("itemId1-1").clientWidth;
+        movieItemWidth = document.getElementById("itemId1-2").clientWidth;
 
         firstVisibleItemPosition = (-parseInt(element.style.left.substring(0, element.style.left.length - 2)) / movieItemWidth) + 1;
         if (direction === "right" && firstVisibleItemPosition + (scrollAmountPerClick - 1) >= movies.length) return;
