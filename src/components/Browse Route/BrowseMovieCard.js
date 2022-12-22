@@ -145,7 +145,7 @@ export default function BrowseMovieCard({item, index, rowId, type}) {
     return (
         <div id={"itemId" + index + "-" + rowId} className={`movie_card_item w-[${setLoadingSize()}] inline-block cursor-pointer relative p-2 group`} data-index={index}>
         <div id={"itemInRowId" + index + "-" + rowId} className="row_item" style={{left: 0}} onMouseOver={showDetails} onMouseLeave={hideDetails}>
-            <Link to={`/${type}/${item?.id}`} id={"player" + index + "-" + rowId} className="player">
+            <Link to={`/${type}/${item?.id}/`} id={"player" + index + "-" + rowId} className="player">
                 {!isLoading ?
                     <div className="relative">
                         <img id={"img" + index + "-" + rowId} className='w-full h-auto block overflow-visible rounded bg-black' src={!hasNoImage ? `https://image.tmdb.org/t/p/${imageWidth}/${backdrop ? backdrop : item.backdrop_path}` : emptyBackdrop} alt={item.title} onError={() => setHasNoImage(true)}/>

@@ -21,6 +21,7 @@ import {Popover, Rating, Tooltip} from "@mui/material";
 import {HiHeart, HiOutlineHeart} from "react-icons/hi";
 import "./Movie.css";
 import {doc, setDoc} from "firebase/firestore";
+import imdbIcon from "../../Icons/imdb_favicon.png";
 
 export default function MediaPage() {
     let { movieId } = useParams();
@@ -213,6 +214,12 @@ export default function MediaPage() {
                 <div id="movie_backdrop_ribbon" className="inline-block w-[100vw] media_parent h-fit min-h-[100vh] justify-center movie_ribbon relative" onLoad={() => setReleases(document.getElementById("root")?.getAttribute('locvalue'))}>
                     <img src={`https://image.tmdb.org/t/p/original/${item.backdrop_path}`} alt="" className="w-[100vw] h-full rounded-b-3xl img_bg"/>
                     <div id="media_overview" className="relative w-full h-full ml-[5vw] pt-[15vh] w-[45vw]">
+                        <div className="flex_center m-2">
+                            {item.imdb_id ?
+                                <a href={"https://www.imdb.com/title/" + item.imdb_id + "/"}><img id="imdb_icon" src={imdbIcon} alt="IMDb" className="w-[4vh] mr-2"/></a>
+                                : null}
+                            <a href={isMovie ? "https://www.themoviedb.org/movie/" + movieId : "https://www.themoviedb.org/tv/" + televisionId}><img id="imdb_icon" src={"https://www.themoviedb.org/favicon.ico"} alt="IMDb" className="w-[4vh]"/></a>
+                        </div>
                         <div className="flex_center w-full m-auto pr-[4vw] pl-[4vw]">
                             {item.genres?.map((item, id) => {
                                 if (id < 3) return <div key={id} className="bg-[#43495C] border-[#93A0C9] border-[1.5px] rounded-full w-full m-2 pt-2 pb-2 whitespace-nowrap">{item.name}</div>;
