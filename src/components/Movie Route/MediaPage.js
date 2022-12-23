@@ -225,7 +225,7 @@ export default function MediaPage() {
                                 if (id < 3) return <div key={id} className="bg-[#43495C] border-[#93A0C9] border-[1.5px] rounded-full w-full m-2 pt-2 pb-2 whitespace-nowrap">{item.name}</div>;
                             })}
                         </div>
-                        <a href={`${item.homepage}`} className="font-bold text-[5vh]">{isMovie ? item.title : item.name}</a>
+                        {item.homepage ? <a href={`${item.homepage}`} className="font-bold text-[5vh]">{isMovie ? item.title : item.name}</a> : <div className="font-bold text-[5vh]">{isMovie ? item.title : item.name}</div>}
                         {item.belongs_to_collection ? <Link to={`/collection/${item.belongs_to_collection.id}/`}><div className="font-bold italic">Part of the {item.belongs_to_collection.name}</div></Link> : null}
                         {item.tagline ? <div className="mr-5 text-center w-full text-[#878787] text-[2vh] italic">{item.tagline}</div> : null}
                         {item.runtime ? <div>{item.runtime}m</div> : null}
