@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkmyfavmovies=self.webpackChunkmyfavmovies||[]).push([[423],{6009:function(c,e,s){s(2791);e.Z=s.p+"static/media/no-person.dc876450bf77789d94b8c63607cb6b93.svg"},5385:function(c,e,s){c.exports=s.p+"static/media/imdb_favicon.a5cb1e98132279a464bf.png"}}]);
+//# sourceMappingURL=423.4d6cf8b9.chunk.js.map
