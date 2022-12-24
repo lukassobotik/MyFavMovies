@@ -1,5 +1,5 @@
 # MyFavMovies
-[**MyFavMovies**](https://puckyeu.github.io/MyFavMovies/) is a website, which is made for you to **Discover** what movies or tv shows you would want to watch. It is in a streaming service like fashion, and all results will be **Personalized** depending on **Your Ratings** of previous movies. The website will contain every bit of information you would **need** or **want** to know about the movie like **Release Dates, Cast, Crew** and so on.
+[**MyFavMovies**](https://puckyeu.github.io/MyFavMovies/) is in a streaming service like fashion, and results are **Personalized** depending on **Your Ratings** of previous movies. It contains every bit of information you would **need** or **want** to know about the movie like **Release Dates, Cast, Crew** and so on.
 
 ## How to clone this repository
 
@@ -27,6 +27,9 @@ In between the apostrophes, add your Firestore Database and TMDb API Keys. Leave
 For more info, checkout the [Documentation](https://github.com/PuckyEU/MyFavMovies/wiki)
 
 ## Plans for the future
+<details><summary>Click to See Previous Version Plans</summary>
+<p>
+
 #### v0.7.0:
 - [x] Actor Page
 #### v0.8.0:
@@ -34,8 +37,14 @@ For more info, checkout the [Documentation](https://github.com/PuckyEU/MyFavMovi
 - [x] Movie Searching
 #### v0.9.0:
 - [x] TV Page
-#### v1.0.0 (Should be finished until the end of the year):
+#### v1.0.0:
 - [x] Movie & Actor Lists
-- [ ] Movie Recommendations
+- [x] Movie Recommendations
+
+</p>
+</details>
+
+### Current State Of the Project
+This Project isn't perfect, there are many things I'd love to add and many things that could be improved, but I don't want to get stuck on one project for a long time. I might return to add a feature or two down the line, or I might even start from scratch, but nothing's for certain. This doesn't mean I'm completely giving up on this project, I just want to move on to other things. So if you find any bugs, please let me know, and I'll try to fix them.
 
 #### [Documentation](https://github.com/PuckyEU/MyFavMovies/wiki) ~ [Donate](https://www.buymeacoffee.com/puckyeu)
