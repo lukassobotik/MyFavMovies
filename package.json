@@ -2,7 +2,7 @@
   "name": "myfavmovies",
   "version": "1.0.0",
   "private": false,
-  "homepage": "https://puckyeu.github.io/MyFavMovies/",
+  "homepage": "https://myfavmovies.lukassobotik.dev/",
   "dependencies": {
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",

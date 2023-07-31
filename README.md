@@ -1,5 +1,5 @@
 # MyFavMovies
-[**MyFavMovies**](https://puckyeu.github.io/MyFavMovies/) is in a streaming service like fashion, and results are **Personalized** depending on **Your Ratings** of previous movies. It contains every bit of information you would **need** or **want** to know about the movie like **Release Dates, Cast, Crew** and so on.
+[**MyFavMovies**](https://myfavmovies.lukassobotik.dev/) is in a streaming service like fashion, and results are **Personalized** depending on **Your Ratings** of previous movies. It contains every bit of information you would **need** or **want** to know about the movie like **Release Dates, Cast, Crew** and so on.
 
 ## How to clone this repository
 
@@ -24,7 +24,7 @@ REACT_APP_TMDB_API_KEY=''
 ```
 In between the apostrophes, add your Firestore Database and TMDb API Keys. Leave the `REACT_APP_VERSION` as it is.
 
-For more info, checkout the [Documentation](https://github.com/PuckyEU/MyFavMovies/wiki)
+For more info, checkout the [Documentation](https://github.com/lukassobotik/MyFavMovies/wiki)
 
 ## Plans for the future
 <details><summary>Click to See Previous Version Plans</summary>
