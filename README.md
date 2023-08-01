@@ -47,4 +47,4 @@ For more info, checkout the [Documentation](https://github.com/lukassobotik/MyFa
 ### Current State Of the Project
 This Project isn't perfect, there are many things I'd love to add and many things that could be improved, but I don't want to get stuck on one project for a long time. I might return to add a feature or two down the line, or I might even start from scratch, but nothing's for certain. This doesn't mean I'm completely giving up on this project, I just want to move on to other things. So if you find any bugs, please let me know, and I'll try to fix them.
 
-#### [Documentation](https://github.com/PuckyEU/MyFavMovies/wiki) ~ [Donate](https://www.buymeacoffee.com/puckyeu)
+#### [Documentation](https://github.com/PuckyEU/MyFavMovies/wiki) ~ [Donate](https://www.buymeacoffee.com/lukassobotik)
