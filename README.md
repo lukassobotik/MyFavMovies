@@ -1,4 +1,13 @@
-# MyFavMovies
+<p align="center">
+<img style="align:center;" src="./public/favicon.ico" alt="" width="100" />
+</p>
+
+<h1 align="center">MyFavMovies</h1>
+<h3 align="center"></h3>
+<p align="center">
+<a href="https://myfavmovies.lukassobotik.dev/">Try It Out!</a> | <a href="https://www.buymeacoffee.com/lukassobotik">Support Me</a> | <a href="https://www.lukassobotik.dev/project/MyFavMovies">Website</a> | <a href="https://github.com/PuckyEU/MyFavMovies/wiki">Documentation</a>
+</p>
+
 [**MyFavMovies**](https://myfavmovies.lukassobotik.dev/) is in a streaming service like fashion, and results are **Personalized** depending on **Your Ratings** of previous movies. It contains every bit of information you would **need** or **want** to know about the movie like **Release Dates, Cast, Crew** and so on.
 
 ## How to clone this repository
