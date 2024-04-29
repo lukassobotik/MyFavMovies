@@ -3,7 +3,7 @@
 </p>
 
 <h1 align="center">MyFavMovies</h1>
-<h3 align="center">Personalized Streaming, All-in-One Movie Info</h3>
+<h3 align="center">All-in-One Movie Info in one Place!</h3>
 <p align="center">
 <a href="https://myfavmovies.lukassobotik.dev/">Try It Out!</a> | <a href="https://www.buymeacoffee.com/lukassobotik">Support Me</a> | <a href="https://www.lukassobotik.dev/project/MyFavMovies">Website</a> | <a href="https://github.com/PuckyEU/MyFavMovies/wiki">Documentation</a>
 </p>
